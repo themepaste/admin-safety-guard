@@ -1,0 +1,15 @@
+{
+    "authors": [
+        {
+            "name": "ThemePaste"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ThemePaste\\SecureAdmin\\": "app/"
+        }
+    },
+    "config": {
+        "autoloader-suffix": "TPSecureAdmin"
+    }
+}

@@ -8,7 +8,7 @@ Author: Themepaste Team
 Author URI: http://themepaste.com/
 License: GPL2 or Later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: themepaste
+Text Domain: tp-secure-plugin
 */
 
 if ( !defined( 'ABSPATH' ) ) {
@@ -69,9 +69,9 @@ if ( !defined( 'ABSPATH' ) ) {
          * If the class does not exist, include the Composer autoloader file to
          * register the necessary autoload mappings.
          */
-        if ( ! class_exists( 'ComposerAutoloaderInitTPShippingManager' ) ) {
-            require_once dirname( __FILE__ ) . '/vendor/autoload.php';
-        }
+        // if ( ! class_exists( 'ComposerAutoloaderInitTPShippingManager' ) ) {
+		require_once dirname( __FILE__ ) . '/vendor/autoload.php';
+        // }
     }
 
     /**
