@@ -11,8 +11,8 @@ class Admin {
     use Hook;
 
     public function __construct() {
-        $this->action( 'plugins_loaded', function() {
-            // ( new Settings() )->init();
+        $this->action( 'init', function() {
+            echo "Hello";
         } );
     }
 }

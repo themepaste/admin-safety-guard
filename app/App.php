@@ -5,7 +5,7 @@
  * @package ThemePaste\SecureAdmin
  */
 
-namespace ThemePaste\SecureAdmin\App;
+namespace ThemePaste\SecureAdmin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -40,7 +40,7 @@ final class App {
 
 		// Register admin-specific hooks and classes.
 		if ( is_admin() ) {
-			// new Classes\Admin();
+			new Classes\Admin();
 		}
 
 		// Register frontend-specific hooks and classes.
