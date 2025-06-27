@@ -5,6 +5,7 @@ namespace ThemePaste\SecureAdmin\Classes;
 defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Traits\Hook;
+use ThemePaste\SecureAdmin\Helpers\Utility;
 
 class Admin {
 
@@ -58,7 +59,7 @@ class Admin {
      * @action admin_menu
      */
     public function settings_page_layout() {
-        require_once( TPSA_PLUGIN_DIR . '/views/settings.php' );
+        printf( '%s', Utility::get_template( 'settings/layout.php' ) );
     }
 
     public function settings_link( $links ) {
