@@ -1,6 +1,6 @@
 <?php 
 
-if ( ! function_exists( 'tpsa_features_lists' ) ) {
+if ( ! function_exists( 'tpsa_settings_option' ) ) {
 /**
  * Returns an associative array of features available for the Secure Admin plugin.
  *
@@ -12,9 +12,9 @@ if ( ! function_exists( 'tpsa_features_lists' ) ) {
  *
  * @return array Associative array of available features.
  */
-    function tpsa_features_lists() {
+    function tpsa_settings_option() {
         return apply_filters(
-            'tpsa_features_lists',
+            'tpsa_settings_option',
             array(
                 'dashboard' => array(
                     'label' => __( 'Dashboard', 'shipping-manager' ),
