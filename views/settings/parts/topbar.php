@@ -19,11 +19,7 @@
 
     <!-- Right-aligned topbar info area -->
     <div class="tpsa-topbar-info-area">
-        <!-- Link to plugin documentation -->
-        <!-- <a href="#" target="_blank"> -->
-            <!-- <?php esc_html_e( 'Documentation', 'tp-secure-plugin' ); ?> -->
-            <p>Version: 1.0.0</p>
-        <!-- </a> -->
+        <p>Version: 1.0.0</p>
     </div>
 </div>
 

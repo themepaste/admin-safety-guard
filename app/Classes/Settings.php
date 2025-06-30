@@ -5,6 +5,7 @@ namespace ThemePaste\SecureAdmin\Classes;
 defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Traits\Hook;
+use ThemePaste\SecureAdmin\Traits\Asset;
 use ThemePaste\SecureAdmin\Helpers\Utility;
 
 /**
@@ -17,6 +18,7 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 class Settings {
 
 	use Hook;
+	use Asset;
 
 	/**
 	 * Settings Page Slug.
@@ -44,7 +46,17 @@ class Settings {
 		);
 
 		$this->action( 'admin_menu', [ $this, 'register_settings_page' ] );
+		$this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );
 		$this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, [ $this, 'add_settings_link' ] );
+	}
+
+	public function admin_enqueue_styles( $screen ) {
+		if ( 'toplevel_page_' . self::SETTING_PAGE_ID === $screen ) {
+            $this->enqueue_style(
+                'tpsa-settings',
+                TPSA_ASSETS_URL . '/admin/css/settings.css'
+            );
+        }
 	}
 
 	/**
