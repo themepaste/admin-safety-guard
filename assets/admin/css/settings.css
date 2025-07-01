@@ -6,3 +6,31 @@
     justify-content: space-between;
     border-bottom: 1px solid #e5e5e5;
 }
+.tp-secure-admin_container {
+    display: flex;
+}
+.tpsa-siderbar-wrapper {
+    padding: 20px 10px;
+    width: 200px;
+    background-color: #f6f9f9;
+}
+.tpsa-siderbar-wrapper ul li a,
+.tpsa-siderbar-wrapper ul li a:active,
+.tpsa-siderbar-wrapper ul li a:focus,
+.tpsa-siderbar-wrapper ul li a:focus-visible,
+.tpsa-siderbar-wrapper ul li a:visited {
+    text-decoration: none;
+    display: block;
+    font-weight: 500;
+    border-radius: 3px;
+    transition: 0.3s all ease;
+    color: #3d444b;
+    outline: 0;
+    padding: 10px 10px;
+    font-size: 15px;
+    box-shadow: none;
+}
+.tpsa-siderbar-wrapper ul li a.active {
+    color: #f25500;
+    background-color: #fff;
+}

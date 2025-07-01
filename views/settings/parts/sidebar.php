@@ -1,7 +1,7 @@
 <?php defined( 'ABSPATH' ) || exit; // Exit if accessed directly ?>
 
 <!-- Sidebar wrapper for the Shipping Manager settings -->
-<div class="tpsm-siderbar-wrapper">
+<div class="tpsa-siderbar-wrapper">
     <ul>
         <?php 
             // Loop through each settings option to build the sidebar menu
