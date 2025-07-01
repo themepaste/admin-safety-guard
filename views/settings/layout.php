@@ -9,6 +9,8 @@ $current_screen     = Utility::get_screen( 'tpsa-setting' );
 $args = array(
     'settings_option' => $settings_option,
     'current_screen'  => $current_screen,
+    'prefix'          => 'tpsa',
+    'page_label'      => $settings_option[$current_screen]['label'],
 );
 ?>
 
