@@ -17,15 +17,15 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
             'tpsa_settings_option',
             array(
                 'dashboard' => array(
-                    'label' => __( 'Dashboard', 'shipping-manager' ),
+                    'label' => __( 'Dashboard', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'hide-admin-bar' => array(
-                    'label' => __( 'Hide Admin Bar', 'shipping-manager' ),
+                    'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'custom-login-url' => array(
-                    'label' => __( 'Custom URL', 'shipping-manager' ),
+                    'label' => __( 'Custom URL', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
             )
