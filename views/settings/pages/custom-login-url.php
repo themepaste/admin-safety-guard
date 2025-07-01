@@ -1,9 +1,11 @@
 <?php 
-    defined( 'ABSPATH' ) || exit; 
+    defined( 'ABSPATH' ) || exit;
+    use ThemePaste\SecureAdmin\Helpers\Utility; 
 
     $screen_slug     = $args['current_screen'];
     $settings_option = $args['settings_option'];
     $page_label      = $args['page_label'];
+    $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'];
 ?>
 
 <div class="tpsa-setting-wrapper">
@@ -14,6 +16,20 @@
     
             <!-- Switch for enable disable  -->
             <div class="tpsa-setting-row">
+                <?php 
+                    if( is_array( $current_settings_fields ) && ! empty( $current_settings_fields ) ) {
+                        foreach ( $current_settings_fields as $key => $value ) {
+                            $args =[
+                                'prefix'=> $args['prefix'],
+                                'key'   => $key,
+                                'value' => $value,
+                                'current_screen_slug' => $screen_slug,
+                            ];
+                            $field_name = $value['type'];
+                            echo Utility::get_template( 'settings/fields/' . $field_name . '.php', $args );
+                        }
+                    }
+                ?>
                 <div class="tpsa-field">
                     <div class="tpsa-field-label">
                         <label><?php esc_html_e( 'Disable/Enable:', 'tp-secure-plugin' ); ?></label>

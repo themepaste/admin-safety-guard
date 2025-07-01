@@ -4,10 +4,12 @@ defined( 'ABSPATH' ) || exit;
 use ThemePaste\SecureAdmin\Helpers\Utility;
 
 $settings_option    = tpsa_settings_option();
+$settings_fields    = tpsa_settings_fields();
 $current_screen     = Utility::get_screen( 'tpsa-setting' );
 
 $args = array(
     'settings_option' => $settings_option,
+    'settings_fields' => $settings_fields,
     'current_screen'  => $current_screen,
     'prefix'          => 'tpsa',
     'page_label'      => $settings_option[$current_screen]['label'],
