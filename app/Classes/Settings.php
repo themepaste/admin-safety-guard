@@ -46,23 +46,7 @@ class Settings {
 		);
 
 		$this->action( 'admin_menu', [ $this, 'register_settings_page' ] );
-		$this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );
 		$this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, [ $this, 'add_settings_link' ] );
-	}
-
-	public function admin_enqueue_styles( $screen ) {
-		if ( 'toplevel_page_' . self::SETTING_PAGE_ID === $screen ) {
-            $this->enqueue_style(
-                'tpsa-settings',
-                TPSA_ASSETS_URL . '/admin/css/settings.css'
-            );
-        }
-		if ( 'toplevel_page_' . self::SETTING_PAGE_ID === $screen ) {
-            $this->enqueue_style(
-                'tpsa-fields',
-                TPSA_ASSETS_URL . '/admin/css/fields.css'
-            );
-        }
 	}
 
 	/**
