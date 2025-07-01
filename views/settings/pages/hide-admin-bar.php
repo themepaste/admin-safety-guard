@@ -13,7 +13,7 @@
     <div class="tpsa-general-settings-wrapper">
         <h2><?php echo esc_html( $page_label ); // page_label; ?></h2>
         <form method="POST">
-            <?php //wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
+            <?php wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
     
             <!-- Switch for enable disable  -->
             <div class="tpsa-setting-row">
