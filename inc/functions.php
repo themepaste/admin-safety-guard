@@ -32,3 +32,46 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
         );
     }
 }
+
+if( ! function_exists( 'tpsa_settings_fields' ) ) {
+    function tpsa_settings_fields() {
+        return apply_filters(
+            'tpsa_settings_fields',
+            array(
+                'dashboard' => array(
+                    
+                ),
+                'hide-admin-bar' => array(
+                    'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => ''
+                        )
+                    )
+                ),
+                'custom-login-url' => array(
+                    'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' )
+                        ),
+                        'login-url' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Login Url', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' )
+                        ),
+
+                    )
+                ),
+            )
+        );
+    }
+}
