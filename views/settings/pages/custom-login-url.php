@@ -3,9 +3,11 @@
 
     use ThemePaste\SecureAdmin\Helpers\Utility; 
 
+    $prefix          = $args['prefix'];
     $screen_slug     = $args['current_screen'];
     $settings_option = $args['settings_option'];
     $page_label      = $args['page_label'];
+    $submit_button   = $prefix . '-' . $screen_slug . '_submit';
     $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'];
 ?>
 
@@ -34,7 +36,12 @@
             </div>
             
             <div class="tpsa-save-button">
-                <button type="submit" name="tpsa-shipping-fees_submit"><?php esc_html_e( 'Save Settings', 'tp-secure-plugin' ); ?></button>
+                <?php
+                    printf( '<button type="submit" name="%1$s">%2$s</button>',
+                        $submit_button,
+                        esc_html__( 'Save Settings', 'tp-secure-plugin' ) 
+                    );
+                ?>
             </div>
         </form>
     </div>
