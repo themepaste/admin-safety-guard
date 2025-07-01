@@ -11,7 +11,7 @@ $args = array(
     'settings_option' => $settings_option,
     'settings_fields' => $settings_fields,
     'current_screen'  => $current_screen,
-    'prefix'          => 'tpsa',
+    'prefix'          => get_tpsa_prefix(),
     'page_label'      => $settings_option[$current_screen]['label'],
 );
 ?>

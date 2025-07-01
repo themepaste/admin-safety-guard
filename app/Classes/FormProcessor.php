@@ -23,14 +23,14 @@ class FormProcessor {
 
         // Get settings fields from a global or helper method
         $all_fields = tpsa_settings_fields();
-        $fields = $all_fields[ $screen_slug ]['fields'] ?? [];
+        $fields     = $all_fields[ $screen_slug ]['fields'] ?? [];
 
         // Build settings data
         $sanitized = [];
 
         foreach ( $fields as $key => $field ) {
-            $abc = 'tpsa-' . $screen_slug . '_' . $key;
-            $raw = $_POST[ $abc ];
+            $field_name = get_tpsa_prefix() . $screen_slug . '_' . $key;
+            $raw        = $_POST[ $field_name ] ?? null;
 
             // Basic sanitization logic (customize based on field type)
             switch ( $field['type'] ) {
@@ -47,7 +47,7 @@ class FormProcessor {
         }
 
          // Save settings
-        $option_key = $screen_slug . '_settings';
+        $option_key = get_tpsa_prefix() . $screen_slug . '_settings';
         update_option( $option_key, $sanitized );
 
         // Redirect or render message

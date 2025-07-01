@@ -7,7 +7,7 @@
 
     defined( 'ABSPATH' ) || exit;
 
-    $id_name = esc_attr( $args['prefix'] . '-' . $args['current_screen_slug'] . '_' . $args['key'] );
+    $id_name = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
     
     $field_template = '
         <div class="tp-field">
