@@ -7,7 +7,7 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 ?>
 
 <!-- Main content wrapper for the Shipping Manager settings page -->
-<div class="tpsm-main-wrapper">
+<div class="tpsa-main-wrapper">
     <?php 
         // Loop through the available settings options
         foreach ( $settings_option as $key => $value ) {

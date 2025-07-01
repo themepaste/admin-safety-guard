@@ -7,6 +7,7 @@
     border-bottom: 1px solid #e5e5e5;
 }
 .tp-secure-admin_container {
+    background-color: #fff;
     display: flex;
 }
 .tpsa-siderbar-wrapper {
@@ -33,4 +34,20 @@
 .tpsa-siderbar-wrapper ul li a.active {
     color: #f25500;
     background-color: #fff;
+}
+.tpsa-main-wrapper {
+    padding: 50px;
+    padding-bottom: 100px;
+    padding-top: 30px;
+    width: calc(100% - 200px);
+    position: relative;
+}
+.tpsa-setting-wrapper h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #1d2327;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
 }
