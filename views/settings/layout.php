@@ -5,14 +5,14 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 
 $settings_option    = tpsa_settings_option();
 $settings_fields    = tpsa_settings_fields();
-$current_screen     = Utility::get_screen( 'tpsa-setting' );
+$current_screen     = Utility::get_screen( 'tpsa-setting' ) ?? null;
 
 $args = array(
     'settings_option' => $settings_option,
     'settings_fields' => $settings_fields,
     'current_screen'  => $current_screen,
     'prefix'          => get_tpsa_prefix(),
-    'page_label'      => $settings_option[$current_screen]['label'],
+    'page_label'      => !is_null( $current_screen ) ? $settings_option[$current_screen]['label'] : '',
 );
 ?>
 

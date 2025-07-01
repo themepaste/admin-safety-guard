@@ -55,7 +55,7 @@ class FormProcessor {
             array(
                 'page'          => Settings::$SETTING_PAGE_ID,
                 'tpsa-setting'  => $screen_slug,
-                'settings-updated' => true
+                'settings-saved' => true
             ),
             admin_url( 'admin.php' )
         ) );

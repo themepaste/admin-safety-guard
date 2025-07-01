@@ -76,17 +76,17 @@ class Settings {
 	 */
 	public function render_settings_page() {
 
-		 if ( ! isset( $_GET['tpsa-setting'] ) ) {
-            $redirect_url = add_query_arg(
-                [
-                    'tpsa-setting'  => 'dashboard',
-                ],
-                $this->setting_page_url
-            );
+		// if ( ! isset( $_GET['tpsa-setting'] ) ) {
+        //     $redirect_url = add_query_arg(
+        //         [
+        //             'tpsa-setting'  => 'dashboard',
+        //         ],
+        //         $this->setting_page_url
+        //     );
 
-            wp_safe_redirect( $redirect_url );
-            exit;
-        }
+        //     wp_safe_redirect( $redirect_url );
+        //     exit;
+        // }
 
         printf( '%s', Utility::get_template( 'settings/layout.php' ) );
 	}
