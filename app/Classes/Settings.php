@@ -57,6 +57,12 @@ class Settings {
                 TPSA_ASSETS_URL . '/admin/css/settings.css'
             );
         }
+		if ( 'toplevel_page_' . self::SETTING_PAGE_ID === $screen ) {
+            $this->enqueue_style(
+                'tpsa-fields',
+                TPSA_ASSETS_URL . '/admin/css/fields.css'
+            );
+        }
 	}
 
 	/**

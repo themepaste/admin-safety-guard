@@ -30,28 +30,6 @@
                         }
                     }
                 ?>
-                <div class="tpsa-field">
-                    <div class="tpsa-field-label">
-                        <label><?php esc_html_e( 'Disable/Enable:', 'tp-secure-plugin' ); ?></label>
-                    </div>
-                    <div class="tpsa-field-input">
-                        <div class="tpsa-switch-wrapper">
-                            <input class="tpsa-switch" type="checkbox" id="tpsa-shipping-fees-disable-enable" name="tpsa-shipping-fees-disable-enable" <?php echo 'checked'; ?> /><label for="tpsa-shipping-fees-disable-enable" class="tpsa-switch-label"></label>
-                        </div>
-                        <p class="tpsa-field-desc"><?php esc_html_e( 'To enable/disable this feature.', 'tp-secure-plugin' ); ?></p>
-                    </div>
-                </div>
-                <div class="tpsa-field">
-                    <div class="tpsa-field-label">
-                        <label><?php esc_html_e( 'Login URL', 'tp-secure-plugin' ); ?></label>
-                    </div>
-                    <div class="tpsa-field-input">
-                        <div class="tpsa-switch-wrapper">
-                            <input type="text" id="tpsm-shipping-fees-flat-rate-amount" name="tpsa-shipping-fees-flat-rate-amount" value="">
-                        </div>
-                        <p class="tpsa-field-desc"><?php esc_html_e( 'Protect your website by changing the login page URL. ', 'tp-secure-plugin' ); ?></p>
-                    </div>
-                </div>
             </div>
             
             <div class="tpsa-save-button">
