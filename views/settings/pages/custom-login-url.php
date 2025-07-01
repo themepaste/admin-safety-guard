@@ -1,5 +1,6 @@
 <?php 
     defined( 'ABSPATH' ) || exit;
+    
     use ThemePaste\SecureAdmin\Helpers\Utility; 
 
     $screen_slug     = $args['current_screen'];

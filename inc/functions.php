@@ -56,7 +56,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                     'fields' => array(
                         'enable' => array(
                             'type'  => 'switch',
-                            'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
+                            'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' )
