@@ -75,3 +75,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
         );
     }
 }
+
+// function get_tpsa_prefix() {
+//     return 'tpsa_';
+// }

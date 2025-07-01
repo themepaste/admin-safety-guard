@@ -25,7 +25,7 @@ class Settings {
 	 *
 	 * @var string
 	 */
-	const SETTING_PAGE_ID = 'tp-secure-admin';
+	public static $SETTING_PAGE_ID = 'tp-secure-admin';
 
 	/**
 	 * Admin settings page URL.
@@ -40,13 +40,16 @@ class Settings {
 	public function init() {
 		$this->setting_page_url = add_query_arg(
 			[
-				'page' => self::SETTING_PAGE_ID,
+				'page' => self::$SETTING_PAGE_ID,
 			],
 			admin_url( 'admin.php' )
 		);
 
 		$this->action( 'admin_menu', [ $this, 'register_settings_page' ] );
 		$this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, [ $this, 'add_settings_link' ] );
+
+		//Process and save settings
+		$this->action( 'admin_post_tpsa_process_form', [ FormProcessor::class, 'process_form' ] );
 	}
 
 	/**
@@ -59,7 +62,7 @@ class Settings {
 			esc_html__( 'Secure Admin', 'shipping-manager' ),
 			esc_html__( 'Secure Admin', 'shipping-manager' ),
 			'manage_options',
-			self::SETTING_PAGE_ID,
+			self::$SETTING_PAGE_ID,
 			[ $this, 'render_settings_page' ],
 			'dashicons-lock',
 			56
@@ -72,7 +75,20 @@ class Settings {
 	 * @return void
 	 */
 	public function render_settings_page() {
-		echo Utility::get_template( 'settings/layout.php' );
+
+		 if ( ! isset( $_GET['tpsa-setting'] ) ) {
+            $redirect_url = add_query_arg(
+                [
+                    'tpsa-setting'  => 'dashboard',
+                ],
+                $this->setting_page_url
+            );
+
+            wp_safe_redirect( $redirect_url );
+            exit;
+        }
+
+        printf( '%s', Utility::get_template( 'settings/layout.php' ) );
 	}
 
 	/**

@@ -33,7 +33,7 @@ final class App {
 		// new Classes\Install();
 
 		// Load common functionality (AJAX, scripts, etc.)
-		// new Classes\Common();
+		new Classes\Common();
 
 		// Register shipping methods setup.
 		// new Classes\Shipping\ShippingMethods();

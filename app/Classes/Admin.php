@@ -12,13 +12,9 @@ class Admin {
     use Hook;
     use Asset;
 
-    
-    private $settings;
-
     public function __construct() {
         $this->action( 'plugins_loaded', function() {
-            $this->settings = new Settings();
-            $this->settings->init();
+            ( new Settings() )->init();
         } );
         $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );
     }
@@ -31,13 +27,13 @@ class Admin {
      * @return void
      */
     public function admin_enqueue_styles( $screen ) {
-		if ( 'toplevel_page_' . $this->settings::SETTING_PAGE_ID === $screen ) {
+		if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen ) {
             $this->enqueue_style(
                 'tpsa-settings',
                 TPSA_ASSETS_URL . '/admin/css/settings.css'
             );
         }
-		if ( 'toplevel_page_' . $this->settings::SETTING_PAGE_ID === $screen ) {
+		if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen ) {
             $this->enqueue_style(
                 'tpsa-fields',
                 TPSA_ASSETS_URL . '/admin/css/fields.css'
