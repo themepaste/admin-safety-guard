@@ -19,10 +19,10 @@
                 <p class="tp-field-desc">%4$s</p>
             </div>
         </div>',
-        $args['value']['label'],                                                    // %1$s == Label
-        $args['prefix'] . '-' . $args['current_screen_slug'] . '_' . $args['key'],  // %2$s == ID & Name
-        $args['value']['id'],                                                       // %3$s == value
-        $args['value']['desc']                                                      // %4$s == Description
+        esc_html( $args['value']['label'] ),                                                    // %1$s == Label
+        esc_attr( $args['prefix'] . '-' . $args['current_screen_slug'] . '_' . $args['key'] ),  // %2$s == ID & Name
+        esc_attr( $args['value']['id'] ),                                                       // %3$s == value
+        esc_html( $args['value']['desc'] )                                                     // %4$s == Description
     );
 ?>
 
