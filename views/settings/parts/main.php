@@ -16,8 +16,8 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
             if ( $current_screen === $key ) {
 
                 // Attempt to retrieve the template for the active settings page
-                $template = Utility::get_template( 'settings/pages/' . $key . '.php', $args );
-                $pro_template = Utility::get_pro_template( 'settings/pages/' . $key . '.php', $args );
+                $template       = Utility::get_template( 'settings/pages/' . $key . '.php', $args );
+                $pro_template   = Utility::get_pro_template( 'settings/pages/' . $key . '.php', $args );
 
                 // If a valid template is returned, output it
                 if ( $template ) {
@@ -26,14 +26,14 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
                     echo $pro_template;
                 } else {
                     ?>
-                    <div style="text-align: center;">
+                    <!-- <div style="text-align: center;">
                         <p style="margin-top: 50px; font-size: 16px;">
-                            <?php esc_html_e( 'To Enable this Feature you need to purchase Pro', 'shipping-manager' ); ?>
+                            <?php // esc_html_e( 'To Enable this Feature you need to purchase Pro', 'shipping-manager' ); ?>
                         </p>
                         <button style="padding:10px 35px; background:#f25500; color: #fff; border:none; cursor:pointer; border-radius: 4px;">
-                            <?php esc_html_e( 'Upgrade to Pro', 'shipping-manager' ); ?>
+                            <?php // esc_html_e( 'Upgrade to Pro', 'shipping-manager' ); ?>
                         </button>
-                    </div>
+                    </div> -->
                     <?php
                 }
             }
