@@ -8,6 +8,8 @@
     $settings_option = $args['settings_option'];
     $page_label      = $args['page_label'];
     $submit_button   = $prefix . '-' . $screen_slug . '_submit';
+    $option_name     = $args['option_name'];
+    $saved_settings  = get_option( $option_name, [] );
     $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'];
 ?>
 
@@ -27,7 +29,8 @@
                             $args =[
                                 'prefix'=> $args['prefix'],
                                 'key'   => $key,
-                                'value' => $value,
+                                'field' => $value,
+                                'value' => isset( $saved_settings[$key] ) ?  $saved_settings[$key] : '',
                                 'current_screen_slug' => $screen_slug,
                             ];
                             $field_name = $value['type'];

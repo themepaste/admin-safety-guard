@@ -7,7 +7,8 @@
 
     defined( 'ABSPATH' ) || exit;
 
-    $id_name = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
+    $id_name    = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
+    $value      = isset( $args['value'] ) && ! empty( $args['value'] ) ? $args['value'] : '';
     
     $field_template = '
         <div class="tp-field">
@@ -24,10 +25,10 @@
     $field_template = apply_filters( $id_name, $field_template, $args );
 
     printf( $field_template,
-        esc_html( $args['value']['label'] ),    // %1$s == Label
+        esc_html( $args['field']['label'] ),    // %1$s == Label
         $id_name,                               // %2$s == ID & Name
-        esc_attr( $args['value']['id'] ),       // %3$s == value
-        esc_html( $args['value']['desc'] )      // %4$s == Description
+        esc_attr( $value ),                     // %3$s == value
+        esc_html( $args['field']['desc'] )      // %4$s == Description
     );
 ?>
 

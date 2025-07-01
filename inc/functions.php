@@ -34,6 +34,18 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
 }
 
 if( ! function_exists( 'tpsa_settings_fields' ) ) {
+/**
+ * Returns an associative array of settings fields available for the Secure Admin plugin.
+ *
+ * The array is composed of feature slugs as keys and arrays of 'fields' as values.
+ * Each 'fields' array is composed of field slugs as keys and arrays of 'type', 'label', 'class', 'id', and 'desc' as values.
+ *
+ * @since 1.0.0
+ *
+ * @filter tpsa_settings_fields
+ *
+ * @return array Associative array of available settings fields.
+ */
     function tpsa_settings_fields() {
         return apply_filters(
             'tpsa_settings_fields',
@@ -76,6 +88,28 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
     }
 }
 
-function get_tpsa_prefix() {
-    return 'tpsa_';
+if( ! function_exists( 'get_tpsa_prefix' ) ) {
+    /**
+     * Returns the prefix used for options and other identifiers throughout the plugin.
+     *
+     * @since 1.0.0
+     *
+     * @return string The prefix used by the plugin.
+     */
+    function get_tpsa_prefix() {
+        return 'tpsa_';
+    }
+}
+
+/**
+ * Returns the option name used to store the settings for a given screen slug.
+ *
+ * @since 1.0.0
+ *
+ * @param string $screen_slug The screen slug.
+ *
+ * @return string The option name used to store the settings.
+ */
+function get_tpsa_settings_option_name( $screen_slug ) {
+    return get_tpsa_prefix() . $screen_slug . '_settings';
 }

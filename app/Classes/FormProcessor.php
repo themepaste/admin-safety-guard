@@ -47,8 +47,8 @@ class FormProcessor {
         }
 
          // Save settings
-        $option_key = get_tpsa_prefix() . $screen_slug . '_settings';
-        update_option( $option_key, $sanitized );
+        $option_name = get_tpsa_settings_option_name( $screen_slug );
+        update_option( $option_name, $sanitized );
 
         // Redirect or render message
         wp_redirect( add_query_arg( 

@@ -8,6 +8,8 @@
     $settings_option = $args['settings_option'];
     $page_label      = $args['page_label'];
     $submit_button   = $prefix . '-' . $screen_slug . '_submit';
+    $option_name     = $args['option_name'];
+    $saved_settings  = get_option( $option_name, [] );
     $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'];
 ?>
 
@@ -23,14 +25,15 @@
             <div class="tpsa-setting-row">
                 <?php 
                     if( is_array( $current_settings_fields ) && ! empty( $current_settings_fields ) ) {
-                        foreach ( $current_settings_fields as $key => $value ) {
+                        foreach ( $current_settings_fields as $key => $field ) {
                             $args =[
                                 'prefix'=> $args['prefix'],
                                 'key'   => $key,
-                                'value' => $value,
-                                'current_screen_slug' => $screen_slug,
+                                'field' => $field,
+                                'value' => isset( $saved_settings[$key] ) ?  $saved_settings[$key] : '',
+                                'current_screen_slug'   => $screen_slug,
                             ];
-                            $field_name = $value['type'];
+                            $field_name = $field['type'];
                             echo Utility::get_template( 'settings/fields/' . $field_name . '.php', $args );
                         }
                     }
