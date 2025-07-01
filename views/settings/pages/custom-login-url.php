@@ -37,8 +37,7 @@
             
             <div class="tpsa-save-button">
                 <?php
-                    printf( '<button type="submit" name="%1$s">%2$s</button>',
-                        $submit_button,
+                    printf( '<button type="submit">%1$s</button>',
                         esc_html__( 'Save Settings', 'tp-secure-plugin' ) 
                     );
                 ?>
