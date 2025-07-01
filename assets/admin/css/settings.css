@@ -90,7 +90,7 @@
 }
 /* End fieldset */
 
-/*== switch style ==*/
+/*== start switch style ==*/
 .tpsa-switch-wrapper {
     position: relative;
 }
@@ -136,8 +136,7 @@
 .tpsa-switch-label:active:after {
     width: 50px;
 }
-
-/*== end switch style ==*/
+/*== End switch style ==*/
 
 .tpsa-setting-wrapper .tpsa-save-button {
     margin-top: 50px;
