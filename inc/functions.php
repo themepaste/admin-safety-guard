@@ -61,6 +61,15 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'class' => '',
                             'id'    => '',
                             'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0
+                        ),
+                        'disable-for-admin' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Disable for Admin', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 1
                         )
                     )
                 ),
@@ -72,6 +81,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0,
                         ),
                         'login-url' => array(
                             'type'  => 'text',
@@ -79,6 +89,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' ),
+                            'default' => '',
                         ),
 
                     )

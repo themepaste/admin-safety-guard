@@ -30,7 +30,7 @@
                                 'prefix'=> $args['prefix'],
                                 'key'   => $key,
                                 'field' => $value,
-                                'value' => isset( $saved_settings[$key] ) ?  $saved_settings[$key] : '',
+                                'value' => isset( $saved_settings[$key] ) ?  $saved_settings[$key] : $value['default'],
                                 'current_screen_slug' => $screen_slug,
                             ];
                             $field_name = $value['type'];
