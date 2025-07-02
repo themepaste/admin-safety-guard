@@ -25,7 +25,11 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'class' => '',
                 ),
                 'custom-login-url' => array(
-                    'label' => __( 'Custom URL', 'tp-secure-plugin' ),
+                    'label' => __( 'Custom Login URL', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
+                'limit-login-attempts' => array(
+                    'label' => __( 'Limit Login Attempts', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
             )
@@ -94,6 +98,18 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
 
                     )
                 ),
+                'limit-login-attempts' => array(
+                    'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Enable', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                    )
+                )
             )
         );
     }
