@@ -89,13 +89,30 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' ),
-                            'default' => '',
+                            'default' => get_tpsa_site_login_path(),
                         ),
 
                     )
                 ),
             )
         );
+    }
+}
+
+if(  ! function_exists( 'get_tpsa_site_login_path' ) ) {
+    /**
+     * Returns the relative path of the WordPress login URL.
+     *
+     * @since 1.0.0
+     *
+     * @return string The relative path of the WordPress login URL.
+     */
+    function get_tpsa_site_login_path() {
+        $site_url  = get_site_url();
+        $login_url = wp_login_url();
+        $relative_path = str_replace( trailingslashit( $site_url ), '', trailingslashit( $login_url ) );
+
+        return $relative_path;
     }
 }
 

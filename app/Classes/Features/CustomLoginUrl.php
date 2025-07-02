@@ -47,7 +47,33 @@ class CustomLoginUrl implements FeatureInterface {
 
     public function register_hooks() {
         $this->action( 'init', [$this, 'custom_login_url']);
-        
+        $this->filter( 'tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_url_field'], 10, 2 );
+    }
+
+    /**
+     * Modifies the custom login URL field to include the site URL.
+     *
+     * Prepend the site URL to the field template to provide a better user experience.
+     *
+     * @since 1.0.0
+     *
+     * @param string $template The field template.
+     * @param array  $args     The field args.
+     *
+     * @return string The modified field template.
+     */
+    public function modify_the_custom_login_url_field( $template, $args ) {
+
+        $site_url = get_site_url();
+
+        $template = str_replace(
+			'<input type="text" id="%2$s" name="%2$s" value="%3$s">',
+			$site_url . '/<input type="text" id="%2$s" name="%2$s" value="%3$s">',
+			$template
+		);
+
+
+        return $template;
     }
 
     

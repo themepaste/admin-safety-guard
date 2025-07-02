@@ -29,6 +29,7 @@ class FeatureManager {
     private function load_features() {
         $features = [
             Features\HideAdminBar::class,
+            Features\CustomLoginUrl::class,
         ];
 
         foreach ( $features as $feature ) {
