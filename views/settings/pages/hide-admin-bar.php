@@ -25,15 +25,15 @@
             <div class="tpsa-setting-row">
                 <?php 
                     if( is_array( $current_settings_fields ) && ! empty( $current_settings_fields ) ) {
-                        foreach ( $current_settings_fields as $key => $value ) {
+                        foreach ( $current_settings_fields as $key => $field ) {
                             $args =[
                                 'prefix'=> $args['prefix'],
                                 'key'   => $key,
-                                'field' => $value,
-                                'value' => isset( $saved_settings[$key] ) ?  $saved_settings[$key] : $value['default'],
+                                'field' => $field,
+                                'value' => isset( $saved_settings[$key] ) ?  $saved_settings[$key] : $field['default'],
                                 'current_screen_slug' => $screen_slug,
                             ];
-                            $field_name = $value['type'];
+                            $field_name = $field['type'];
                             echo Utility::get_template( 'settings/fields/' . $field_name . '.php', $args );
                         }
                     }
