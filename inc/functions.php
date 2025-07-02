@@ -65,7 +65,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                         'disable-for-admin' => array(
                             'type'  => 'switch',
-                            'label' => __( 'Disable for Admin', 'tp-secure-plugin' ),
+                            'label' => __( 'Disable for Administrator', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
                             'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),

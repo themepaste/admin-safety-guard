@@ -39,7 +39,16 @@ class HideAdminBar implements FeatureInterface {
         $settings       = get_option( $option_name, [] );
         if( ! empty( $settings ) && is_array( $settings ) ) {
             if( isset( $settings['enable'] ) && $settings['enable'] == 1 ) {
-                $this->filter( 'show_admin_bar', '__return_false');
+                if( isset( $settings['disable-for-admin'] ) && $settings['disable-for-admin'] == 1 ) {
+                    $this->filter( 'show_admin_bar', function( $show ) {
+                        if ( ! current_user_can( 'administrator' ) ) {
+                            return false;
+                        }
+                        return $show;
+                    } );
+                }else {
+                    $this->filter( 'show_admin_bar', '__return_false');
+                }
             }
         }
     }
