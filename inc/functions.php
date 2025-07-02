@@ -126,7 +126,12 @@ if(  ! function_exists( 'get_tpsa_site_login_path' ) ) {
     function get_tpsa_site_login_path() {
         $site_url  = get_site_url();
         $login_url = wp_login_url();
-        $relative_path = str_replace( trailingslashit( $site_url ), '', trailingslashit( $login_url ) );
+
+        // Remove site URL from login URL
+        $relative_path = str_replace( $site_url, '', $login_url );
+
+        // Trim any leading/trailing slashes
+        $relative_path = trim( $relative_path, '/' );
 
         return $relative_path;
     }

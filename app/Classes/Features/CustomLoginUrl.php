@@ -68,7 +68,7 @@ class CustomLoginUrl implements FeatureInterface {
 
         $template = str_replace(
 			'<input type="text" id="%2$s" name="%2$s" value="%3$s">',
-			$site_url . '/<input type="text" id="%2$s" name="%2$s" value="%3$s">',
+			$site_url . '/<input type="text" id="%2$s" name="%2$s" value="%3$s">' . get_tpsa_site_login_path(),
 			$template
 		);
 
@@ -83,7 +83,7 @@ class CustomLoginUrl implements FeatureInterface {
         if( ! empty( $settings ) && is_array( $settings ) ) {
             if( isset( $settings['enable'] ) && $settings['enable'] == 1 ) {
                 if( isset( $settings['login-url'] ) && ! empty( $settings['login-url'] ) ) {
-                    
+
                 }
             }
         }
