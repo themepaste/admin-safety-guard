@@ -57,10 +57,10 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                     'fields' => array(
                         'enable' => array(
                             'type'  => 'switch',
-                            'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
+                            'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => ''
+                            'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
                         )
                     )
                 ),
@@ -71,14 +71,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' )
+                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
                         ),
                         'login-url' => array(
                             'type'  => 'text',
                             'label' => __( 'Login Url', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' )
+                            'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' ),
                         ),
 
                     )
