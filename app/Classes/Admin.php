@@ -12,6 +12,17 @@ class Admin {
     use Hook;
     use Asset;
 
+    /**
+     * Admin constructor.
+     *
+     * Initializes the Secure Admin plugin by triggering the
+     * initialization of the settings page and enqueueing the
+     * admin styles.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function __construct() {
         $this->action( 'plugins_loaded', function() {
             ( new Settings() )->init();
