@@ -13,16 +13,33 @@ class HideAdminBar implements FeatureInterface {
 
     private $features_id = 'hide-admin-bar';
 
+    /**
+     * Registers the WordPress hooks for the HideAdminBar feature.
+     *
+     * Hooks the 'init' action to the 'hide_admin_bar' method.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+
     public function register_hooks() {
         $this->action( 'init', [$this, 'hide_admin_bar']);
     }
 
+    /**
+     * Hide the admin bar when the feature is enabled.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function hide_admin_bar() {
         $option_name    = get_tpsa_settings_option_name( $this->features_id );
         $settings       = get_option( $option_name, [] );
         if( ! empty( $settings ) && is_array( $settings ) ) {
             if( isset( $settings['enable'] ) && $settings['enable'] == 1 ) {
-                add_filter( 'show_admin_bar', '__return_false');
+                $this->filter( 'show_admin_bar', '__return_false');
             }
         }
     }

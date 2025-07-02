@@ -8,10 +8,24 @@ use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 
 class FeatureManager {
 
+    /**
+     * Loads all features.
+     *
+     * @since 1.0.0
+     */
     public function __construct() {
         $this->load_features();
     }
 
+    /**
+     * Loads all features.
+     *
+     * Iterates over the list of features, checks if the class exists and implements the FeatureInterface.
+     * If the class exists and implements the interface, an instance of the class is created and its
+     * register_hooks() method is called.
+     *
+     * @since 1.0.0
+     */
     private function load_features() {
         $features = [
             Features\HideAdminBar::class,
