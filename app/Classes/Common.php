@@ -14,6 +14,5 @@ class Common {
     use Asset;
 
     public function __construct() {
-        
     }
 }
