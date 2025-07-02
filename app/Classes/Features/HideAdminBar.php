@@ -7,10 +7,32 @@ defined( 'ABSPATH' ) || exit;
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
+/**
+ * Feature: HideAdminBar
+ *
+ * Hides the WordPress admin bar based on plugin settings.
+ *
+ * @package ThemePaste\SecureAdmin\Classes\Features
+ * @since   1.0.0
+ */
 class HideAdminBar implements FeatureInterface {
 
     use Hook;
 
+    /**
+     * Unique feature ID for settings reference and settings screen slug.
+     *
+     * This ID corresponds to:
+     * - The feature key in the `tpsa_settings_fields()` configuration array.
+     * - The `tpsa-setting` query parameter in the admin settings screen URL.
+     *
+     * Example usage:
+     * - Settings array: tpsa_settings_fields()['hide-admin-bar']
+     * - Admin page URL: wp-admin/admin.php?page=tp-secure-admin&tpsa-setting=hide-admin-bar
+     *
+     * @since 1.0.0
+     * @var string
+     */
     private $features_id = 'hide-admin-bar';
 
     /**
@@ -28,7 +50,11 @@ class HideAdminBar implements FeatureInterface {
     }
 
     /**
-     * Hide the admin bar when the feature is enabled.
+     * Hides the admin bar.
+     *
+     * Checks the settings for the feature and if the feature is enabled, it filters the 'show_admin_bar' hook
+     * to disable the admin bar. If the 'disable-for-admin' option is set to true, it only disables the admin bar
+     * for non-admin users.
      *
      * @since 1.0.0
      *
