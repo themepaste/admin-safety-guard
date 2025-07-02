@@ -82,7 +82,9 @@ class CustomLoginUrl implements FeatureInterface {
 
         if( ! empty( $settings ) && is_array( $settings ) ) {
             if( isset( $settings['enable'] ) && $settings['enable'] == 1 ) {
-                
+                if( isset( $settings['login-url'] ) && ! empty( $settings['login-url'] ) ) {
+                    
+                }
             }
         }
     }
