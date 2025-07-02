@@ -35,6 +35,8 @@ class CustomLoginUrl implements FeatureInterface {
      */
     private $features_id = 'custom-login-url';
 
+    private $custom_login_path = '';
+
     /**
      * Registers the WordPress hooks for the HideAdminBar feature.
      *
@@ -83,9 +85,101 @@ class CustomLoginUrl implements FeatureInterface {
         if( ! empty( $settings ) && is_array( $settings ) ) {
             if( isset( $settings['enable'] ) && $settings['enable'] == 1 ) {
                 if( isset( $settings['login-url'] ) && ! empty( $settings['login-url'] ) ) {
-
+                    $this->custom_login_path = $settings['login-url'];
+                    $this->register_custom_login_url( $this->custom_login_path );
                 }
             }
         }
+    }
+
+    private function register_custom_login_url( $custom_login_path ) {
+        if( empty( $custom_login_path ) ) {
+            return;
+        }
+        $this->action( 'init', [$this, 'tpsa_custom_login_rewrite'], 1 );
+        $this->action( 'init', [$this, 'return_404_for_wp_login'], 1 );
+        $this->action( 'init', [$this, 'return_404_for_wp_admin'] );
+        $this->filter( 'login_url', [$this, 'change_login_url'], 10, 3 );
+    }
+
+
+    public function tpsa_custom_login_rewrite() {
+        if( empty( $this->custom_login_path ) ) {
+            return;
+        }
+
+         global $pagenow;
+
+        // Block direct wp-login.php access (except logout)
+        if (
+            strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false &&
+            ( !isset($_GET['action']) || $_GET['action'] !== 'logout' ) &&
+            !is_admin()
+        ) {
+            wp_redirect( home_url( $this->custom_login_path ) );
+            exit;
+        }
+
+        // If visiting /login, load wp-login.php
+        if ( trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/') === $this->custom_login_path ) {
+            global $user_login, $error, $interim_login, $redirect_to;
+
+            // Initialize variables expected by wp-login.php
+            $user_login    = isset( $_GET['user_login'] ) ? sanitize_user( $_GET['user_login'] ) : '';
+            $error         = '';
+            $interim_login = false;
+            $redirect_to   = isset( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to'] ) : '';
+
+            require_once ABSPATH . 'wp-login.php';
+            exit;
+        }
+    }
+
+    public function return_404_for_wp_login() {
+        if (
+            strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false &&
+            (!isset($_GET['action']) || $_GET['action'] !== 'logout')
+        ) {
+            global $wp_query;
+            $wp_query->set_404();
+            status_header(404);
+            nocache_headers();
+            include get_404_template(); // or use custom template
+            exit;
+        }
+    }
+
+    public function return_404_for_wp_admin() {
+        if (
+            is_admin() &&
+            !is_user_logged_in() &&
+            !( defined('DOING_AJAX' ) && DOING_AJAX)
+        ) {
+            global $wp_query;
+            $wp_query->set_404();
+            status_header( 404 );
+            nocache_headers();
+            include get_404_template(); // or use a custom page if desired
+            exit;
+        }
+    }
+
+    public function change_login_url( $login_url, $redirect, $force_reauth ) {
+
+        if( empty( $this->custom_login_path ) ) {
+            return $login_url;
+        }
+
+        $custom_url = home_url( $this->custom_login_path );
+
+        if ( !empty( $redirect ) ) {
+            $custom_url = add_query_arg( 'redirect_to', urlencode( $redirect ), $custom_url );
+        }
+
+        if ( $force_reauth ) {
+            $custom_url = add_query_arg( 'reauth', '1', $custom_url );
+        }
+
+        return $custom_url;
     }
 }
