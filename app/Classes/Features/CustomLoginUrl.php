@@ -72,7 +72,6 @@ class CustomLoginUrl implements FeatureInterface {
 			$template
 		);
 
-
         return $template;
     }
 
