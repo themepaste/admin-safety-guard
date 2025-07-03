@@ -108,6 +108,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
+                         'max-attempts' => array(
+                            'type'  => 'number',
+                            'label' => __( 'Max Login Attempts', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Maximum number of login attempts.', 'tp-secure-plugin' ),
+                            'default' => 5,
+                        ),
                     )
                 )
             )
