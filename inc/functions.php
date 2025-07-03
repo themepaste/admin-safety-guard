@@ -20,12 +20,12 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'hide-admin-bar' => array(
-                    'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
+                'admin-bar' => array(
+                    'label' => __( 'Admin Bar', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'custom-login-url' => array(
-                    'label' => __( 'Custom Login URL', 'tp-secure-plugin' ),
+                    'label' => __( 'Login/Logout', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'limit-login-attempts' => array(
@@ -61,11 +61,11 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                 'analytics' => array(
                     
                 ),
-                'hide-admin-bar' => array(
+                'admin-bar' => array(
                     'fields' => array(
                         'enable' => array(
                             'type'  => 'switch',
-                            'label' => __( 'Enable', 'tp-secure-plugin' ),
+                            'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
                             'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
@@ -93,10 +93,18 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                         'login-url' => array(
                             'type'  => 'text',
-                            'label' => __( 'Login Url', 'tp-secure-plugin' ),
+                            'label' => __( 'Custom Login Url', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' ),
+                            'default' => get_tpsa_site_login_path(),
+                        ),
+                        'logout-url' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Redirect URL After Logout', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Redirect URL After Logout', 'tp-secure-plugin' ),
                             'default' => get_tpsa_site_login_path(),
                         ),
 
