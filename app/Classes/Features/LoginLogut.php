@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
-class CustomLoginUrl implements FeatureInterface {
+class LoginLogut implements FeatureInterface {
 
     use Hook;
 
@@ -16,10 +16,11 @@ class CustomLoginUrl implements FeatureInterface {
 
     public function register_hooks() {
         $this->action( 'plugins_loaded', [$this, 'custom_login_url'], 1 );
-        $this->filter( 'tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_url_field'], 10, 2 );
+        $this->filter( 'tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
+        $this->filter( 'tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
     }
 
-    public function modify_the_custom_login_url_field( $template, $args ) {
+    public function modify_the_custom_login_logout_url_field( $template, $args ) {
         $site_url = get_site_url();
         $template = str_replace(
             '<input type="text" id="%2$s" name="%2$s" value="%3$s">',
