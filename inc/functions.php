@@ -32,6 +32,10 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Limit Login Attempts', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
+                'login-logs-activity' => array(
+                    'label' => __( 'Login Logs & Activity Tracking', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
             )
         );
     }
@@ -125,7 +129,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'default' => __( 'You have been locked out due to too many login attempts.', 'tp-secure-plugin' ),
                         ),
                     )
-                )
+                ),
             )
         );
     }

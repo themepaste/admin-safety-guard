@@ -10,7 +10,7 @@
     $submit_button   = $prefix . '-' . $screen_slug . '_submit';
     $option_name     = $args['option_name'];
     $saved_settings  = get_option( $option_name, [] );
-    $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'];
+    $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
 ?>
 
 <div class="tpsa-setting-wrapper">
