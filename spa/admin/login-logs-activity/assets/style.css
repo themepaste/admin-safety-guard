@@ -17,7 +17,7 @@
 .tpsa-login-log-activity-tabs button.active {
     background-color: #fff;
     color: #f25500;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
 }
 .tpsa-login-log-activity-container {
     margin-top: 20px;
