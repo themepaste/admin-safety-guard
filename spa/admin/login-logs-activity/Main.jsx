@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/style.css';
-import BlockUsers from './components/BlockUsers';
 import FailedLogins from './components/FailedLogins';
 import SuccessfulLogins from './components/SuccessfulLogins';
+import BlockUsers from './components/BlockUsers/Index';
 
 function Main() {
     const [activeComponent, setActiveComponent] = useState('BlockUsers');
@@ -14,6 +14,7 @@ function Main() {
                 return <BlockUsers />;
             case 'FailedLogins':
                 return <FailedLogins />;
+
             case 'SuccessfulLogins':
                 return <SuccessfulLogins />;
             default:
