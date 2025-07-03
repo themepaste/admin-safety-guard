@@ -63,6 +63,11 @@ class Admin {
             'tpsa-login-log-activity',
             TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js',
         );
+        $this->enqueue_script(
+            'tpsa-analytics',
+            TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js',
+        );
+        
     }
 
 }

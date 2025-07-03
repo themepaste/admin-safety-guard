@@ -8,6 +8,10 @@ module.exports = (env, argv) => {
                 __dirname,
                 './spa/admin/login-logs-activity/Main.jsx'
             ),
+            analytics: path.resolve(
+                __dirname,
+                './spa/admin/login-logs-activity/Main.jsx'
+            ),
         },
         output: {
             filename: '[name].bundle.js',

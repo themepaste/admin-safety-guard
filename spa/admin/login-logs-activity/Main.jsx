@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './assets/style.css';
 
 function Main() {
     return (
         <>
-            <h1>Hello I am from react</h1>
+            <div class="tpsa-analytics-wrapper">
+                <h1>Dashboard</h1>
+            </div>
         </>
     );
 }
 
-ReactDOM.createRoot(document.getElementById('tpsa-login-log-activity')).render(
+ReactDOM.createRoot(document.getElementById('tpsa-analytics-wrapper')).render(
     <Main />
 );
 
