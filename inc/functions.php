@@ -125,7 +125,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Max Login Attempts', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Maximum number of login attempts.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Maximum number of login attempts within 24 hours.', 'tp-secure-plugin' ),
                             'default' => 5,
                         ),
                         'block-message' => array(
