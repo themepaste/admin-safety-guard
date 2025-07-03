@@ -31,6 +31,9 @@
     border-radius: 4px;
     box-shadow: none;
 }
+.tp-field .tp-field-input textarea {
+    min-height: 68px;
+}
 /* End fieldset */
 
 /*== start switch style ==*/
