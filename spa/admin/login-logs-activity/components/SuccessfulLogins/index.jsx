@@ -1,7 +1,11 @@
 import React from 'react';
 
 const SuccessfulLogins = () => {
-    return <div>This is the Successful Logins component.</div>;
+    return (
+        <div>
+            <h1>Successful Logins</h1>
+        </div>
+    );
 };
 
 export default SuccessfulLogins;

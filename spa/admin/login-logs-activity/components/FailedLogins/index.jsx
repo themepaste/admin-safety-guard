@@ -1,7 +1,11 @@
 import React from 'react';
 
 const FailedLogins = () => {
-    return <div>This is the Failed Logins component.</div>;
+    return (
+        <div>
+            <h1>Failed Logins</h1>
+        </div>
+    );
 };
 
 export default FailedLogins;

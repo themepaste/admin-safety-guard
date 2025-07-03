@@ -1,7 +1,11 @@
 import React from 'react';
 
 const BlockUsers = () => {
-    return <div>Hello Block User </div>;
+    return (
+        <div>
+            <h1>Block Users</h1>
+        </div>
+    );
 };
 
 export default BlockUsers;

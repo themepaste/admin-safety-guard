@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './assets/style.css';
 import FailedLogins from './components/FailedLogins';
 import SuccessfulLogins from './components/SuccessfulLogins';
-import BlockUsers from './components/BlockUsers/Index';
+import BlockUsers from './components/BlockUsers';
 
 function Main() {
     const [activeComponent, setActiveComponent] = useState('BlockUsers');
