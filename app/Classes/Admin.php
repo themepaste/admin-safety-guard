@@ -28,6 +28,7 @@ class Admin {
             ( new Settings() )->init();
         } );
         $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );
+        $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts'] );
     }
 
     /**
@@ -51,5 +52,17 @@ class Admin {
             );
         }
 	}
+
+    public function admin_enqueue_scripts() {
+        $this->enqueue_script(
+            'tpsa-admin',
+            TPSA_ASSETS_URL . '/admin/js/admin.js',
+            [ 'jquery' ]
+        );
+        $this->enqueue_script(
+            'tpsa-login-log-activity',
+            TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js',
+        );
+    }
 
 }

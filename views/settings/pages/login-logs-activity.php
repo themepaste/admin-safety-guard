@@ -39,6 +39,11 @@
                     }
                 ?>
             </div>
+
+            <div class="tpsa-setting-row">
+                <div id="tpsa-login-log-activity">
+                </div>
+            </div>
             
             <div class="tpsa-save-button">
                 <?php

@@ -4,7 +4,10 @@ module.exports = (env, argv) => {
     return {
         mode: argv.mode || 'development',
         entry: {
-            lockouts: path.resolve(__dirname, './spa/admin/'),
+            loginLogActivity: path.resolve(
+                __dirname,
+                './spa/admin/login-logs-activity/Main.jsx'
+            ),
         },
         output: {
             filename: '[name].bundle.js',
