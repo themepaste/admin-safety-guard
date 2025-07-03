@@ -36,7 +36,7 @@ const SuccessfulLogins = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 2;
+    const itemsPerPage = 10;
 
     const filteredData = loginData.filter((item) =>
         Object.values(item).some((val) =>
