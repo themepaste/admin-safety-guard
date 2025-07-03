@@ -1,0 +1,24 @@
+.tpsa-login-log-activity-tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+.tpsa-login-log-activity-tabs button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f25500;
+    color: #fff;
+    cursor: pointer;
+    border: 1px solid #f25500;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+.tpsa-login-log-activity-tabs button.active {
+    background-color: #fff;
+    color: #f25500;
+    border: 1px solid #ddd;
+}
+.tpsa-login-log-activity-container {
+    margin-top: 20px;
+}
