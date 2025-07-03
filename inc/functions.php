@@ -16,8 +16,8 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
         return apply_filters(
             'tpsa_settings_option',
             array(
-                'dashboard' => array(
-                    'label' => __( 'Dashboard', 'tp-secure-plugin' ),
+                'analytics' => array(
+                    'label' => __( 'Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'hide-admin-bar' => array(
@@ -58,7 +58,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
         return apply_filters(
             'tpsa_settings_fields',
             array(
-                'dashboard' => array(
+                'analytics' => array(
                     
                 ),
                 'hide-admin-bar' => array(
