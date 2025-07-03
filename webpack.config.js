@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
             ),
             analytics: path.resolve(
                 __dirname,
-                './spa/admin/login-logs-activity/Main.jsx'
+                './spa/admin/analytics/Main.jsx'
             ),
         },
         output: {
