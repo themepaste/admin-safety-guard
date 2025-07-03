@@ -128,6 +128,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Maximum number of login attempts within 24 hours.', 'tp-secure-plugin' ),
                             'default' => 5,
                         ),
+                        'block-users' => array(
+                            'type'  => 'textarea',
+                            'label' => __( 'Block Users', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'usernames separated by comma', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
                         'block-message' => array(
                             'type'  => 'textarea',
                             'label' => __( 'Block Message', 'tp-secure-plugin' ),
