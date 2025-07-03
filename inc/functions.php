@@ -130,6 +130,18 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                     )
                 ),
+                'login-logs-activity' => array(
+                    'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Enable', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                    )
+                ),
             )
         );
     }
