@@ -52,8 +52,7 @@ class Install {
 
         global $wpdb;
 
-        $prefix          = $wpdb->prefix . TPSA_PREFIX . '_';
-        $full_table_name = $prefix . $table_name;
+        $full_table_name = get_tpsa_db_table_name( $table_name );
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE {$full_table_name} ($table_columns) {$charset_collate};";

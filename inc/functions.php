@@ -203,3 +203,22 @@ if( ! function_exists( 'get_tpsa_prefix' ) ) {
 function get_tpsa_settings_option_name( $screen_slug ) {
     return get_tpsa_prefix() . $screen_slug . '_settings';
 }
+
+/**
+ * Returns the full table name with the TPSA prefix.
+ *
+ * This function combines the global WordPress table prefix with the TPSA-specific
+ * prefix and the provided table name to generate the full table name.
+ *
+ * @since 1.0.0
+ *
+ * @param string $table_name The base name of the table.
+ *
+ * @return string The full table name with the TPSA prefix.
+ */
+
+function get_tpsa_db_table_name( $table_name ) {
+    global $wpdb;
+    $prefix          = $wpdb->prefix . TPSA_PREFIX . '_';
+    return $prefix . $table_name;
+}
