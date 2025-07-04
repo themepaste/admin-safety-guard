@@ -8,9 +8,6 @@
 namespace ThemePaste\SecureAdmin;
 
 defined( 'ABSPATH' ) || exit;
-
-use ThemePaste\SecureAdmin\Traits\Hook;
-
 /**
  * Final Class App
  *
@@ -18,37 +15,59 @@ use ThemePaste\SecureAdmin\Traits\Hook;
  */
 final class App {
 
-	use Hook;
+    /**
+     * Holds the instances of the loaded classes.
+     *
+     * @var array
+     */
+    private static $instances = [];
 
-	/**
-	 * Initialize all plugin hooks and core components.
-	 *
-	 * This method sets up both frontend and backend functionalities.
-	 *
-	 * @return void
-	 */
-	public static function hooks() {
+    /**
+     * Initialize the plugin.
+     *
+     * @return void
+     */
+    public static function init() {
+        self::hooks();
+    }
 
-		// Register activation-related setup such as DB installation, version check, etc.
-		// new Classes\Install();
+    /**
+     * Get an instance of a class.
+     *
+     * @param string $class The class name to retrieve.
+     *
+     * @return object The class instance.
+     */
+    public static function get( $class ) {
+        if ( ! isset( self::$instances[ $class ] ) ) {
+            self::$instances[ $class ] = new $class();
+        }
 
-		// Load common functionality (AJAX, scripts, etc.)
-		new Classes\Common();
+        return self::$instances[ $class ];
+    }
 
-		// Load all features
-		new Classes\FeatureManager();
+    /**
+     * Initialize all plugin hooks and core components.
+     *
+     * This method sets up both frontend and backend functionalities.
+     *
+     * @return void
+     */
+    public static function hooks() {
+        // Load common functionality (AJAX, scripts, etc.)
+        self::get( Classes\Common::class );
 
-		// Register shipping methods setup.
-		// new Classes\Shipping\ShippingMethods();
+        // Load all features
+        self::get( Classes\FeatureManager::class );
 
-		// Register admin-specific hooks and classes.
-		if ( is_admin() ) {
-			new Classes\Admin();
-		}
+        // Register admin-specific hooks and classes.
+        if ( is_admin() ) {
+            self::get( Classes\Admin::class );
+        }
 
-		// Register frontend-specific hooks and classes.
-		if ( ! is_admin() ) {
-			// new Classes\Front();
-		}
-	}
+        // Register frontend-specific hooks and classes.
+        if ( ! is_admin() ) {
+            // self::get( Classes\Front::class );
+        }
+    }
 }

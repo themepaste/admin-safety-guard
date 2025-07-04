@@ -27,7 +27,7 @@ if ( !defined( 'ABSPATH' ) ) {
     private function __construct() {
         $this->define();
         $this->include();
-        ThemePaste\SecureAdmin\App::hooks();
+        ThemePaste\SecureAdmin\App::init();
     }
 
     /**
