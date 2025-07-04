@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace ThemePaste\SecureAdmin\Classes;
 
@@ -12,52 +12,74 @@ class Install {
     use Hook;
     use Asset;
 
+    /**
+     * Constructor.
+     */
     public function __construct() {
-        $this->activation( [$this, 'bootstrapping'] );
+        $this->activation( [ $this, 'bootstrapping' ] );
     }
 
+    /**
+     * Run installation tasks on plugin activation.
+     */
     public function bootstrapping() {
+        if ( ! $this->is_database_up_to_date() ) {
 
-        if( ! $this->is_database_up_to_date() ) {
-
-            $this->create_table( 
-                'habib', 
-                'book_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                    title VARCHAR(255) NOT NULL,
-                    author VARCHAR(255) NOT NULL,
-                    publisher VARCHAR(255) NOT NULL,
-                    isbn VARCHAR(20) NOT NULL,
-                    publication_date DATE NOT NULL,
-                    PRIMARY KEY (book_id)', 
+            // Create table for successful logins data
+            $this->create_table(
+                's_logins',
+                "
+                id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                username VARCHAR(100) NOT NULL,
+                user_agent TEXT NOT NULL,
+                ip_address VARCHAR(45) NOT NULL,
+                login_time DATETIME NOT NULL,
+                PRIMARY KEY (id),
+                "
             );
 
-            $this->update_db_version(); 
+            $this->update_db_version();
         }
     }
 
-    
-    public function create_table( $table_name, $table_columns ): void {
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    /**
+     * Create a custom database table.
+     *
+     * @param string $table_name
+     * @param string $table_columns
+     */
+    public function create_table( $table_name, $table_columns ) {
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         global $wpdb;
 
-        $db         = $wpdb;
-        $prefix     = $db->prefix . TPSA_PREFIX . '_';
-        $table_name = $prefix . $table_name;
-        $charset_collate = $db->get_charset_collate();
+        $prefix          = $wpdb->prefix . TPSA_PREFIX . '_';
+        $full_table_name = esc_sql( $prefix . $table_name );
+        $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE {$table_name} ($table_columns) {$charset_collate};";
+        // Clean trailing comma and whitespace in column string
+        $table_columns = trim( rtrim( $table_columns, ', ' ) );
 
-        dbDelta($sql);
+        // Compose SQL safely using prepare for full structure
+        $sql_template = "CREATE TABLE `%s` ( %s ) ENGINE=InnoDB $charset_collate;";
+        $sql = $wpdb->prepare( $sql_template, $full_table_name, $table_columns );
+
+        dbDelta( $sql );
     }
 
-    
-	private function is_database_up_to_date() {
-		$installed_ver = get_option( 'tpsa_version' );
-		return version_compare( $installed_ver, TPSA_PLUGIN_VERSION, '=' );
-	}
+    /**
+     * Check if the database is already up to date.
+     *
+     * @return bool
+     */
+    private function is_database_up_to_date() {
+        $installed_ver = get_option( 'tpsa_version' );
+        return version_compare( $installed_ver, TPSA_PLUGIN_VERSION, '=' );
+    }
 
-    
+    /**
+     * Update the database version stored in options.
+     */
     private function update_db_version() {
         update_option( 'tpsa_version', TPSA_PLUGIN_VERSION );
     }
