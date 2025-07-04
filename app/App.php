@@ -54,6 +54,9 @@ final class App {
      * @return void
      */
     public static function hooks() {
+        // Register activation-related setup such as DB installation, version check, etc.
+        self::get( Classes\Install::class );
+
         // Load common functionality (AJAX, scripts, etc.)
         self::get( Classes\Common::class );
 
