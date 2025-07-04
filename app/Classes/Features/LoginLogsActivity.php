@@ -47,7 +47,63 @@ class LoginLogsActivity implements FeatureInterface {
 
     public function register_hooks() {
         $this->action( 'wp_login', [$this, 'save_successful_login_log'], 10, 2 );
+        $this->action( 'wp_login_failed', [$this, 'save_failed_login_log'] );
     }
+
+    public function save_failed_login_log( $username ) {
+        global $wpdb;
+
+        $table      = get_tpsa_db_table_name( 'failed_logins' );
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
+
+        // Default values
+        $country = 'Unknown';
+        $city    = 'Unknown';
+
+        // Optional: use a geolocation service
+        $geo_data = $this->get_geo_info( $ip_address );
+
+        if ( $geo_data ) {
+            $country = $geo_data['country'] ?? 'Unknown';
+            $city    = $geo_data['city'] ?? 'Unknown';
+        }
+
+        $wpdb->insert(
+            $table,
+            [
+                'username'   => $username,
+                'user_agent' => $user_agent,
+                'ip_address' => $ip_address,
+                'login_time' => current_time('mysql'),
+                'country'    => $country,
+                'city'       => $city,
+            ],
+            [
+                '%s', '%s', '%s', '%s', '%s', '%s'
+            ]
+        );
+    }
+
+    private function get_geo_info( $ip ) {
+        $response = wp_remote_get( "http://ip-api.com/json/{$ip}" );
+
+        if ( is_wp_error( $response ) ) {
+            return false;
+        }
+
+        $data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+        if ( isset( $data['status'] ) && $data['status'] === 'success' ) {
+            return [
+                'country' => $data['country'] ?? '',
+                'city'    => $data['city'] ?? '',
+            ];
+        }
+
+        return false;
+    }
+
 
     public function save_successful_login_log( $user_login, $user ) {
          global $wpdb;
