@@ -37,6 +37,20 @@ class Install {
                 "
             );
 
+            $this->create_table(
+                'failed_logins',
+                "
+                id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                username VARCHAR(100) NOT NULL,
+                user_agent TEXT NOT NULL,
+                ip_address VARCHAR(45) NOT NULL,
+                login_time DATETIME NOT NULL,
+                country VARCHAR(45) NOT NULL,
+                city VARCHAR(45) NOT NULL,
+                PRIMARY KEY (id)
+                "
+            );
+
             $this->update_db_version();
         }
     }
