@@ -2,7 +2,7 @@
 /*
 Plugin Name: Themepaste Secure Admin
 Plugin URI: http://themepaste.com/product/themepaste-secure-admin-pro/
-Description: This is Themepaste Secure Admin Manager Plugin for wordpress website to customize the wp-admin url, layout etc.
+Description: Secure your admin panel with Themepaste Secure Admin
 Version: 1.1
 Author: Themepaste Team
 Author URI: http://themepaste.com/
