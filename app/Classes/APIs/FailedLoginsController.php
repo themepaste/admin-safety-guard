@@ -1,6 +1,6 @@
 <?php
 
-namespace Themepaste\SecureAdmin\Classes\APIs;
+namespace ThemePaste\SecureAdmin\Classes\APIs;
 
 use WP_REST_Request;
 use WP_REST_Response;
@@ -66,10 +66,5 @@ class FailedLoginsController {
     public function get_failed_logins_permission_check() {
         // return current_user_can( 'manage_options' );
         return true;
-    }
-
-    public function abc() {
-
-        echo "Hello";
     }
 }

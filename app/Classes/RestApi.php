@@ -1,8 +1,8 @@
 <?php
 
-namespace Themepaste\SecureAdmin\Classes;
+namespace ThemePaste\SecureAdmin\Classes;
 
-use Themepaste\SecureAdmin\Classes\APIs\FailedLoginsController;
+use ThemePaste\SecureAdmin\Classes\APIs\FailedLoginsController;
 
 class RestApi {
 
