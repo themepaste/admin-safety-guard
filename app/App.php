@@ -72,5 +72,8 @@ final class App {
         if ( ! is_admin() ) {
             // self::get( Classes\Front::class );
         }
+
+        // Initialize REST API
+        self::get( Classes\RestApi::class );
     }
 }
