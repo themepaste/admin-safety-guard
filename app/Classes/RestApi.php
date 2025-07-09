@@ -2,8 +2,7 @@
 
 namespace Themepaste\SecureAdmin\Classes;
 
-use Themepaste\SecureAdmin\Classes\API\FailedLoginsController;
-use Themepaste\SecureAdmin\Classes\API\SuccessfulLoginsController;
+use Themepaste\SecureAdmin\Classes\APIs\FailedLoginsController;
 
 class RestApi {
 
@@ -25,16 +24,6 @@ class RestApi {
                 'methods'             => 'GET',
                 'callback'            => [ FailedLoginsController::get(), 'get_failed_logins' ],
                 'permission_callback' => [ FailedLoginsController::get(), 'get_failed_logins_permission_check' ],
-            ]
-        );
-
-        register_rest_route(
-            'secure-admin/v1',
-            '/successful-logins',
-            [
-                'methods'             => 'GET',
-                'callback'            => [ SuccessfulLoginsController::get(), 'get_successful_logins' ],
-                'permission_callback' => [ SuccessfulLoginsController::get(), 'get_successful_logins_permission_check' ],
             ]
         );
     }
