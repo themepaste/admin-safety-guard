@@ -39,7 +39,7 @@ const SuccessfulLogins = () => {
             const response = await fetch(
                 `${
                     tpsaAdmin.rest_url
-                }secure-admin/v1/failed-logins?${params.toString()}`,
+                }secure-admin/v1/success-logins?${params.toString()}`,
                 {
                     method: 'GET',
                 }
@@ -74,7 +74,7 @@ const SuccessfulLogins = () => {
 
     return (
         <div className="tpsa-login-log-activity">
-            <h1>Failed Logins</h1>
+            <h1>Successful Logins</h1>
             <div className="tpsa-login-log-activity-header">
                 <div className="tpsa-login-log-activity-items-per-page">
                     <label>Items per page: </label>
