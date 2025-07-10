@@ -19,32 +19,46 @@ class RestApi {
      * Registers the REST API routes.
      */
     public function register_routes() {
-        register_rest_route(
-            'secure-admin/v1',
-            '/failed-logins',
-            [
-                'methods'             => 'GET',
-                'callback'            => [ FailedLoginsController::get(), 'get_failed_logins' ],
-                'permission_callback' => [ FailedLoginsController::get(), 'authorize_request' ],
-            ]
-        );
-        register_rest_route(
-            'secure-admin/v1',
-            '/success-logins',
-            [
-                'methods'             => 'GET',
-                'callback'            => [ SuccessLoginsController::get(), 'get_success_logins' ],
-                'permission_callback' => [ SuccessLoginsController::get(), 'authorize_request' ],
-            ]
-        );
 
         register_rest_route(
             'secure-admin/v1',
             '/success-logins',
             [
                 'methods'             => 'GET',
-                'callback'            => [ BlockUsersController::get(), 'get_block_users' ],
-                'permission_callback' => [ BlockUsersController::get(), 'authorize_request' ],
+                'callback' => function( $request ) {
+                    return SuccessLoginsController::get()->get_data( $request );
+                },
+                'permission_callback' => function( $request ) {
+                    return SuccessLoginsController::get()->authorize_request( $request );
+                },
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/failed-logins',
+            [
+                'methods'             => 'GET',
+                'callback' => function( $request ) {
+                    return FailedLoginsController::get()->get_data( $request );
+                },
+                'permission_callback' => function( $request ) {
+                    return FailedLoginsController::get()->authorize_request( $request );
+                },
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/block-users',
+            [
+                'methods'             => 'GET',
+                'callback' => function( $request ) {
+                    return BlockUsersController::get()->get_data( $request );
+                },
+                'permission_callback' => function( $request ) {
+                    return BlockUsersController::get()->authorize_request( $request );
+                },
             ]
         );
     }
