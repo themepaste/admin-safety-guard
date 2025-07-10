@@ -73,39 +73,37 @@ const FailedLogins = () => {
     };
 
     return (
-        <div>
+        <div className="tpsa-login-log-activity">
             <h1>Failed Logins</h1>
-
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setCurrentPage(1);
-                }}
-                style={{
-                    marginBottom: '10px',
-                    padding: '8px',
-                    width: '300px',
-                    fontSize: '16px',
-                }}
-            />
-
-            <div>
-                <label>Items per page: </label>
-                <select
-                    value={itemsPerPage} // bind to state
-                    onChange={(e) => setItemsPerPage(Number(e.target.value))} // convert string to number
-                >
-                    <option value="1">1</option>
-                    <option value="3">3</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
+            <div className="tpsa-login-log-activity-header">
+                <div className="tpsa-login-log-activity-items-per-page">
+                    <label>Items per page: </label>
+                    <select
+                        value={itemsPerPage}
+                        onChange={(e) =>
+                            setItemsPerPage(Number(e.target.value))
+                        }
+                    >
+                        <option value="1">1</option>
+                        <option value="3">3</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div className="tpsa-login-log-activity-search">
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    />
+                </div>
             </div>
 
             {loading ? (
@@ -121,8 +119,6 @@ const FailedLogins = () => {
                                 <th>Username</th>
                                 <th>User Agent</th>
                                 <th>IP Address</th>
-                                <th>City</th>
-                                <th>Country</th>
                                 <th>Date & Time</th>
                             </tr>
                         </thead>
@@ -134,8 +130,6 @@ const FailedLogins = () => {
                                         <td>{login.username}</td>
                                         <td>{login.user_agent}</td>
                                         <td>{login.ip_address}</td>
-                                        <td>{login.city}</td>
-                                        <td>{login.country}</td>
                                         <td>{formatDate(login.login_time)}</td>
                                     </tr>
                                 ))
@@ -149,20 +143,14 @@ const FailedLogins = () => {
                         </tbody>
                     </table>
 
-                    {/* <div style={{ marginTop: '10px' }}>
-                        <span>
-                            Showing {itemsPerPage} of {totalEntries} entries
-                        </span>
-                    </div> */}
-
-                    <div style={{ marginTop: '10px' }}>
+                    <div className="tpsa-login-log-activity-pagination">
                         <button
                             onClick={handlePrevPage}
                             disabled={currentPage === 1}
                         >
                             Previous
                         </button>
-                        <span style={{ margin: '0 10px' }}>
+                        <span>
                             Page {currentPage} of {totalPages || 1}
                         </span>
                         <button
