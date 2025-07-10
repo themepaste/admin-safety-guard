@@ -95,24 +95,15 @@ class FailedLoginsController {
      * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
      */
     public function get_failed_logins_permission_check( WP_REST_Request $request ) {
-        $nonce = $request->get_header( 'X-WP-Nonce' );
-
-        if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
-            return new WP_Error(
-                'rest_forbidden',
-                __( 'Invalid or expired nonce.', 'tp-secure-plugin' ),
-                [ 'status' => 403 ]
-            );
-        }
 
         // You can add more custom checks here, like checking roles or capabilities:
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return new WP_Error(
-                'rest_forbidden',
-                __( 'You do not have permission to access this data.', 'tp-secure-plugin' ),
-                [ 'status' => 403 ]
-            );
-        }
+        // if ( ! current_user_can( 'manage_options' ) ) {
+        //     return new WP_Error(
+        //         'rest_forbidden',
+        //         __( 'You do not have permission to access this data.', 'tp-secure-plugin' ),
+        //         [ 'status' => 403 ]
+        //     );
+        // }
 
         return true;
     }

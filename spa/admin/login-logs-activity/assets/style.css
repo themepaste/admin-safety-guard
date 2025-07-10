@@ -22,3 +22,17 @@
 .tpsa-login-log-activity-container {
     margin-top: 20px;
 }
+.tpsa-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.tpsa-table th {
+    border: 1px solid #ccc;
+    padding: 8px;
+    background: #f4f4f4;
+    text-align: left;
+}
+.tpsa-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
