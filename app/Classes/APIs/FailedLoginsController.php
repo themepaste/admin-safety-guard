@@ -113,7 +113,7 @@ class FailedLoginsController {
      *
      * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
      */
-    public function get_failed_logins_permission_check( WP_REST_Request $request ) {
+    public function authorize_request( WP_REST_Request $request ) {
         return true;
     }
 

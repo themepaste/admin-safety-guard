@@ -4,6 +4,7 @@ namespace ThemePaste\SecureAdmin\Classes;
 
 use ThemePaste\SecureAdmin\Classes\APIs\FailedLoginsController;
 use ThemePaste\SecureAdmin\Classes\APIs\SuccessLoginsController;
+use ThemePaste\SecureAdmin\Classes\APIs\BlockUsersController;
 
 class RestApi {
 
@@ -24,7 +25,7 @@ class RestApi {
             [
                 'methods'             => 'GET',
                 'callback'            => [ FailedLoginsController::get(), 'get_failed_logins' ],
-                'permission_callback' => [ FailedLoginsController::get(), 'get_failed_logins_permission_check' ],
+                'permission_callback' => [ FailedLoginsController::get(), 'authorize_request' ],
             ]
         );
         register_rest_route(
@@ -33,7 +34,17 @@ class RestApi {
             [
                 'methods'             => 'GET',
                 'callback'            => [ SuccessLoginsController::get(), 'get_success_logins' ],
-                'permission_callback' => [ SuccessLoginsController::get(), 'get_failed_logins_permission_check' ],
+                'permission_callback' => [ SuccessLoginsController::get(), 'authorize_request' ],
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/success-logins',
+            [
+                'methods'             => 'GET',
+                'callback'            => [ BlockUsersController::get(), 'get_block_users' ],
+                'permission_callback' => [ BlockUsersController::get(), 'authorize_request' ],
             ]
         );
     }

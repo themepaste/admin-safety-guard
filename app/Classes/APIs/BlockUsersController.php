@@ -6,18 +6,18 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
 
-class SuccessLoginsController {
+class BlockUsersController {
     /**
      * The single instance of the class.
      *
-     * @var SuccessLoginsController|null
+     * @var BlockUsersController|null
      */
     private static $instance = null;
 
     /**
      * Ensures only one instance of the class is loaded.
      *
-     * @return SuccessLoginsController
+     * @return BlockUsersController
      */
     public static function get() {
         if ( is_null( self::$instance ) ) {
@@ -39,7 +39,7 @@ class SuccessLoginsController {
      * @param WP_REST_Request $request
      * @return WP_REST_Response
      */
-    public function get_success_logins( WP_REST_Request $request ) {
+    public function get_block_users( WP_REST_Request $request ) {
         global $wpdb;
 
         // Sanitize and validate parameters
@@ -51,7 +51,7 @@ class SuccessLoginsController {
         $limit = $limit > 0 ? $limit : 10;
 
         $offset     = ( $page - 1 ) * $limit;
-        $table_name = get_tpsa_db_table_name( 's_logins' );
+        $table_name = get_tpsa_db_table_name( 'block_users' );
 
         // Verify table exists
         if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
