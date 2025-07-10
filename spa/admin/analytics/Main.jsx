@@ -5,7 +5,7 @@ import './assets/style.css';
 function Main() {
     return (
         <>
-            <div class="tpsa-analytics-wrapper">
+            <div className="tpsa-analytics-wrapper">
                 <h1>Analytics</h1>
             </div>
         </>

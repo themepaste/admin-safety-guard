@@ -109,4 +109,8 @@ class Settings {
 
 		return $links;
 	}
+
+	public static function get_current_screen(  ) {
+		return $_GET['tpsa-setting'] ?? null;
+	}
 }

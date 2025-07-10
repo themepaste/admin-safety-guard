@@ -44,8 +44,6 @@ class Admin {
                 'tpsa-settings',
                 TPSA_ASSETS_URL . '/admin/css/settings.css'
             );
-        }
-		if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen ) {
             $this->enqueue_style(
                 'tpsa-fields',
                 TPSA_ASSETS_URL . '/admin/css/fields.css'
@@ -53,20 +51,36 @@ class Admin {
         }
 	}
 
-    public function admin_enqueue_scripts() {
-        $this->enqueue_script(
-            'tpsa-admin',
-            TPSA_ASSETS_URL . '/admin/js/admin.js',
-            [ 'jquery' ]
-        );
-        $this->enqueue_script(
-            'tpsa-login-log-activity',
-            TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js',
-        );
-        $this->enqueue_script(
-            'tpsa-analytics',
-            TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js',
-        );
+    public function admin_enqueue_scripts( $screen ) {
+        $current_setting_screen = Settings::get_current_screen();
+
+        if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen ) {
+
+            $this->enqueue_script(
+                'tpsa-admin',
+                TPSA_ASSETS_URL . '/admin/js/admin.js',
+                [ 'jquery' ]
+            );
+            if( $current_setting_screen === 'login-logs-activity' ) {
+                $this->enqueue_script(
+                    'tpsa-login-log-activity',
+                    TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js',
+                );
+            }
+            if( $current_setting_screen === 'analytics' ) {
+                $this->enqueue_script(
+                    'tpsa-analytics',
+                    TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js',
+                );
+            }
+
+            $this->localize_script( 'tpsa-admin', 'tpsaAdmin', [
+                'nonce'         => wp_create_nonce( 'tpsa-nonce' ),
+                'ajax_url'      => admin_url( 'admin-ajax.php' ),
+                'screen_slug'   => Settings::$SETTING_PAGE_ID,
+                'rest_url'      => rest_url(),
+            ] );
+        }
         
     }
 
