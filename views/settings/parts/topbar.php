@@ -12,7 +12,7 @@
 
         <!-- Plugin title and tagline -->
         <div class="tpsa-titles">
-            <h1><?php esc_html_e( 'ThemePaste Secure Admin', 'tp-secure-plugin' ); // Plugin title ?></h1>
+            <h1><?php esc_html_e( 'Themepaste Secure Admin', 'tp-secure-plugin' ); // Plugin title ?></h1>
             <p style="margin:0;"><?php esc_html_e( 'Secure your admin account', 'tp-secure-plugin' ); // Plugin tagline ?></p>
         </div>
     </div>

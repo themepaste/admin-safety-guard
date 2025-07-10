@@ -141,7 +141,9 @@ const FailedLogins = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4">No results found</td>
+                                    <td colSpan="7">
+                                        No results available in table
+                                    </td>
                                 </tr>
                             )}
                         </tbody>
