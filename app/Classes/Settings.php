@@ -50,6 +50,7 @@ class Settings {
 
 		//Process and save settings
 		$this->action( 'admin_post_tpsa_process_form', [ FormProcessor::class, 'process_form' ] );
+		$this->action( 'admin_init', [ $this, 'redirect_to_default_tab' ] );
 	}
 
 	/**
@@ -75,20 +76,27 @@ class Settings {
 	 * @return void
 	 */
 	public function render_settings_page() {
-
-		// if ( ! isset( $_GET['tpsa-setting'] ) ) {
-        //     $redirect_url = add_query_arg(
-        //         [
-        //             'tpsa-setting'  => 'dashboard',
-        //         ],
-        //         $this->setting_page_url
-        //     );
-
-        //     wp_safe_redirect( $redirect_url );
-        //     exit;
-        // }
-
         printf( '%s', Utility::get_template( 'settings/layout.php' ) );
+	}
+
+	public function redirect_to_default_tab() {
+		if (
+			is_admin() &&
+			current_user_can( 'manage_options' ) &&
+			isset( $_GET['page'] ) &&
+			$_GET['page'] === self::$SETTING_PAGE_ID &&
+			! isset( $_GET['tpsa-setting'] )
+		) {
+			$redirect_url = add_query_arg(
+				[
+					'page' => self::$SETTING_PAGE_ID,
+					'tpsa-setting' => 'analytics',
+				],
+				admin_url( 'admin.php' )
+			);
+			wp_safe_redirect( $redirect_url );
+			exit;
+		}
 	}
 
 	/**
