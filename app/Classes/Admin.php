@@ -78,6 +78,7 @@ class Admin {
                 'nonce'         => wp_create_nonce( 'tpsa-nonce' ),
                 'ajax_url'      => admin_url( 'admin-ajax.php' ),
                 'screen_slug'   => Settings::$SETTING_PAGE_ID,
+                'setting_slug'  => $current_setting_screen,
                 'rest_url'      => rest_url(),
             ] );
         }
