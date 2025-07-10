@@ -36,12 +36,32 @@ class FailedLoginsController {
     public function get_failed_logins( WP_REST_Request $request ) {
         global $wpdb;
 
-        $page        = $request->get_param( 'page' ) ? absint( $request->get_param( 'page' ) ) : 1;
-        $limit       = $request->get_param( 'limit' ) ? absint( $request->get_param( 'limit' ) ) : 10;
-        $offset      = ( $page - 1 ) * $limit;
-        $table_name  = $wpdb->prefix . 'secure_admin_failed_logins';
-        $total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
-        $data        = $wpdb->get_results(
+        // Sanitize and validate parameters
+        $page  = absint( $request->get_param( 'page' ) );
+        $limit = absint( $request->get_param( 'limit' ) );
+
+        $page  = $page > 0 ? $page : 1;
+        $limit = $limit > 0 ? $limit : 10;
+
+        $offset     = ( $page - 1 ) * $limit;
+        $table_name = get_tpsa_db_table_name( 'failed_logins' );
+
+        // Verify table exists
+        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
+            return new WP_REST_Response(
+                [
+                    'error'   => true,
+                    'message' => __( 'Table does not exist.', 'tp-secure-plugin' ),
+                ],
+                500
+            );
+        }
+
+        // Get total number of records
+        $total_items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
+
+        // Fetch paginated results
+        $results = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM $table_name ORDER BY id DESC LIMIT %d OFFSET %d",
                 $limit,
@@ -50,13 +70,13 @@ class FailedLoginsController {
             ARRAY_A
         );
 
-        $response = [
-            'data'  => $data,
-            'total' => $total_items,
-        ];
+        if ( empty( $results ) ) {
+            return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given page.', 'tp-secure-plugin' ) );
+        }
 
-        return new WP_REST_Response( $response, 200 );
+        return $this->build_response( $results, $total_items, $page, $limit );
     }
+
 
     /**
      * Checks if the user has permission to access the endpoint.
@@ -64,7 +84,32 @@ class FailedLoginsController {
      * @return bool
      */
     public function get_failed_logins_permission_check() {
-        // return current_user_can( 'manage_options' );
-        return true;
+        return current_user_can( 'manage_options' );
+    }
+
+    /**
+     * Build a standard REST response for failed login data.
+     *
+     * @param array $data
+     * @param int   $total
+     * @param int   $page
+     * @param int   $limit
+     * @param string|null $notice Optional notice message.
+     *
+     * @return WP_REST_Response
+     */
+    private function build_response( $data, $total, $page, $limit, $notice = null ) {
+        $response = [
+            'data'  => $data,
+            'total' => $total,
+            'page'  => $page,
+            'limit' => $limit,
+        ];
+
+        if ( $notice ) {
+            $response['notice'] = $notice;
+        }
+
+        return new WP_REST_Response( $response, 200 );
     }
 }
