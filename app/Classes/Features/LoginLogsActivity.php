@@ -57,16 +57,8 @@ class LoginLogsActivity implements FeatureInterface {
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
 
-        // Default values
-        $country = 'Unknown';
-        $city    = 'Unknown';
-
-        // Optional: use a geolocation service
-        $geo_data = $this->get_geo_info( $ip_address );
-
-        if ( $geo_data ) {
-            $country = $geo_data['country'] ?? 'Unknown';
-            $city    = $geo_data['city'] ?? 'Unknown';
+        if ( empty( $username ) ) {
+            $username = 'Unknown';
         }
 
         $wpdb->insert(
@@ -75,27 +67,12 @@ class LoginLogsActivity implements FeatureInterface {
                 'username'   => $username,
                 'user_agent' => $user_agent,
                 'ip_address' => $ip_address,
-                'login_time' => current_time('mysql'),
-                'country'    => $country,
-                'city'       => $city,
+                'login_time' => current_time('mysql')
             ],
             [
-                '%s', '%s', '%s', '%s', '%s', '%s'
+                '%s', '%s', '%s', '%s'
             ]
         );
-    }
-
-    private function get_geo_info( $ip ) {
-        $url = "http://www.geoplugin.net/json.gp?ip={$ip}";
-        $response = file_get_contents($url);
-        $data = json_decode($response);
-
-        return [
-            'country'   => $data->geoplugin_countryName ?? null,
-            'city'      => $data->geoplugin_city ?? null
-        ];
-
-        return false;
     }
 
 

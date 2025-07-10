@@ -45,8 +45,6 @@ class Install {
                 user_agent TEXT NOT NULL,
                 ip_address VARCHAR(45) NOT NULL,
                 login_time DATETIME NOT NULL,
-                country VARCHAR(45) NOT NULL,
-                city VARCHAR(45) NOT NULL,
                 PRIMARY KEY (id)
                 "
             );

@@ -74,11 +74,7 @@ class FailedLoginsController {
                 "WHERE username LIKE %s 
                 OR user_agent LIKE %s 
                 OR ip_address LIKE %s 
-                OR login_time LIKE %s 
-                OR country LIKE %s 
-                OR city LIKE %s",
-                $like_search,
-                $like_search,
+                OR login_time LIKE %s",
                 $like_search,
                 $like_search,
                 $like_search,
@@ -118,16 +114,6 @@ class FailedLoginsController {
      * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
      */
     public function get_failed_logins_permission_check( WP_REST_Request $request ) {
-
-        // You can add more custom checks here, like checking roles or capabilities:
-        // if ( ! current_user_can( 'manage_options' ) ) {
-        //     return new WP_Error(
-        //         'rest_forbidden',
-        //         __( 'You do not have permission to access this data.', 'tp-secure-plugin' ),
-        //         [ 'status' => 403 ]
-        //     );
-        // }
-
         return true;
     }
 
