@@ -19,8 +19,15 @@ const FailedLogins = () => {
                 limit: itemsPerPage,
             });
 
+            // Add search param only if searchTerm is not empty
+            if (searchTerm.trim() !== '') {
+                params.append('s', searchTerm.trim());
+            }
+
             const response = await fetch(
-                `${tpsaAdmin.rest_url}secure-admin/v1/failed-logins?${params}`,
+                `${
+                    tpsaAdmin.rest_url
+                }secure-admin/v1/failed-logins?${params.toString()}`,
                 {
                     method: 'GET',
                 }

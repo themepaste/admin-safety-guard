@@ -43,8 +43,9 @@ class FailedLoginsController {
         global $wpdb;
 
         // Sanitize and validate parameters
-        $page  = absint( $request->get_param( 'page' ) );
-        $limit = absint( $request->get_param( 'limit' ) );
+        $page   = absint( $request->get_param( 'page' ) );
+        $limit  = absint( $request->get_param( 'limit' ) );
+        $search = sanitize_text_field( $request->get_param( 's' ) );
 
         $page  = $page > 0 ? $page : 1;
         $limit = $limit > 0 ? $limit : 10;
@@ -63,13 +64,35 @@ class FailedLoginsController {
             );
         }
 
-        // Get total number of records
-        $total_items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
+        $where_sql = '';
+        $like_search = '';
+        if ( ! empty( $search ) ) {
+            $like_search = '%' . $wpdb->esc_like( $search ) . '%';
+
+            // Search across all relevant columns
+            $where_sql = $wpdb->prepare(
+                "WHERE username LIKE %s 
+                OR user_agent LIKE %s 
+                OR ip_address LIKE %s 
+                OR login_time LIKE %s 
+                OR country LIKE %s 
+                OR city LIKE %s",
+                $like_search,
+                $like_search,
+                $like_search,
+                $like_search,
+                $like_search,
+                $like_search
+            );
+        }
+
+        // Get total number of filtered records
+        $total_items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM $table_name $where_sql" );
 
         // Fetch paginated results
         $results = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM $table_name ORDER BY id DESC LIMIT %d OFFSET %d",
+                "SELECT * FROM $table_name $where_sql ORDER BY id DESC LIMIT %d OFFSET %d",
                 $limit,
                 $offset
             ),
@@ -77,7 +100,7 @@ class FailedLoginsController {
         );
 
         if ( empty( $results ) ) {
-            return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given page.', 'tp-secure-plugin' ) );
+            return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given search.', 'tp-secure-plugin' ) );
         }
 
         return $this->build_response( $results, $total_items, $page, $limit );
