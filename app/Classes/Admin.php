@@ -29,6 +29,29 @@ class Admin {
         } );
         $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );
         $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts'] );
+        // $this->action( 'admin_init', [ $this, 'init'] );
+    }
+
+    public function init() {
+        if( isset( $_GET['ip'] ) ) {
+            
+            ?>
+
+            <script>
+
+                navigator.geolocation.getCurrentPosition(
+                position => {
+                    console.log(position.coords.latitude, position.coords.longitude);
+                },
+                error => {
+                    console.error("Geolocation error:", error);
+                }
+            );
+            </script>
+
+            <?php 
+
+        }
     }
 
     /**

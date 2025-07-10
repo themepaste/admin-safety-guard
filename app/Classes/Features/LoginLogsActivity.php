@@ -86,20 +86,14 @@ class LoginLogsActivity implements FeatureInterface {
     }
 
     private function get_geo_info( $ip ) {
-        $response = wp_remote_get( "http://ip-api.com/json/{$ip}" );
+        $url = "http://www.geoplugin.net/json.gp?ip={$ip}";
+        $response = file_get_contents($url);
+        $data = json_decode($response);
 
-        if ( is_wp_error( $response ) ) {
-            return false;
-        }
-
-        $data = json_decode( wp_remote_retrieve_body( $response ), true );
-
-        if ( isset( $data['status'] ) && $data['status'] === 'success' ) {
-            return [
-                'country' => $data['country'] ?? '',
-                'city'    => $data['city'] ?? '',
-            ];
-        }
+        return [
+            'country'   => $data->geoplugin_countryName ?? null,
+            'city'      => $data->geoplugin_city ?? null
+        ];
 
         return false;
     }

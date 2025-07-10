@@ -3,12 +3,24 @@ import React, { useState, useEffect } from 'react';
 const FailedLogins = () => {
     const [loginData, setLoginData] = useState([]);
     const [totalEntries, setTotalEntries] = useState(0);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const itemsPerPage = 3;
+    const [itemsPerPage, setItemsPerPage] = useState(3);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString.replace(' ', 'T'));
+        return date.toLocaleString('en-US', {
+            month: 'long', // July
+            day: 'numeric', // 3
+            year: 'numeric', // 2025
+            hour: 'numeric', // 11
+            minute: '2-digit', // 17
+            hour12: true, // am/pm
+        });
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -48,7 +60,7 @@ const FailedLogins = () => {
 
     useEffect(() => {
         fetchData();
-    }, [currentPage, searchTerm]);
+    }, [currentPage, searchTerm, itemsPerPage]);
 
     const totalPages = Math.ceil(totalEntries / itemsPerPage);
 
@@ -80,6 +92,22 @@ const FailedLogins = () => {
                 }}
             />
 
+            <div>
+                <label>Items per page: </label>
+                <select
+                    value={itemsPerPage} // bind to state
+                    onChange={(e) => setItemsPerPage(Number(e.target.value))} // convert string to number
+                >
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -108,7 +136,7 @@ const FailedLogins = () => {
                                         <td>{login.ip_address}</td>
                                         <td>{login.city}</td>
                                         <td>{login.country}</td>
-                                        <td>{login.login_time}</td>
+                                        <td>{formatDate(login.login_time)}</td>
                                     </tr>
                                 ))
                             ) : (
@@ -119,13 +147,11 @@ const FailedLogins = () => {
                         </tbody>
                     </table>
 
-                    <div style={{ marginTop: '10px' }}>
+                    {/* <div style={{ marginTop: '10px' }}>
                         <span>
-                            Showing {(currentPage - 1) * itemsPerPage + 1} to{' '}
-                            {Math.min(currentPage * itemsPerPage, totalEntries)}{' '}
-                            of {totalEntries} entries
+                            Showing {itemsPerPage} of {totalEntries} entries
                         </span>
-                    </div>
+                    </div> */}
 
                     <div style={{ marginTop: '10px' }}>
                         <button
