@@ -1,34 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const BlockUsers = () => {
-    const loginData = [
-        {
-            id: 1,
-            username: 'john_doe',
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-            dataTime: 'July 3, 2025, 11:17 am',
-            ipAddress: '192.168.0.1',
-            country: 'United States',
-            city: 'New York',
-        },
-    ];
-
-    const [searchTerm, setSearchTerm] = useState('');
+    const [loginData, setLoginData] = useState([]);
+    const [totalEntries, setTotalEntries] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    const filteredData = loginData.filter((item) =>
-        Object.values(item).some((val) =>
-            String(val).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    );
+    const [itemsPerPage, setItemsPerPage] = useState(3);
 
-    const totalEntries = filteredData.length;
+    const formatDate = (dateString) => {
+        const date = new Date(dateString.replace(' ', 'T'));
+        return date.toLocaleString('en-US', {
+            month: 'long', // July
+            day: 'numeric', // 3
+            year: 'numeric', // 2025
+            hour: 'numeric', // 11
+            minute: '2-digit', // 17
+            hour12: true, // am/pm
+        });
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const params = new URLSearchParams({
+                page: currentPage,
+                limit: itemsPerPage,
+            });
+
+            // Add search param only if searchTerm is not empty
+            if (searchTerm.trim() !== '') {
+                params.append('s', searchTerm.trim());
+            }
+
+            const response = await fetch(
+                `${
+                    tpsaAdmin.rest_url
+                }secure-admin/v1/block-users?${params.toString()}`,
+                {
+                    method: 'GET',
+                }
+            );
+
+            if (!response.ok) throw new Error('Failed to fetch data');
+
+            const json = await response.json();
+
+            setLoginData(json.data || []);
+            setTotalEntries(json.total || 0);
+        } catch (err) {
+            setError(err.message || 'Unknown error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [currentPage, searchTerm, itemsPerPage]);
+
     const totalPages = Math.ceil(totalEntries / itemsPerPage);
-
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, totalEntries);
-    const paginatedData = filteredData.slice(startIndex, endIndex);
 
     const handlePrevPage = () => {
         if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -39,106 +73,99 @@ const BlockUsers = () => {
     };
 
     return (
-        <div>
+        <div className="tpsa-login-log-activity">
             <h1>Block Users</h1>
+            <div className="tpsa-login-log-activity-header">
+                <div className="tpsa-login-log-activity-items-per-page">
+                    <label>Items per page: </label>
+                    <select
+                        value={itemsPerPage}
+                        onChange={(e) =>
+                            setItemsPerPage(Number(e.target.value))
+                        }
+                    >
+                        <option value="1">1</option>
+                        <option value="3">3</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div className="tpsa-login-log-activity-search">
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    />
+                </div>
+            </div>
 
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setCurrentPage(1);
-                }}
-                style={{
-                    marginBottom: '10px',
-                    padding: '8px',
-                    width: '300px',
-                    fontSize: '16px',
-                }}
-            />
-
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                    <tr>
-                        <th style={thStyle}>ID</th>
-                        <th style={thStyle}>Username</th>
-                        <th style={thStyle}>User Agent / IP Address</th>
-                        <th style={thStyle}>Country</th>
-                        <th style={thStyle}>City / State</th>
-                        <th style={thStyle}>Date & Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {paginatedData.length > 0 ? (
-                        paginatedData.map((login) => (
-                            <tr key={login.id}>
-                                <td style={tdStyle}>{login.id}</td>
-                                <td style={tdStyle}>{login.username}</td>
-                                <td style={tdStyle}>
-                                    {login.userAgent} / {login.ipAddress}
-                                </td>
-                                <td style={tdStyle}>{login.country}</td>
-                                <td style={tdStyle}>{login.city}</td>
-                                <td style={tdStyle}>{login.dataTime}</td>
+            {loading ? (
+                <p>Loading...</p>
+            ) : error ? (
+                <p style={{ color: 'red' }}>Error: {error}</p>
+            ) : (
+                <>
+                    <table className="tpsa-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>User Agent</th>
+                                <th>IP Address</th>
+                                <th>Date & Time</th>
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4" style={tdStyle}>
-                                No results found
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            {loginData.length > 0 ? (
+                                loginData.map((login) => (
+                                    <tr key={login.id}>
+                                        <td>{login.id}</td>
+                                        <td>{login.username}</td>
+                                        <td>{login.user_agent}</td>
+                                        <td>{login.ip_address}</td>
+                                        <td>{formatDate(login.login_time)}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="7">
+                                        No results available in table
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
 
-            <div style={{ marginTop: '10px' }}>
-                <span>
-                    Showing {totalEntries === 0 ? 0 : startIndex + 1} to{' '}
-                    {endIndex} of {totalEntries} entries
-                </span>
-            </div>
-
-            <div style={{ marginTop: '10px' }}>
-                <button
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    style={buttonStyle}
-                >
-                    Previous
-                </button>
-                <span style={{ margin: '0 10px' }}>
-                    Page {currentPage} of {totalPages || 1}
-                </span>
-                <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages || totalEntries === 0}
-                    style={buttonStyle}
-                >
-                    Next
-                </button>
-            </div>
+                    <div className="tpsa-login-log-activity-pagination">
+                        <button
+                            onClick={handlePrevPage}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <span>
+                            Page {currentPage} of {totalPages || 1}
+                        </span>
+                        <button
+                            onClick={handleNextPage}
+                            disabled={
+                                currentPage === totalPages || totalEntries === 0
+                            }
+                        >
+                            Next
+                        </button>
+                    </div>
+                </>
+            )}
         </div>
     );
-};
-
-const thStyle = {
-    border: '1px solid #ccc',
-    padding: '8px',
-    background: '#f4f4f4',
-    textAlign: 'left',
-};
-
-const tdStyle = {
-    border: '1px solid #ccc',
-    padding: '8px',
-};
-
-const buttonStyle = {
-    padding: '6px 12px',
-    fontSize: '14px',
-    margin: '0 5px',
 };
 
 export default BlockUsers;
