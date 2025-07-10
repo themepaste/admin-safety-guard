@@ -4,6 +4,7 @@ namespace ThemePaste\SecureAdmin\Classes\APIs;
 
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_Error;
 
 class FailedLoginsController {
     /**
@@ -27,10 +28,15 @@ class FailedLoginsController {
     }
 
     /**
-     * Retrieves failed login data.
+     * Private constructor to prevent direct instantiation.
+     */
+    private function __construct() {}
+
+    
+    /**
+     * Returns a paginated list of failed login records.
      *
      * @param WP_REST_Request $request
-     *
      * @return WP_REST_Response
      */
     public function get_failed_logins( WP_REST_Request $request ) {
@@ -79,13 +85,38 @@ class FailedLoginsController {
 
 
     /**
-     * Checks if the user has permission to access the endpoint.
+     * Permission check callback for `get_failed_logins` endpoint.
      *
-     * @return bool
+     * Ensures that the request is valid and that the user has the necessary
+     * permissions to access the data.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
      */
-    public function get_failed_logins_permission_check() {
-        return current_user_can( 'manage_options' );
+    public function get_failed_logins_permission_check( WP_REST_Request $request ) {
+        $nonce = $request->get_header( 'X-WP-Nonce' );
+
+        if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+            return new WP_Error(
+                'rest_forbidden',
+                __( 'Invalid or expired nonce.', 'tp-secure-plugin' ),
+                [ 'status' => 403 ]
+            );
+        }
+
+        // You can add more custom checks here, like checking roles or capabilities:
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return new WP_Error(
+                'rest_forbidden',
+                __( 'You do not have permission to access this data.', 'tp-secure-plugin' ),
+                [ 'status' => 403 ]
+            );
+        }
+
+        return true;
     }
+
 
     /**
      * Build a standard REST response for failed login data.
