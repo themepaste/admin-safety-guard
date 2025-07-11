@@ -8,14 +8,14 @@ use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
 /**
- * Feature: HideAdminBar
+ * Feature: LimitLoginAttempts
  *
  * Hides the WordPress admin bar based on plugin settings.
  *
  * @package ThemePaste\SecureAdmin\Classes\Features
  * @since   1.0.0
  */
-class HideAdminBar implements FeatureInterface {
+class LimitLoginAttempts implements FeatureInterface {
 
     use Hook;
 
@@ -27,13 +27,13 @@ class HideAdminBar implements FeatureInterface {
      * - The `tpsa-setting` query parameter in the admin settings screen URL.
      *
      * Example usage:
-     * - Settings array: tpsa_settings_fields()['hide-admin-bar']
-     * - Admin page URL: wp-admin/admin.php?page=tp-secure-admin&tpsa-setting=hide-admin-bar
+     * - Settings array: tpsa_settings_fields()['limit-login-attempts']
+     * - Admin page URL: wp-admin/admin.php?page=tp-secure-admin&tpsa-setting=limit-login-attempts
      *
      * @since 1.0.0
      * @var string
      */
-    private $features_id = 'hide-admin-bar';
+    private $features_id = 'limit-login-attempts';
 
     /**
      * Registers the WordPress hooks for the HideAdminBar feature.
@@ -47,6 +47,28 @@ class HideAdminBar implements FeatureInterface {
 
     public function register_hooks() {
         $this->action( 'init', [$this, 'hide_admin_bar']);
+        $this->action( 'login_init', [ $this, 'maybe_hide_login_form' ] );
+    }
+
+    public function maybe_hide_login_form() {
+        $settings = $this->get_settings();
+        
+        wp_die(
+            '<h2 style="color:red;text-align:center;">Access Denied</h2><p style="text-align:center;">You are temporarily blocked from accessing the login page.</p>',
+            'Login Blocked',
+            [ 'response' => 403 ]
+        );
+        exit;
+    }
+
+    private function get_ip_address() {
+        if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+            return sanitize_text_field( $_SERVER['HTTP_CLIENT_IP'] );
+        } elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+            return sanitize_text_field( explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] )[0] );
+        }
+
+        return sanitize_text_field( $_SERVER['REMOTE_ADDR'] );
     }
 
     /**
@@ -61,18 +83,9 @@ class HideAdminBar implements FeatureInterface {
      * @return void
      */
     public function hide_admin_bar() {
-        $settings = $this->get_settings();
+        $settings       = $this->get_settings();
         if( $this->is_enabled( $settings ) ) {
-            if( isset( $settings['disable-for-admin'] ) && $settings['disable-for-admin'] == 1 ) {
-                $this->filter( 'show_admin_bar', function( $show ) {
-                    if ( ! current_user_can( 'administrator' ) ) {
-                        return false;
-                    }
-                    return $show;
-                } );
-            }else {
-                $this->filter( 'show_admin_bar', '__return_false');
-            }
+            
         }
     }
 

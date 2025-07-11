@@ -30,7 +30,8 @@ class FeatureManager {
         $features = [
             Features\HideAdminBar::class,
             Features\LoginLogut::class,
-            Features\LoginLogsActivity::class
+            Features\LoginLogsActivity::class,
+            Features\LimitLoginAttempts::class,
         ];
 
         foreach ( $features as $feature ) {
