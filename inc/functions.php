@@ -36,6 +36,10 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Login Logs & Activity Tracking', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
+                'authentication-security' => array(
+                    'label' => __( 'Authentication Security', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
                 'customize' => array(
                     'label' => __( 'Customize', 'tp-secure-plugin' ),
                     'class' => '',
