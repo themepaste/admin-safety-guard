@@ -140,14 +140,6 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Add How many munite block', 'tp-secure-plugin' ),
                             'default' => 15,
                         ),
-                        'block-users' => array(
-                            'type'  => 'textarea',
-                            'label' => __( 'Block Users', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'usernames separated by comma', 'tp-secure-plugin' ),
-                            'default' => '',
-                        ),
                         'block-message' => array(
                             'type'  => 'textarea',
                             'label' => __( 'Block Message', 'tp-secure-plugin' ),

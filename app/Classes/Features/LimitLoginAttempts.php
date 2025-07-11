@@ -80,8 +80,8 @@ class LimitLoginAttempts implements FeatureInterface {
     public function maybe_hide_login_form() {
         $settings = $this->get_settings();
         $ip       = $this->get_ip_address();
-
         $tpsa_ip = get_transient( 'tpsa_blocked_ip_' . $ip );
+        $block_message = $settings['block-message'];
 
         if ( $tpsa_ip ) {
             wp_die(
@@ -89,7 +89,7 @@ class LimitLoginAttempts implements FeatureInterface {
                     Access Denied
                 </h2>
                 <p style="text-align:center;">
-                    You are temporarily blocked from accessing the login page.
+                    ' . $block_message . '
                 </p>',
                 'Login Blocked',
                 [ 'response' => 403 ]
@@ -109,24 +109,6 @@ class LimitLoginAttempts implements FeatureInterface {
 
         return sanitize_text_field( $_SERVER['REMOTE_ADDR'] );
     }
-
-    /**
-     * Hides the admin bar.
-     *
-     * Checks the settings for the feature and if the feature is enabled, it filters the 'show_admin_bar' hook
-     * to disable the admin bar. If the 'disable-for-admin' option is set to true, it only disables the admin bar
-     * for non-admin users.
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
-    // public function hide_admin_bar() {
-    //     $settings       = $this->get_settings();
-    //     if( $this->is_enabled( $settings ) ) {
-            
-    //     }
-    // }
 
     /**
      * Get plugin settings.
