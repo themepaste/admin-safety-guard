@@ -46,19 +46,56 @@ class LimitLoginAttempts implements FeatureInterface {
      */
 
     public function register_hooks() {
-        $this->action( 'init', [$this, 'hide_admin_bar']);
+        $this->action( 'wp_login_failed', [$this, 'tpsa_track_failed_login_24hr']);
         $this->action( 'login_init', [ $this, 'maybe_hide_login_form' ] );
+    }
+
+    public function tpsa_track_failed_login_24hr( $username ) {
+        $settings       = $this->get_settings();
+        if( $this->is_enabled( $settings ) ) {
+
+            $ip             = $this->get_ip_address();
+            $failed_logins  = get_option( 'tpsa_failed_logins', [] );
+            $now            = time();
+            $attempts       = isset( $failed_logins[$ip] ) ? $failed_logins[$ip] : [];
+    
+            // Remove entries older than 24 hours
+            $attempts = array_filter( $attempts, function( $entry ) use ( $now ) {
+                return ( $now - $entry['time'] ) <= DAY_IN_SECONDS;
+            });
+    
+            // Add current attempt
+            $attempts[]         = ['time' => $now];
+            $failed_logins[$ip] = $attempts;
+    
+            update_option( 'tpsa_failed_logins', $failed_logins );
+    
+            // Check if over limit
+            if ( count( $attempts ) > $settings['max-attempts'] ) {
+                set_transient( 'tpsa_blocked_ip_' . $ip, true, $settings['block-for'] * 60 );
+            }
+        }
     }
 
     public function maybe_hide_login_form() {
         $settings = $this->get_settings();
+        $ip       = $this->get_ip_address();
+
+        if ( get_transient( 'tpsa_blocked_ip_' . $ip ) ) {
+            wp_die(
+                '<h2 style="color:red;text-align:center;">
+                    Access Denied
+                </h2>
+                <p style="text-align:center;">
+                    You are temporarily blocked from accessing the login page.
+                </p>',
+                'Login Blocked',
+                [ 'response' => 403 ]
+            );
+            exit;
+        }
         
-        wp_die(
-            '<h2 style="color:red;text-align:center;">Access Denied</h2><p style="text-align:center;">You are temporarily blocked from accessing the login page.</p>',
-            'Login Blocked',
-            [ 'response' => 403 ]
-        );
-        exit;
+        
     }
 
     private function get_ip_address() {
@@ -82,12 +119,12 @@ class LimitLoginAttempts implements FeatureInterface {
      *
      * @return void
      */
-    public function hide_admin_bar() {
-        $settings       = $this->get_settings();
-        if( $this->is_enabled( $settings ) ) {
+    // public function hide_admin_bar() {
+    //     $settings       = $this->get_settings();
+    //     if( $this->is_enabled( $settings ) ) {
             
-        }
-    }
+    //     }
+    // }
 
     /**
      * Get plugin settings.
