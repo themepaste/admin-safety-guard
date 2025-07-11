@@ -128,6 +128,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Maximum number of login attempts within 24 hours.', 'tp-secure-plugin' ),
                             'default' => 5,
                         ),
+                        'block-for' => array(
+                            'type'  => 'number',
+                            'label' => __( 'Block For', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Add How many munite block', 'tp-secure-plugin' ),
+                            'default' => 15,
+                        ),
                         'block-users' => array(
                             'type'  => 'textarea',
                             'label' => __( 'Block Users', 'tp-secure-plugin' ),
