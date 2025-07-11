@@ -81,7 +81,9 @@ class LimitLoginAttempts implements FeatureInterface {
         $settings = $this->get_settings();
         $ip       = $this->get_ip_address();
 
-        if ( get_transient( 'tpsa_blocked_ip_' . $ip ) ) {
+        $tpsa_ip = get_transient( 'tpsa_blocked_ip_' . $ip );
+
+        if ( $tpsa_ip ) {
             wp_die(
                 '<h2 style="color:red;text-align:center;">
                     Access Denied
