@@ -112,10 +112,12 @@ class LoginLogut implements FeatureInterface
      */
     public function logout_redirect($redirect_to, $requested_redirect_to, $user)
     {
-        $settings = $this->get_settings();
-        if ($this->is_enabled($settings) && !empty($settings['logout-url'])) {
-            return home_url($settings['logout-url']);
+        $settings       = $this->get_settings();
+        $redirect_to    = $settings['logout-url'];
+        if( $this->is_enabled( $settings ) ) {
+            return home_url( $redirect_to );
         }
+
         return $redirect_to;
     }
 
