@@ -15,85 +15,95 @@ class LoginLogut implements FeatureInterface
 
     public function register_hooks()
     {
-        $this->action('init', [$this, 'add_custom_rewrite_rule']);
-        $this->action('template_redirect', [$this, 'block_wp_admin_access']);
-        $this->action('login_init', [$this, 'block_direct_login_access']);
         $this->filter('logout_redirect', [$this, 'logout_redirect'], 10, 3);
         $this->filter('tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
         $this->filter('tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
-        $this->action('admin_init', [$this, 'maybe_flush_rules']);
+
+        // Login redirect functionality
+        $this->action('init', [$this, 'add_rewrite_rule']);
+        $this->filter('query_vars', [$this, 'add_query_vars']);
+        $this->action('template_redirect', [$this, 'handle_custom_login']);
+        $this->action('login_init', [$this, 'maybe_block_default_login']);
+        $this->action('init', [$this, 'block_wp_admin'], 1);
+        $this->action('init', [$this, 'maybe_flush_rules']);
     }
 
     /**
-     * Add a rewrite rule for the custom login slug
+     * Add rewrite rule for custom login
      */
-    public function add_custom_rewrite_rule()
+    public function add_rewrite_rule()
     {
         $settings = $this->get_settings();
-        if ($this->is_enabled($settings) && !empty($settings['login-url'])) {
-            add_rewrite_rule("^" . preg_quote($settings['login-url'], '/') . "/?", 'wp-login.php', 'top');
+        if (! $this->is_enabled($settings) || empty($settings['login-url'])) {
+            return;
+        }
+
+        add_rewrite_rule("^{$settings['login-url']}/?$", 'index.php?custom_login=1', 'top');
+    }
+
+    /**
+     * Add custom query var
+     */
+    public function add_query_vars($vars)
+    {
+        $vars[] = 'custom_login';
+        return $vars;
+    }
+
+    /**
+     * Handle login form rendering
+     */
+    public function handle_custom_login()
+    {
+        if (get_query_var('custom_login')) {
+            require_once ABSPATH . 'wp-login.php';
+            exit;
         }
     }
 
     /**
-     * Flush rules on settings update
+     * Block default login access
+     */
+    public function maybe_block_default_login()
+    {
+        $settings = $this->get_settings();
+        if (! $this->is_enabled($settings) || empty($settings['login-url'])) {
+            return;
+        }
+
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        if (strpos($request_uri, $settings['login-url']) !== false) {
+            return;
+        }
+
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        include get_query_template('404');
+        exit;
+    }
+
+    /**
+     * Block wp-admin for unauthenticated users
+     */
+    public function block_wp_admin()
+    {
+        if (is_admin() && !is_user_logged_in() && !defined('DOING_AJAX')) {
+            wp_redirect(home_url('/404'));
+            exit;
+        }
+    }
+
+    /**
+     * Trigger flush rewrite rules if necessary
      */
     public function maybe_flush_rules()
     {
-        if (isset($_GET['tpsa_flush_rules'])) {
+        if (get_option('_tpsa_flush_login_rewrite') !== 'yes') {
             flush_rewrite_rules();
-        }
-    }
-
-    /**
-     * Block direct access to wp-login.php unless via custom slug
-     */
-    public function block_direct_login_access()
-    {
-        $settings = $this->get_settings();
-        if (!$this->is_enabled($settings)) {
-            return;
-        }
-
-        $custom_slug = trim($settings['login-url'], '/');
-        $parsed_custom_path = trim(parse_url(site_url($custom_slug), PHP_URL_PATH), '/');
-        $request_path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
-        // If accessing wp-login.php directly (not via rewrite rule), block it
-        if ($request_path === 'wp-login.php' && $parsed_custom_path !== 'wp-login.php') {
-            global $wp_query;
-            $wp_query->set_404();
-            status_header(404);
-            nocache_headers();
-            include get_404_template();
-            exit;
-        }
-    }
-
-    /**
-     * Block /wp-admin access for non-logged-in users
-     */
-    public function block_wp_admin_access()
-    {
-        if (is_user_logged_in()) {
-            return;
-        }
-
-        $settings = $this->get_settings();
-        if (!$this->is_enabled($settings)) {
-            return;
-        }
-
-        $request_path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
-        // If accessing /wp-admin and not logged in
-        if (strpos($request_path, 'wp-admin') === 0) {
-            global $wp_query;
-            $wp_query->set_404();
-            status_header(404);
-            nocache_headers();
-            include get_404_template();
-            exit;
+            update_option('_tpsa_flush_login_rewrite', 'yes');
         }
     }
 
@@ -109,19 +119,8 @@ class LoginLogut implements FeatureInterface
         return $redirect_to;
     }
 
-    private function get_settings()
-    {
-        $option_name = get_tpsa_settings_option_name($this->features_id);
-        return get_option($option_name, []);
-    }
-
-    private function is_enabled($settings)
-    {
-        return isset($settings['enable']) && $settings['enable'] == 1;
-    }
-
     /**
-     * Show full URL in settings fields
+     * Add site URL in login/logout input
      */
     public function modify_the_custom_login_logout_url_field($template, $args)
     {
@@ -132,5 +131,16 @@ class LoginLogut implements FeatureInterface
             $template
         );
         return $template;
+    }
+
+    private function get_settings()
+    {
+        $option_name = get_tpsa_settings_option_name($this->features_id);
+        return get_option($option_name, []);
+    }
+
+    private function is_enabled($settings)
+    {
+        return isset($settings['enable']) && $settings['enable'] == 1;
     }
 }
