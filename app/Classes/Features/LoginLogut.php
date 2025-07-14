@@ -49,10 +49,11 @@ class LoginLogut implements FeatureInterface {
             return;
         }
         
-        $this->action( 'setup_theme', [$this, 'tpsa_custom_login_rewrite'], 1 );
-        $this->action( 'wp_loaded', [$this, 'maybe_block_default_login'] );
-        $this->filter( 'site_url', [$this, 'change_login_url'], 10, 3 );
-        $this->filter( 'wp_redirect', [$this, 'filter_login_redirects'], 10, 2 );
+        // $this->action( 'setup_theme', [$this, 'tpsa_custom_login_rewrite'], 1 );
+        // $this->action( 'wp_loaded', [$this, 'maybe_block_default_login'] );
+        // $this->filter( 'site_url', [$this, 'change_login_url'], 10, 3 );
+        // $this->filter( 'wp_redirect', [$this, 'filter_login_redirects'], 10, 2 );
+        $this->filter( 'logout_redirect',[$this, 'logout_redirect'] ,10, 3 );
     }
 
     public function tpsa_custom_login_rewrite() {
@@ -119,5 +120,28 @@ class LoginLogut implements FeatureInterface {
             $location = str_replace( 'wp-login.php', $this->custom_login_path, $location );
         }
         return $location;
+    }
+
+    public function logout_redirect( $redirect_to, $requested_redirect_to, $user ) {
+        $settings       = $this->get_settings();
+        $redirect_to    = $settings['logout-url'];
+        if( $this->is_enabled( $settings ) ) {
+            return home_url( $redirect_to );
+        }
+    }
+
+    /**
+     * Get plugin settings.
+     */
+    private function get_settings() {
+        $option_name = get_tpsa_settings_option_name( $this->features_id );
+        return get_option( $option_name, [] );
+    }
+
+    /**
+     * Check if the feature is enabled.
+     */
+    private function is_enabled( $settings ) {
+        return isset( $settings['enable'] ) && $settings['enable'] == 1;
     }
 }
