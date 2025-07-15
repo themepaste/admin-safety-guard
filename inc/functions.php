@@ -159,6 +159,42 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         
                     )
                 ),
+                'authentication-security' => array(
+                    'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Enable', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                        'site-key' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Site Key', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
+                        'screet-key' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Screet Key', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
+                        'theme' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Theme', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
+                    )
+                )
             )
         );
     }
