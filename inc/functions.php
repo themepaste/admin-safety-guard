@@ -169,6 +169,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
+                        'version' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Version', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
                         'site-key' => array(
                             'type'  => 'text',
                             'label' => __( 'Site Key', 'tp-secure-plugin' ),

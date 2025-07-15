@@ -20,32 +20,14 @@ class AuthenticationSecurity implements FeatureInterface {
 
     use Hook;
 
-    /**
-     * Feature ID for settings and admin slug.
-     *
-     * @var string
-     */
     private $features_id = 'authentication-security';
 
-    /**
-     * Plugin settings.
-     *
-     * @var array
-     */
     private $settings = [];
 
-    /**
-     * Registers WordPress hooks.
-     *
-     * @return void
-     */
     public function register_hooks() {
         $this->action('init', [$this, 'authentication_security']);
     }
 
-    /**
-     * Boot feature if enabled and keys are provided.
-     */
     public function authentication_security() {
         $this->settings = $this->get_settings();
         if (!$this->is_enabled($this->settings)) {
@@ -66,35 +48,45 @@ class AuthenticationSecurity implements FeatureInterface {
         $this->filter('registration_errors', [$this, 'verify_recaptcha_on_register'], 10, 1);
     }
 
-    /**
-     * Enqueue Google reCAPTCHA script.
-     */
     public function enqueue_scripts() {
-        echo '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-    }
-
-    /**
-     * Display reCAPTCHA box in form.
-     */
-    public function show_recaptcha() {
         $site_key = esc_attr($this->settings['site-key']);
-        $theme    = esc_attr($this->settings['theme'] ?? 'light');
+        $version  = $this->settings['version'] ?? 'v2';
 
-        echo '<div class="g-recaptcha" data-sitekey="' . $site_key . '" data-theme="' . $theme . '"></div>';
+        if ($version === 'v3') {
+            echo "<script src='https://www.google.com/recaptcha/api.js?render={$site_key}'></script>";
+            echo "<script>
+                grecaptcha.ready(function() {
+                    grecaptcha.execute('{$site_key}', {action: 'login_register'}).then(function(token) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'g-recaptcha-response';
+                        input.value = token;
+                        document.forms[0].appendChild(input);
+                    });
+                });
+            </script>";
+        } else {
+            echo '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+        }
     }
 
-    /**
-     * Show error if keys are missing.
-     */
+    public function show_recaptcha() {
+        $version = $this->settings['version'] ?? 'v2';
+
+        if ($version === 'v2') {
+            $site_key = esc_attr($this->settings['site-key']);
+            $theme    = esc_attr($this->settings['theme'] ?? 'light');
+
+            echo '<div class="g-recaptcha" data-sitekey="' . $site_key . '" data-theme="' . $theme . '"></div>';
+        }
+    }
+
     public function show_recaptcha_error() {
         echo '<div style="color: red; margin: 10px 0;">';
         esc_html_e('reCAPTCHA keys are not configured properly. Please contact the site administrator.', 'tp-secure-plugin');
         echo '</div>';
     }
 
-    /**
-     * Verify reCAPTCHA on login.
-     */
     public function verify_recaptcha_on_login($user, $username, $password) {
         if (!isset($_POST['g-recaptcha-response'])) {
             return new WP_Error('recaptcha_missing', __('reCAPTCHA verification missing.', 'tp-secure-plugin'));
@@ -108,11 +100,8 @@ class AuthenticationSecurity implements FeatureInterface {
         return $user;
     }
 
-    /**
-     * Verify reCAPTCHA on registration.
-     */
     public function verify_recaptcha_on_register($errors) {
-        $token = $_POST['g-recaptcha-response'] ?? '';
+        $token  = $_POST['g-recaptcha-response'] ?? '';
         $result = $this->verify_recaptcha(sanitize_text_field($token));
 
         if (is_wp_error($result)) {
@@ -122,11 +111,9 @@ class AuthenticationSecurity implements FeatureInterface {
         return $errors;
     }
 
-    /**
-     * reCAPTCHA token verification.
-     */
     private function verify_recaptcha($token) {
         $secret_key = sanitize_text_field($this->settings['secret-key']);
+        $version    = $this->settings['version'] ?? 'v2';
 
         if (empty($token)) {
             return new WP_Error('recaptcha_missing', __('reCAPTCHA token is missing.', 'tp-secure-plugin'));
@@ -150,20 +137,24 @@ class AuthenticationSecurity implements FeatureInterface {
             return new WP_Error('recaptcha_invalid', __('reCAPTCHA verification failed.', 'tp-secure-plugin'));
         }
 
+        if ($version === 'v3') {
+            if (empty($body['score']) || $body['score'] < 0.5) {
+                return new WP_Error('recaptcha_low_score', __('reCAPTCHA score too low. Try again.', 'tp-secure-plugin'));
+            }
+
+            if (empty($body['action']) || $body['action'] !== 'login_register') {
+                return new WP_Error('recaptcha_action_mismatch', __('reCAPTCHA action mismatch.', 'tp-secure-plugin'));
+            }
+        }
+
         return true;
     }
 
-    /**
-     * Get plugin settings.
-     */
     private function get_settings() {
         $option_name = get_tpsa_settings_option_name($this->features_id);
         return get_option($option_name, []);
     }
 
-    /**
-     * Check if the feature is enabled.
-     */
     private function is_enabled($settings) {
         return !empty($settings['enable']) && (int) $settings['enable'] === 1;
     }
