@@ -177,7 +177,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( '', 'tp-secure-plugin' ),
                             'default' => '',
                         ),
-                        'screet-key' => array(
+                        'secret-key' => array(
                             'type'  => 'text',
                             'label' => __( 'Screet Key', 'tp-secure-plugin' ),
                             'class' => '',

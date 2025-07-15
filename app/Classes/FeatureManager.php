@@ -29,7 +29,7 @@ class FeatureManager {
     private function load_features() {
         $features = [
             Features\HideAdminBar::class,
-            Features\LoginLogut::class,
+            // Features\LoginLogut::class,
             Features\LoginLogsActivity::class,
             Features\LimitLoginAttempts::class,
             Features\AuthenticationSecurity::class
