@@ -33,7 +33,7 @@ class HideAdminBar implements FeatureInterface {
      * @since 1.0.0
      * @var string
      */
-    private $features_id = 'hide-admin-bar';
+    private $features_id = 'admin-bar';
 
     /**
      * Registers the WordPress hooks for the HideAdminBar feature.

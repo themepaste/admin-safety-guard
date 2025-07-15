@@ -85,7 +85,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'class' => '',
                             'id'    => '',
                             'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
-                            'default' => 1
+                            'default' => 0
                         )
                     )
                 ),
