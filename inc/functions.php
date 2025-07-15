@@ -198,12 +198,16 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'default' => '',
                         ),
                         'theme' => array(
-                            'type'  => 'text',
+                            'type'  => 'option',
                             'label' => __( 'Theme', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( '', 'tp-secure-plugin' ),
-                            'default' => '',
+                            'default' => 'light',
+                            'options' => array(
+                                'light' => 'Light Theme',
+                                'dark'  => 'Dark Theme',
+                            )
                         ),
                     )
                 )
