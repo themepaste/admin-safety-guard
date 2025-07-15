@@ -32,6 +32,7 @@ class FeatureManager {
             Features\LoginLogut::class,
             Features\LoginLogsActivity::class,
             Features\LimitLoginAttempts::class,
+            Features\AuthenticationSecurity::class
         ];
 
         foreach ( $features as $feature ) {
