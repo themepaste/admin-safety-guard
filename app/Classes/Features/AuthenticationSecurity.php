@@ -20,7 +20,7 @@ use WP_Error;
 class AuthenticationSecurity implements FeatureInterface {
 
 	use Hook;
-    use Asset;
+	use Asset;
 
 	/**
 	 * Feature ID for settings and admin slug.
@@ -71,52 +71,54 @@ class AuthenticationSecurity implements FeatureInterface {
 	 * Enqueue Google reCAPTCHA script.
 	 */
 	public function enqueue_scripts() {
-        $site_key = isset( $this->settings['site-key'] ) ? esc_attr( $this->settings['site-key'] ) : '';
-        $version  = isset( $this->settings['version'] ) ? $this->settings['version'] : 'v2';
+		$site_key = isset( $this->settings['site-key'] ) ? esc_attr( $this->settings['site-key'] ) : '';
+		$version  = isset( $this->settings['version'] ) ? $this->settings['version'] : 'v2';
 
-        if ( 'v3' === $version ) {
-            wp_enqueue_script(
-                'google-recaptcha-v3',
-                'https://www.google.com/recaptcha/api.js?render=' . rawurlencode( $site_key ),
-                [],
-                null,
-                true
-            );
+		if ( 'v3' === $version ) {
+			wp_enqueue_script(
+				'google-recaptcha-v3',
+				'https://www.google.com/recaptcha/api.js?render=' . rawurlencode( $site_key ),
+				[],
+				null,
+				true
+			);
 
-            $inline_script = "
-                document.addEventListener('DOMContentLoaded', function () {
-                    if (typeof grecaptcha !== 'undefined') {
-                        grecaptcha.ready(function () {
-                            grecaptcha.execute('{$site_key}', {action: 'login_register'}).then(function (token) {
-                                var input = document.createElement('input');
-                                input.type = 'hidden';
-                                input.name = 'g-recaptcha-response';
-                                input.value = token;
-                                var form = document.querySelector('form');
-                                if (form) {
-                                    form.appendChild(input);
-                                }
-                            });
-                        });
-                    }
-                });
-            ";
+			$inline_script = "
+				document.addEventListener('DOMContentLoaded', function () {
+					if (typeof grecaptcha !== 'undefined') {
+						grecaptcha.ready(function () {
+							grecaptcha.execute('{$site_key}', {action: 'login_register'}).then(function (token) {
+								var input = document.createElement('input');
+								input.type = 'hidden';
+								input.name = 'g-recaptcha-response';
+								input.value = token;
+								var form = document.querySelector('form');
+								if (form) {
+									form.appendChild(input);
+								}
+							});
+						});
+					}
+				});
+			";
 
-            wp_add_inline_script( 'google-recaptcha-v3', $inline_script );
-        } else {
-            wp_enqueue_script(
-                'google-recaptcha-v2',
-                'https://www.google.com/recaptcha/api.js',
-                [],
-                null,
-                true
-            );
-            $this->enqueue_style( 
-                'google-recaptcha-v2',
-                TPSA_ASSETS_URL . '/login/css/recaptcha.css'
-            );
-        }
-    }
+			wp_add_inline_script( 'google-recaptcha-v3', $inline_script );
+
+		} else {
+			wp_enqueue_script(
+				'google-recaptcha-v2',
+				'https://www.google.com/recaptcha/api.js',
+				[],
+				null,
+				true
+			);
+
+			$this->enqueue_style(
+				'google-recaptcha-v2',
+				TPSA_ASSETS_URL . '/login/css/recaptcha.css'
+			);
+		}
+	}
 
 	/**
 	 * Display reCAPTCHA box in form.
@@ -150,7 +152,11 @@ class AuthenticationSecurity implements FeatureInterface {
 	 * @return WP_User|WP_Error
 	 */
 	public function verify_recaptcha_on_login( $user, $username, $password ) {
-		if ( ! isset( $_POST['g-recaptcha-response'] ) ) {
+		if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+			return $user;
+		}
+
+		if ( empty( $_POST['g-recaptcha-response'] ) ) {
 			return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA verification missing.', 'tp-secure-plugin' ) );
 		}
 
@@ -170,6 +176,10 @@ class AuthenticationSecurity implements FeatureInterface {
 	 * @return WP_Error
 	 */
 	public function verify_recaptcha_on_register( $errors ) {
+		if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+			return $errors;
+		}
+
 		$token  = $_POST['g-recaptcha-response'] ?? '';
 		$result = $this->verify_recaptcha( sanitize_text_field( $token ) );
 
