@@ -170,12 +170,16 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'default' => 0,
                         ),
                         'version' => array(
-                            'type'  => 'text',
+                            'type'  => 'option',
                             'label' => __( 'Version', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( '', 'tp-secure-plugin' ),
                             'default' => '',
+                            'options' => array(
+                                'v2' => 'v2',
+                                'v3' => 'v3',
+                            )
                         ),
                         'site-key' => array(
                             'type'  => 'text',

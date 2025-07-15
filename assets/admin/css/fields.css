@@ -34,6 +34,12 @@
 .tp-field .tp-field-input textarea {
     min-height: 68px;
 }
+.tp-field .tp-field-input select {
+    width: 50%;
+    border: 1px solid #a8a8a8;
+    border-radius: 4px;
+    box-shadow: none;
+}
 /* End fieldset */
 
 /*== start switch style ==*/
