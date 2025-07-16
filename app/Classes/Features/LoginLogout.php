@@ -7,7 +7,7 @@ defined('ABSPATH') || exit;
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
-class LoginLogut implements FeatureInterface
+class LoginLogout implements FeatureInterface
 {
     use Hook;
 
