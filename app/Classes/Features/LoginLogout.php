@@ -11,8 +11,9 @@ class LoginLogout implements FeatureInterface
 {
     use Hook;
 
-    private $features_id = 'custom-login-url';
-    private $custom_login_slug = ''; 
+    private $features_id        = 'custom-login-url';
+    private $custom_login_slug  = ''; 
+    private $redirect_slug      = ''; 
 
     public function register_hooks()
     {
@@ -25,7 +26,7 @@ class LoginLogout implements FeatureInterface
 
         // Get the custom login slug from settings, fallback to empty string
         $this->custom_login_slug = !empty($settings['login-url']) ? trim($settings['login-url'], '/') : '';
-
+        $this->redirect_slug = !empty($settings['redirect-url']) ? trim($settings['redirect-url'], '/') : '';
         if( ! $this->is_enabled( $settings ) || empty( $this->custom_login_slug ) ) {
             return;
         }
@@ -54,7 +55,7 @@ class LoginLogout implements FeatureInterface
      */
     function redirect_wp_admin() {
         if (strpos($_SERVER['REQUEST_URI'], '/wp-admin') === 0 && !is_user_logged_in()) {
-            wp_redirect(home_url('/'));
+            wp_redirect(home_url($this->redirect_slug));
             exit;
         }
     }
