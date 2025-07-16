@@ -12,6 +12,7 @@ class LoginLogout implements FeatureInterface
     use Hook;
 
     private $features_id = 'custom-login-url';
+    private $custom_login_slug = ''; 
 
     public function register_hooks()
     {
@@ -20,7 +21,10 @@ class LoginLogout implements FeatureInterface
         $this->filter('tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
 
         $settings       = $this->get_settings();
-        define('CUSTOM_LOGIN_SLUG', 'habib-login');
+
+        // Get the custom login slug from settings, fallback to empty string
+        $this->custom_login_slug = !empty($settings['login-url']) ? trim($settings['login-url'], '/') : '';
+
         if( ! $this->is_enabled( $settings ) ) {
             return;
         }
@@ -39,7 +43,7 @@ class LoginLogout implements FeatureInterface
      */
     public function override_site_url( $url, $path, $scheme, $blog_id ) {
         if ( strpos( $url, 'wp-login.php' ) !== false ) {
-            $url = str_replace( 'wp-login.php', CUSTOM_LOGIN_SLUG, $url );
+            $url = str_replace( 'wp-login.php', $this->custom_login_slug, $url );
         }
         return $url;
     }
@@ -60,7 +64,7 @@ class LoginLogout implements FeatureInterface
     public function show_404() {
         if (
             strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false &&
-            strpos($_SERVER['REQUEST_URI'], '/' . CUSTOM_LOGIN_SLUG) === false
+            strpos($_SERVER['REQUEST_URI'], '/' . $this->custom_login_slug) === false
         ) {
             global $wp_query;
             $wp_query->set_404();
@@ -75,7 +79,7 @@ class LoginLogout implements FeatureInterface
      * Rewrite /habib-login → wp-login.php with all query args
      */
     public function rewrite_url() {
-        add_rewrite_rule('^' . CUSTOM_LOGIN_SLUG . '/?$', 'wp-login.php', 'top');
+        add_rewrite_rule('^' . $this->custom_login_slug . '/?$', 'wp-login.php', 'top');
     }
 
     /**
@@ -85,7 +89,7 @@ class LoginLogout implements FeatureInterface
         $request_uri = $_SERVER['REQUEST_URI'];
 
         // Normalize custom login slug match
-        if (preg_match('#^/' . CUSTOM_LOGIN_SLUG . '(/|\?|$)#', $request_uri)) {
+        if (preg_match('#^/' . $this->custom_login_slug . '(/|\?|$)#', $request_uri)) {
             require ABSPATH . 'wp-login.php';
             exit;
         }
