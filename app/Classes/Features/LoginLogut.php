@@ -19,7 +19,76 @@ class LoginLogut implements FeatureInterface
         $this->filter('tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
         $this->filter('tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
 
+        $settings       = $this->get_settings();
+        define('CUSTOM_LOGIN_SLUG', 'habib-login');
+        if( ! $this->is_enabled( $settings ) ) {
+            return;
+        }
 
+        $this->action( 'init', [$this, 'rewrite_url'] );
+        $this->action( 'init', [$this, 'show_404'] );
+        $this->action( 'init', [$this, 'redirect_wp_admin'] );
+        $this->action( 'template_redirect', [$this, 'force_custom_login_url'] );
+
+        $this->filter( 'site_url', [$this, 'override_site_url'], 10, 4 );
+
+    }
+
+    /**
+     * Override all WordPress-generated login URLs (login, register, lost password, etc.)
+     */
+    public function override_site_url( $url, $path, $scheme, $blog_id ) {
+        if ( strpos( $url, 'wp-login.php' ) !== false ) {
+            $url = str_replace( 'wp-login.php', CUSTOM_LOGIN_SLUG, $url );
+        }
+        return $url;
+    }
+
+    /**
+     * Redirect /wp-admin to home if not logged in
+     */
+    function redirect_wp_admin() {
+        if (strpos($_SERVER['REQUEST_URI'], '/wp-admin') === 0 && !is_user_logged_in()) {
+            wp_redirect(home_url('/'));
+            exit;
+        }
+    }
+
+    /**
+     * Show 404 if /wp-login.php is accessed
+     */
+    public function show_404() {
+        if (
+            strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false &&
+            strpos($_SERVER['REQUEST_URI'], '/' . CUSTOM_LOGIN_SLUG) === false
+        ) {
+            global $wp_query;
+            $wp_query->set_404();
+            status_header(404);
+            nocache_headers();
+            include get_404_template();
+            exit;
+        }
+    }
+
+    /**
+     * Rewrite /habib-login → wp-login.php with all query args
+     */
+    public function rewrite_url() {
+        add_rewrite_rule('^' . CUSTOM_LOGIN_SLUG . '/?$', 'wp-login.php', 'top');
+    }
+
+    /**
+     * Force WordPress to parse /habib-login as wp-login.php
+     */
+    public function force_custom_login_url() {
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        // Normalize custom login slug match
+        if (preg_match('#^/' . CUSTOM_LOGIN_SLUG . '(/|\?|$)#', $request_uri)) {
+            require ABSPATH . 'wp-login.php';
+            exit;
+        }
     }
 
     /**
