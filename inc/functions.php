@@ -107,6 +107,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' ),
                             'default' => get_tpsa_site_login_path(),
                         ),
+                        'redirect-url' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Redirect URL', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Wp Admin redirect URL. Default: home_url()', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
                         'logout-url' => array(
                             'type'  => 'text',
                             'label' => __( 'Redirect URL After Logout', 'tp-secure-plugin' ),

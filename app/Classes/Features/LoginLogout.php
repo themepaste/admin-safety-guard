@@ -19,13 +19,14 @@ class LoginLogout implements FeatureInterface
         $this->filter('logout_redirect', [$this, 'logout_redirect'], 10, 3);
         $this->filter('tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
         $this->filter('tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
+        $this->filter('tpsa_custom-login-url_redirect-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2);
 
         $settings       = $this->get_settings();
 
         // Get the custom login slug from settings, fallback to empty string
         $this->custom_login_slug = !empty($settings['login-url']) ? trim($settings['login-url'], '/') : '';
 
-        if( ! $this->is_enabled( $settings ) ) {
+        if( ! $this->is_enabled( $settings ) || empty( $this->custom_login_slug ) ) {
             return;
         }
 
