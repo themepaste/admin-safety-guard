@@ -246,17 +246,17 @@ class TwoFactorAuth implements FeatureInterface {
         </head>
         <body>
         <div class="email-container">
-            <div class="email-title">' . esc_html($site_name) . ' OTP is</div>
-            <div class="otp-box">' . esc_html($otp) . '</div>
+            <div class="email-title">' . esc_html( $site_name ) . ' OTP is</div>
+            <div class="otp-box">' . esc_html( $otp ) . '</div>
         </div>
         </body>
         </html>
         ';
 
         // Set content-type header for HTML email
-        $headers = array('Content-Type: text/html; charset=UTF-8');
+        $headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-        wp_mail($user_email, $subject, $message, $headers);
+        wp_mail( $user_email, $subject, $message, $headers );
     }
 
     /**
