@@ -125,7 +125,6 @@ class Recaptcha implements FeatureInterface {
 	 */
 	public function show_recaptcha() {
 		$version = $this->settings['version'] ?? 'v2';
-
 		if ( 'v2' === $version ) {
 			$site_key = esc_attr( $this->settings['site-key'] );
 			$theme    = esc_attr( $this->settings['theme'] ?? 'light' );
