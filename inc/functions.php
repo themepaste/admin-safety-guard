@@ -36,8 +36,8 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Login Logs & Activity Tracking', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'authentication-security' => array(
-                    'label' => __( 'Authentication Security', 'tp-secure-plugin' ),
+                'recaptcha' => array(
+                    'label' => __( 'reCAPTCHA', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'customize' => array(
@@ -167,7 +167,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         
                     )
                 ),
-                'authentication-security' => array(
+                'recaptcha' => array(
                     'fields' => array(
                         'enable' => array(
                             'type'  => 'switch',

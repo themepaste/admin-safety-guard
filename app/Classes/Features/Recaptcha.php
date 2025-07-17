@@ -10,14 +10,14 @@ use ThemePaste\SecureAdmin\Traits\Asset;
 use WP_Error;
 
 /**
- * Feature: AuthenticationSecurity
+ * Feature: Recaptcha
  *
  * Adds Google reCAPTCHA to login and registration forms.
  *
  * @package ThemePaste\SecureAdmin\Classes\Features
  * @since   1.0.0
  */
-class AuthenticationSecurity implements FeatureInterface {
+class Recaptcha implements FeatureInterface {
 
 	use Hook;
 	use Asset;
@@ -27,7 +27,7 @@ class AuthenticationSecurity implements FeatureInterface {
 	 *
 	 * @var string
 	 */
-	private $features_id = 'authentication-security';
+	private $features_id = 'recaptcha';
 
 	/**
 	 * Plugin settings.
@@ -40,13 +40,13 @@ class AuthenticationSecurity implements FeatureInterface {
 	 * Registers WordPress hooks.
 	 */
 	public function register_hooks() {
-		$this->action( 'init', [ $this, 'authentication_security' ] );
+		$this->action( 'init', [ $this, 'recaptcha_security' ] );
 	}
 
 	/**
 	 * Boot feature if enabled and keys are provided.
 	 */
-	public function authentication_security() {
+	public function recaptcha_security() {
 		$this->settings = $this->get_settings();
 
 		if ( ! $this->is_enabled( $this->settings ) ) {
