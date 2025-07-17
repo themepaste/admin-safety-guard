@@ -15,7 +15,7 @@
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( 'Google' . ' ' . $page_label . ' ' . 'Settings' ); // page_label; ?></h2>
+        <h2><?php echo esc_html( 'Two Factor Authentication Settigns' ); // page_label; ?></h2>
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
             <input type="hidden" name="action" value="tpsa_process_form">

@@ -15,6 +15,7 @@
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
+        <!-- <h2><?php echo esc_html( 'Login Logs & Activity Tracking' ); // page_label; ?></h2> -->
         
         <div class="tpsa-setting-row">
             <div id="tpsa-login-log-activity">

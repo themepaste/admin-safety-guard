@@ -33,11 +33,15 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'class' => '',
                 ),
                 'login-logs-activity' => array(
-                    'label' => __( 'Login Logs & Activity Tracking', 'tp-secure-plugin' ),
+                    'label' => __( 'Login Logs & Activity', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'recaptcha' => array(
                     'label' => __( 'reCAPTCHA', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
+                'two-factor-auth' => array(
+                    'label' => __( 'Two Factor Auth', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'customize' => array(
