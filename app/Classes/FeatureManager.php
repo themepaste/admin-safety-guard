@@ -32,7 +32,7 @@ class FeatureManager {
             Features\LoginLogout::class,
             Features\LoginLogsActivity::class,
             Features\LimitLoginAttempts::class,
-            Features\AuthenticationSecurity::class
+            Features\Recaptcha::class
         ];
 
         foreach ( $features as $feature ) {
