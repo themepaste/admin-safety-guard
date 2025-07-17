@@ -53,6 +53,7 @@ class Recaptcha implements FeatureInterface {
 			return;
 		}
 
+		//If its email verification page than return
 		if ( isset( $_GET['tpsa_verify_email_otp'] ) ) {
             return;
         }
