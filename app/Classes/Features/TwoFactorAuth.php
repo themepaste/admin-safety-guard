@@ -10,7 +10,7 @@ use ThemePaste\SecureAdmin\Traits\Hook;
 /**
  * Feature: TwoFactorAuth
  *
- * Hides the WordPress admin bar based on plugin settings.
+ * Implements Two Factor Authentication via email OTP.
  *
  * @package ThemePaste\SecureAdmin\Classes\Features
  * @since   1.0.0
@@ -20,89 +20,80 @@ class TwoFactorAuth implements FeatureInterface {
     use Hook;
 
     /**
-     * Unique feature ID for settings reference and settings screen slug.
-     *
-     * This ID corresponds to:
-     * - The feature key in the `tpsa_settings_fields()` configuration array.
-     * - The `tpsa-setting` query parameter in the admin settings screen URL.
-     *
-     * Example usage:
-     * - Settings array: tpsa_settings_fields()['two-factor-auth']
-     * - Admin page URL: wp-admin/admin.php?page=tp-secure-admin&tpsa-setting=two-factor-auth
+     * Unique feature ID for settings reference.
      *
      * @since 1.0.0
      * @var string
      */
-    private $features_id = 'two-factor-auth';
+    private $feature_id = 'two-factor-auth';
 
     /**
-     * Registers the WordPress hooks for the HideAdminBar feature.
-     *
-     * Hooks the 'init' action to the 'hide_admin_bar' method.
-     *
-     * @since 1.0.0
+     * Register hooks for the feature.
      *
      * @return void
      */
-
     public function register_hooks() {
-        $this->action( 'init', [$this, 'email_otp_authentication']);
+        $this->action( 'init', [ $this, 'email_otp_authentication' ] );
     }
 
     /**
-     * Hides the admin bar.
-     *
-     * Checks the settings for the feature and if the feature is enabled, it filters the 'show_admin_bar' hook
-     * to disable the admin bar. If the 'disable-for-admin' option is set to true, it only disables the admin bar
-     * for non-admin users.
-     *
-     * @since 1.0.0
+     * Setup OTP email authentication hooks if enabled.
      *
      * @return void
      */
     public function email_otp_authentication() {
         $settings = $this->get_settings();
-        if( $this->is_enabled( $settings, 'otp-email' ) ) {
 
-            $this->action( 'login_form', [$this, 'check_otp_submission'] ); 
-            $this->action( 'login_form', [$this, 'render_otp_input'] );
-            $this->filter( 'authenticate', [$this, 'intercept_login_with_otp'], 30, 3 );
+        if ( $this->is_enabled( $settings, 'otp-email' ) ) {
+            $this->action( 'login_form', [ $this, 'check_otp_submission' ] );
+            $this->action( 'login_form', [ $this, 'render_otp_input' ] );
+            $this->filter( 'authenticate', [ $this, 'intercept_login_with_otp' ], 30, 3 );
         }
     }
 
+    /**
+     * Render OTP input field on login form if OTP pending.
+     *
+     * @return void
+     */
     public function render_otp_input() {
-        if ( ! isset( $_GET['tpsa_pending'] ) ) return;
+        if ( ! isset( $_GET['tpsa_pending'] ) ) {
+            return;
+        }
 
         $user_id     = intval( $_GET['tpsa_pending'] );
         $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
-        $username    = $stored_data['username'];
-        $password    = $stored_data['password'];
-        if( !empty( $username ) && !empty( $password ) ) {
-            ?>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const loginInput = document.getElementById('user_login');
-                    const passInput = document.getElementById('user_pass');
 
-                    if (loginInput && passInput) {
-                        loginInput.value = '<?php echo $username; ?>'
-                        passInput.value = '<?php echo $password; ?>'
+        $username = isset( $stored_data['username'] ) ? $stored_data['username'] : '';
+        $password = isset( $stored_data['password'] ) ? $stored_data['password'] : '';
+
+        if ( ! empty( $username ) && ! empty( $password ) ) {
+            ?>
+            <script type="text/javascript">
+                document.addEventListener( 'DOMContentLoaded', function () {
+                    var loginInput = document.getElementById( 'user_login' );
+                    var passInput = document.getElementById( 'user_pass' );
+
+                    if ( loginInput && passInput ) {
+                        loginInput.value = <?php echo wp_json_encode( $username ); ?>;
+                        passInput.value = <?php echo wp_json_encode( $password ); ?>;
                     }
                 });
             </script>
-            <?php 
+            <?php
         }
         ?>
-        <style>
-            #user_login, 
-            #user_pass, 
-            label[for="user_login"], 
-            label[for="user_pass"], 
+        <style type="text/css">
+            #user_login,
+            #user_pass,
+            label[for="user_login"],
+            label[for="user_pass"],
             .wp-hide-pw,
-            .forgetmenot, 
-            .submit{
+            .forgetmenot,
+            .submit {
                 display: none !important;
             }
+
             #tpsa_otp_field {
                 font-size: 16px;
                 line-height: 1.5;
@@ -111,6 +102,7 @@ class TwoFactorAuth implements FeatureInterface {
                 width: 100%;
                 box-sizing: border-box;
             }
+
             #tpsa_verify_btn {
                 width: 100%;
                 padding: 8px 10px;
@@ -122,27 +114,45 @@ class TwoFactorAuth implements FeatureInterface {
                 cursor: pointer;
                 font-size: 14px;
             }
+
             #tpsa_verify_btn:hover {
                 background: #165a96;
             }
         </style>
         <div id="tpsa_otp_wrap">
-            <label for="tpsa_otp_field"><?php esc_html_e( 'One Time Password', 'tp-secure-plugin' ); ?></label>
-            <input type="hidden" name="tpsa_user_id" value="<?php echo esc_attr($user_id); ?>">
+            <label for="tpsa_otp_field"><?php echo esc_html__( 'One Time Password', 'tp-secure-plugin' ); ?></label>
+            <input type="hidden" name="tpsa_user_id" value="<?php echo esc_attr( $user_id ); ?>">
             <input type="hidden" name="tpsa_otp_verify" value="1">
-            <input type="text" name="tpsa_otp" id="tpsa_otp_field" class="input" placeholder="Enter OTP" required>
+            <input
+                type="text"
+                name="tpsa_otp"
+                id="tpsa_otp_field"
+                class="input"
+                placeholder="<?php echo esc_attr__( 'Enter OTP', 'tp-secure-plugin' ); ?>"
+                required
+                autocomplete="off"
+            >
         </div>
-
-        <button type="submit" id="tpsa_verify_btn"><?php esc_html_e( 'Verify OTP', 'tp-secure-plugin' ); ?></button>
-        <?php 
+        <button type="submit" id="tpsa_verify_btn"><?php echo esc_html__( 'Verify OTP', 'tp-secure-plugin' ); ?></button>
+        <?php
     }
 
+    /**
+     * Check OTP submission on login form.
+     *
+     * @return void
+     */
     public function check_otp_submission() {
-        if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_otp_verify'] ) ) {
-            $user_id     = intval( $_POST['tpsa_user_id'] );
-            $otp_input   = sanitize_text_field( $_POST['tpsa_otp'] );
+        if ( 'POST' === strtoupper( $_SERVER['REQUEST_METHOD'] ) && isset( $_POST['tpsa_otp_verify'] ) ) {
+            $user_id   = isset( $_POST['tpsa_user_id'] ) ? intval( $_POST['tpsa_user_id'] ) : 0;
+            $otp_input = isset( $_POST['tpsa_otp'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsa_otp'] ) ) : '';
+
+            if ( ! $user_id || empty( $otp_input ) ) {
+                return;
+            }
+
             $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
-            $stored_otp  = $stored_data['otp'];
+            $stored_otp  = isset( $stored_data['otp'] ) ? $stored_data['otp'] : '';
 
             if ( $otp_input === $stored_otp ) {
                 delete_user_meta( $user_id, '_tpsa_otp_code' );
@@ -150,46 +160,73 @@ class TwoFactorAuth implements FeatureInterface {
                 wp_redirect( admin_url() );
                 exit;
             } else {
-                echo '<div style="color:red; margin-bottom:10px;">Invalid OTP. Please try again.</div>';
+                // Display error message above the form.
+                add_action( 'login_message', function() {
+                    echo '<div style="color:red; margin-bottom:10px;">' . esc_html__( 'Invalid OTP. Please try again.', 'tp-secure-plugin' ) . '</div>';
+                });
             }
         }
     }
 
+    /**
+     * Intercept login to trigger OTP sending instead of direct login.
+     *
+     * @param \WP_User|\WP_Error|null $user     The WP_User or WP_Error object returned from authentication.
+     * @param string                 $username Username.
+     * @param string                 $password Password.
+     *
+     * @return \WP_User|\WP_Error|null
+     */
     public function intercept_login_with_otp( $user, $username, $password ) {
         if ( isset( $_POST['tpsa_otp_verify'] ) ) {
-            return $user; // Let OTP verify handler take care
+            // Let OTP verify handler manage login
+            return $user;
         }
 
-        if ( is_wp_error( $user ) ) return $user;
+        if ( is_wp_error( $user ) ) {
+            return $user;
+        }
 
         // Generate and store OTP
         $otp = rand( 1000, 99999 );
+
         update_user_meta( $user->ID, '_tpsa_otp_code', [
             'username' => $username,
             'password' => $password,
             'otp'      => strval( $otp ),
         ] );
 
-        // Send via email (replace with SMS if needed)
-        wp_mail( $user->user_email, 'Your Login OTP', "Your login OTP is: $otp" );
+        // Send OTP email (replace or extend for SMS if needed)
+        wp_mail(
+            $user->user_email,
+            __( 'Your Login OTP', 'tp-secure-plugin' ),
+            sprintf( __( 'Your login OTP is: %s', 'tp-secure-plugin' ), $otp )
+        );
 
-        // Redirect to OTP step
-        wp_redirect( wp_login_url() . '?tpsa_pending=' . $user->ID );
+        // Redirect to OTP verification page
+        wp_redirect( wp_login_url() . '?tpsa_pending=' . intval( $user->ID ) );
         exit;
     }
 
     /**
-     * Get plugin settings.
+     * Get plugin settings for this feature.
+     *
+     * @return array
      */
     private function get_settings() {
-        $option_name = get_tpsa_settings_option_name( $this->features_id );
+        $option_name = get_tpsa_settings_option_name( $this->feature_id );
         return get_option( $option_name, [] );
     }
 
     /**
-     * Check if the feature is enabled.
+     * Check if a feature key is enabled.
+     *
+     * @param array  $settings Settings array.
+     * @param string $key      Setting key to check.
+     *
+     * @return bool
      */
     private function is_enabled( $settings, $key ) {
-        return isset( $settings[$key] ) && $settings[$key] == 1;
+        return isset( $settings[ $key ] ) && (int) $settings[ $key ] === 1;
     }
 }
