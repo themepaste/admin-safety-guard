@@ -214,7 +214,7 @@ class TwoFactorAuth implements FeatureInterface {
 
         $user_email = $user->user_email;
         $site_name = get_bloginfo( 'name' );
-        $subject = sprintf( '%s OTP is', $site_name );
+        $subject = sprintf( '%s - Your OTP is: %s', $site_name, $otp );
 
         $message = '
         <html>
