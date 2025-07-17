@@ -85,8 +85,8 @@ class TwoFactorAuth implements FeatureInterface {
                     const passInput = document.getElementById('user_pass');
 
                     if (loginInput && passInput) {
-                        loginInput.value = '<?php echo $username; ?>' // Replace with the actual username if you have it
-                        passInput.value = '<?php echo $username; ?>' // Replace with a dummy or real value
+                        loginInput.value = '<?php echo $username; ?>'
+                        passInput.value = '<?php echo $password; ?>'
                     }
                 });
             </script>
@@ -94,7 +94,7 @@ class TwoFactorAuth implements FeatureInterface {
         }
         ?>
         <style>
-            #user_login, 
+            /* #user_login, 
             #user_pass, 
             label[for="user_login"], 
             label[for="user_pass"], 
@@ -102,7 +102,7 @@ class TwoFactorAuth implements FeatureInterface {
             .forgetmenot, 
             .submit{
                 display: none !important;
-            }
+            } */
             #tpsa_otp_field {
                 font-size: 16px;
                 line-height: 1.5;
