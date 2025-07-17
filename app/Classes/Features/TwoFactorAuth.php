@@ -94,7 +94,7 @@ class TwoFactorAuth implements FeatureInterface {
         }
         ?>
         <style>
-            /* #user_login, 
+            #user_login, 
             #user_pass, 
             label[for="user_login"], 
             label[for="user_pass"], 
@@ -102,7 +102,7 @@ class TwoFactorAuth implements FeatureInterface {
             .forgetmenot, 
             .submit{
                 display: none !important;
-            } */
+            }
             #tpsa_otp_field {
                 font-size: 16px;
                 line-height: 1.5;
