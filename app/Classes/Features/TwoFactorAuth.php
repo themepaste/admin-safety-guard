@@ -199,15 +199,64 @@ class TwoFactorAuth implements FeatureInterface {
         
 
         // Send OTP email (replace or extend for SMS if needed)
-        wp_mail(
-            $user->user_email,
-            get_bloginfo( 'name' )  . __( ' - Login OTP', 'tp-secure-plugin' ),
-            sprintf( __( 'Your login OTP is: %s', 'tp-secure-plugin' ), $otp )
-        );
+        $this->send_mail( $user, $otp );
 
         // Redirect to OTP verification page
         wp_redirect( wp_login_url() . '?tpsa_pending=' . intval( $user->ID ) );
         exit;
+    }
+
+    private function send_mail( $user, $otp ) {
+
+        $user_email = $user->user_email;
+        $site_name = get_bloginfo( 'name' );
+        $subject = sprintf( '%s OTP is', $site_name );
+
+        $message = '
+        <html>
+        <head>
+        <style>
+            .email-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            border-radius: 8px;
+            }
+            .email-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333333;
+            }
+            .otp-box {
+            background-color: #0073aa; /* WordPress blue */
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 6px;
+            user-select: all; /* Easy to select and copy */
+            display: inline-block;
+            letter-spacing: 6px;
+            }
+        </style>
+        </head>
+        <body>
+        <div class="email-container">
+            <div class="email-title">' . esc_html($site_name) . ' OTP is</div>
+            <div class="otp-box">' . esc_html($otp) . '</div>
+        </div>
+        </body>
+        </html>
+        ';
+
+        // Set content-type header for HTML email
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+
+        wp_mail($user_email, $subject, $message, $headers);
     }
 
     /**
