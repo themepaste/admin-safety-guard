@@ -57,11 +57,11 @@ class TwoFactorAuth implements FeatureInterface {
      * @return void
      */
     public function render_otp_input() {
-        if ( ! isset( $_GET['tpsa_pending'] ) ) {
+        if ( ! isset( $_GET['tpsa_verify_email_otp'] ) ) {
             return;
         }
 
-        $user_id     = intval( $_GET['tpsa_pending'] );
+        $user_id     = intval( $_GET['tpsa_verify_email_otp'] );
         $user        = get_userdata($user_id);
 
         $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
@@ -206,7 +206,7 @@ class TwoFactorAuth implements FeatureInterface {
         $this->send_mail( $user, $otp );
 
         // Redirect to OTP verification page
-        wp_redirect( wp_login_url() . '?tpsa_pending=' . intval( $user->ID ) );
+        wp_redirect( wp_login_url() . '?tpsa_verify_email_otp=' . intval( $user->ID ) );
         exit;
     }
 

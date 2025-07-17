@@ -53,6 +53,10 @@ class Recaptcha implements FeatureInterface {
 			return;
 		}
 
+		if ( isset( $_GET['tpsa_verify_email_otp'] ) ) {
+            return;
+        }
+
 		if ( empty( $this->settings['site-key'] ) || empty( $this->settings['secret-key'] ) ) {
 			add_action( 'login_form', [ $this, 'show_recaptcha_error' ] );
 			add_action( 'register_form', [ $this, 'show_recaptcha_error' ] );
