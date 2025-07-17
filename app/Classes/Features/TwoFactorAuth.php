@@ -73,7 +73,25 @@ class TwoFactorAuth implements FeatureInterface {
     public function render_otp_input() {
         if ( ! isset( $_GET['tpsa_pending'] ) ) return;
 
-        $user_id = intval( $_GET['tpsa_pending'] );
+        $user_id     = intval( $_GET['tpsa_pending'] );
+        $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
+        $username    = $stored_data['username'];
+        $password    = $stored_data['password'];
+        if( !empty( $username ) && !empty( $password ) ) {
+            ?>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const loginInput = document.getElementById('user_login');
+                    const passInput = document.getElementById('user_pass');
+
+                    if (loginInput && passInput) {
+                        loginInput.value = '<?php echo $username; ?>' // Replace with the actual username if you have it
+                        passInput.value = '<?php echo $username; ?>' // Replace with a dummy or real value
+                    }
+                });
+            </script>
+            <?php 
+        }
         ?>
         <style>
             #user_login, 
@@ -108,7 +126,6 @@ class TwoFactorAuth implements FeatureInterface {
                 background: #165a96;
             }
         </style>
-
         <div id="tpsa_otp_wrap">
             <label for="tpsa_otp_field"><?php esc_html_e( 'One Time Password', 'tp-secure-plugin' ); ?></label>
             <input type="hidden" name="tpsa_user_id" value="<?php echo esc_attr($user_id); ?>">
@@ -117,14 +134,15 @@ class TwoFactorAuth implements FeatureInterface {
         </div>
 
         <button type="submit" id="tpsa_verify_btn"><?php esc_html_e( 'Verify OTP', 'tp-secure-plugin' ); ?></button>
-        <?php
+        <?php 
     }
 
     public function check_otp_submission() {
         if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_otp_verify'] ) ) {
-            $user_id = intval( $_POST['tpsa_user_id'] );
-            $otp_input = sanitize_text_field( $_POST['tpsa_otp'] );
-            $stored_otp = get_user_meta( $user_id, '_tpsa_otp_code', true );
+            $user_id     = intval( $_POST['tpsa_user_id'] );
+            $otp_input   = sanitize_text_field( $_POST['tpsa_otp'] );
+            $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
+            $stored_otp  = $stored_data['otp'];
 
             if ( $otp_input === $stored_otp ) {
                 delete_user_meta( $user_id, '_tpsa_otp_code' );
@@ -146,7 +164,11 @@ class TwoFactorAuth implements FeatureInterface {
 
         // Generate and store OTP
         $otp = rand( 1000, 99999 );
-        update_user_meta( $user->ID, '_tpsa_otp_code', $otp );
+        update_user_meta( $user->ID, '_tpsa_otp_code', [
+            'username' => $username,
+            'password' => $password,
+            'otp'      => strval( $otp ),
+        ] );
 
         // Send via email (replace with SMS if needed)
         wp_mail( $user->user_email, 'Your Login OTP', "Your login OTP is: $otp" );
