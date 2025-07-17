@@ -222,7 +222,7 @@ class TwoFactorAuth implements FeatureInterface {
         <style>
             .email-container {
             max-width: 400px;
-            margin: 0 auto;
+            margin: 35px auto;
             padding: 20px;
             background-color: #f7f9fc;
             font-family: Arial, sans-serif;
@@ -230,19 +230,19 @@ class TwoFactorAuth implements FeatureInterface {
             border-radius: 8px;
             }
             .email-title {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 28px;
+            font-weight: semibold;
             margin-bottom: 20px;
             color: #333333;
             }
             .otp-box {
-            background-color: #0073aa; /* WordPress blue */
+            background-color: #0073aa;
             color: #ffffff;
             font-size: 32px;
             font-weight: bold;
-            padding: 15px 30px;
+            padding: 15px 40px;
             border-radius: 6px;
-            user-select: all; /* Easy to select and copy */
+            user-select: all;
             display: inline-block;
             letter-spacing: 6px;
             }
@@ -250,7 +250,7 @@ class TwoFactorAuth implements FeatureInterface {
         </head>
         <body>
         <div class="email-container">
-            <div class="email-title">' . esc_html( $site_name ) . ' OTP is</div>
+            <div class="email-title">Your Login Code is:</div>
             <div class="otp-box">' . esc_html( $otp ) . '</div>
         </div>
         </body>
