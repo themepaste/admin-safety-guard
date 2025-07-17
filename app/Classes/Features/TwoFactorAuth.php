@@ -1,0 +1,173 @@
+<?php
+
+namespace ThemePaste\SecureAdmin\Classes\Features;
+
+defined( 'ABSPATH' ) || exit;
+
+use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
+use ThemePaste\SecureAdmin\Traits\Hook;
+
+/**
+ * Feature: TwoFactorAuth
+ *
+ * Hides the WordPress admin bar based on plugin settings.
+ *
+ * @package ThemePaste\SecureAdmin\Classes\Features
+ * @since   1.0.0
+ */
+class TwoFactorAuth implements FeatureInterface {
+
+    use Hook;
+
+    /**
+     * Unique feature ID for settings reference and settings screen slug.
+     *
+     * This ID corresponds to:
+     * - The feature key in the `tpsa_settings_fields()` configuration array.
+     * - The `tpsa-setting` query parameter in the admin settings screen URL.
+     *
+     * Example usage:
+     * - Settings array: tpsa_settings_fields()['two-factor-auth']
+     * - Admin page URL: wp-admin/admin.php?page=tp-secure-admin&tpsa-setting=two-factor-auth
+     *
+     * @since 1.0.0
+     * @var string
+     */
+    private $features_id = 'two-factor-auth';
+
+    /**
+     * Registers the WordPress hooks for the HideAdminBar feature.
+     *
+     * Hooks the 'init' action to the 'hide_admin_bar' method.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+
+    public function register_hooks() {
+        $this->action( 'init', [$this, 'email_otp_authentication']);
+    }
+
+    /**
+     * Hides the admin bar.
+     *
+     * Checks the settings for the feature and if the feature is enabled, it filters the 'show_admin_bar' hook
+     * to disable the admin bar. If the 'disable-for-admin' option is set to true, it only disables the admin bar
+     * for non-admin users.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    public function email_otp_authentication() {
+        $settings = $this->get_settings();
+        if( $this->is_enabled( $settings, 'otp-email' ) ) {
+
+            $this->action( 'login_form', [$this, 'check_otp_submission'] ); 
+            $this->action( 'login_form', [$this, 'render_otp_input'] );
+            $this->filter( 'authenticate', [$this, 'intercept_login_with_otp'], 30, 3 );
+        }
+    }
+
+    public function render_otp_input() {
+        if ( ! isset( $_GET['tpsa_pending'] ) ) return;
+
+        $user_id = intval( $_GET['tpsa_pending'] );
+        ?>
+        <style>
+            #user_login, 
+            #user_pass, 
+            label[for="user_login"], 
+            label[for="user_pass"], 
+            .wp-hide-pw,
+            .forgetmenot, 
+            .submit{
+                display: none !important;
+            }
+            #tpsa_otp_field {
+                font-size: 16px;
+                line-height: 1.5;
+                height: auto;
+                padding: 3px 8px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            #tpsa_verify_btn {
+                width: 100%;
+                padding: 8px 10px;
+                background: #2271b1;
+                border: none;
+                color: #fff;
+                font-weight: 600;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+            #tpsa_verify_btn:hover {
+                background: #165a96;
+            }
+        </style>
+
+        <div id="tpsa_otp_wrap">
+            <label for="tpsa_otp_field"><?php esc_html_e( 'One Time Password', 'tp-secure-plugin' ); ?></label>
+            <input type="hidden" name="tpsa_user_id" value="<?php echo esc_attr($user_id); ?>">
+            <input type="hidden" name="tpsa_otp_verify" value="1">
+            <input type="text" name="tpsa_otp" id="tpsa_otp_field" class="input" placeholder="Enter OTP" required>
+        </div>
+
+        <button type="submit" id="tpsa_verify_btn"><?php esc_html_e( 'Verify OTP', 'tp-secure-plugin' ); ?></button>
+        <?php
+    }
+
+    public function check_otp_submission() {
+        if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_otp_verify'] ) ) {
+            $user_id = intval( $_POST['tpsa_user_id'] );
+            $otp_input = sanitize_text_field( $_POST['tpsa_otp'] );
+            $stored_otp = get_user_meta( $user_id, '_tpsa_otp_code', true );
+
+            if ( $otp_input === $stored_otp ) {
+                delete_user_meta( $user_id, '_tpsa_otp_code' );
+                wp_set_auth_cookie( $user_id );
+                wp_redirect( admin_url() );
+                exit;
+            } else {
+                echo '<div style="color:red; margin-bottom:10px;">Invalid OTP. Please try again.</div>';
+            }
+        }
+    }
+
+    public function intercept_login_with_otp( $user, $username, $password ) {
+        if ( isset( $_POST['tpsa_otp_verify'] ) ) {
+            return $user; // Let OTP verify handler take care
+        }
+
+        if ( is_wp_error( $user ) ) return $user;
+
+        // Generate and store OTP
+        $otp = rand( 1000, 99999 );
+        update_user_meta( $user->ID, '_tpsa_otp_code', $otp );
+
+        // Send via email (replace with SMS if needed)
+        wp_mail( $user->user_email, 'Your Login OTP', "Your login OTP is: $otp" );
+
+        // Redirect to OTP step
+        wp_redirect( wp_login_url() . '?tpsa_pending=' . $user->ID );
+        exit;
+    }
+
+    /**
+     * Get plugin settings.
+     */
+    private function get_settings() {
+        $option_name = get_tpsa_settings_option_name( $this->features_id );
+        return get_option( $option_name, [] );
+    }
+
+    /**
+     * Check if the feature is enabled.
+     */
+    private function is_enabled( $settings, $key ) {
+        return isset( $settings[$key] ) && $settings[$key] == 1;
+    }
+}

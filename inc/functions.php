@@ -222,6 +222,18 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             )
                         ),
                     )
+                ),
+                'two-factor-auth' => array(
+                    'fields' => array(
+                        'otp-email' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'OTP via Email', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'After entering the correct login credentials, the user will be asked for the OTP. The OTP will be emailed to the user.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                    ),
                 )
             )
         );
