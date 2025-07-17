@@ -62,10 +62,13 @@ class TwoFactorAuth implements FeatureInterface {
         }
 
         $user_id     = intval( $_GET['tpsa_pending'] );
-        $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
+        $user        = get_userdata($user_id);
 
+        $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
         $username = isset( $stored_data['username'] ) ? $stored_data['username'] : '';
         $password = isset( $stored_data['password'] ) ? $stored_data['password'] : '';
+
+        
 
         if ( ! empty( $username ) && ! empty( $password ) ) {
             ?>
@@ -132,6 +135,7 @@ class TwoFactorAuth implements FeatureInterface {
                 required
                 autocomplete="off"
             >
+            <?php $this->sent_email_message( $user ); ?>
         </div>
         <button type="submit" id="tpsa_verify_btn"><?php echo esc_html__( 'Verify OTP', 'tp-secure-plugin' ); ?></button>
         <?php
@@ -257,6 +261,27 @@ class TwoFactorAuth implements FeatureInterface {
         $headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
         wp_mail( $user_email, $subject, $message, $headers );
+    }
+
+    private function sent_email_message( $user ) {
+        if ( ! $user ) return;
+        $email          = $user->user_email;
+        $email_parts    = explode( '@', $email );
+        $local          = $email_parts[0];
+        $domain         = $email_parts[1] ?? '';
+        $last_chars     = substr($local, -3);
+        $masked_email   = '....' . $last_chars . '@' . $domain;
+
+        ?>
+            <p style="color: green; font-weight: 600; margin-bottom: 20px;">
+                <?php 
+                printf(
+                    __( 'OTP code sent to your email address %s. Please check your inbox or spam folder.', 'tp-secure-plugin '), 
+                    esc_html( $masked_email )
+                );
+                ?>
+            </p>
+        <?php 
     }
 
     /**
