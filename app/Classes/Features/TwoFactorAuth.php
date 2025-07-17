@@ -196,10 +196,12 @@ class TwoFactorAuth implements FeatureInterface {
             'otp'      => strval( $otp ),
         ] );
 
+        
+
         // Send OTP email (replace or extend for SMS if needed)
         wp_mail(
             $user->user_email,
-            __( 'Your Login OTP', 'tp-secure-plugin' ),
+            get_bloginfo( 'name' )  . __( ' - Login OTP', 'tp-secure-plugin' ),
             sprintf( __( 'Your login OTP is: %s', 'tp-secure-plugin' ), $otp )
         );
 
