@@ -44,6 +44,10 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Two Factor Auth', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
+                'password-protection' => array(
+                    'label' => __( 'Password Protection', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
                 'customize' => array(
                     'label' => __( 'Customize', 'tp-secure-plugin' ),
                     'class' => '',
@@ -234,7 +238,27 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'default' => 0,
                         ),
                     ),
-                )
+                ),
+                'password-protection' => array(
+                    'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Enable', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                        'password' => array(
+                            'type'  => 'password',
+                            'label' => __( 'Set Password', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Password-protect the entire site to hide the content from public view and search engine bots / crawlers.', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
+                    ),
+                ),
             )
         );
     }
