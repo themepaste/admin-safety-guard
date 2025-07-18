@@ -21,7 +21,7 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'class' => '',
                 ),
                 'admin-bar' => array(
-                    'label' => __( 'Admin Bar', 'tp-secure-plugin' ),
+                    'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'custom-login-url' => array(
