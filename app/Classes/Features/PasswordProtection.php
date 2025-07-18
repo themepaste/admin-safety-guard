@@ -38,7 +38,7 @@ class PasswordProtection implements FeatureInterface {
     /**
      * Registers the WordPress hooks for the HideAdminBar feature.
      *
-     * Hooks the 'init' action to the 'hide_admin_bar' method.
+     * Hooks the 'init' action to the 'password_protection' method.
      *
      * @since 1.0.0
      *
@@ -46,33 +46,14 @@ class PasswordProtection implements FeatureInterface {
      */
 
     public function register_hooks() {
-        $this->action( 'init', [$this, 'hide_admin_bar']);
+        $this->action( 'init', [$this, 'password_protection']);
     }
 
-    /**
-     * Hides the admin bar.
-     *
-     * Checks the settings for the feature and if the feature is enabled, it filters the 'show_admin_bar' hook
-     * to disable the admin bar. If the 'disable-for-admin' option is set to true, it only disables the admin bar
-     * for non-admin users.
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
-    public function hide_admin_bar() {
+    
+    public function password_protection() {
         $settings = $this->get_settings();
         if( $this->is_enabled( $settings ) ) {
-            if( isset( $settings['disable-for-admin'] ) && $settings['disable-for-admin'] == 1 ) {
-                $this->filter( 'show_admin_bar', function( $show ) {
-                    if ( ! current_user_can( 'administrator' ) ) {
-                        return false;
-                    }
-                    return $show;
-                } );
-            }else {
-                $this->filter( 'show_admin_bar', '__return_false');
-            }
+            
         }
     }
 
