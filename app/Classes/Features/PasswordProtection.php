@@ -2,84 +2,127 @@
 
 namespace ThemePaste\SecureAdmin\Classes\Features;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
+/**
+ * Class PasswordProtection
+ *
+ * Provides site-wide password protection for non-logged-in users.
+ * Displays a password form on all front-end pages and sets a cookie on correct entry.
+ *
+ * @package ThemePaste\SecureAdmin\Classes\Features
+ * @since   1.0.0
+ */
 class PasswordProtection implements FeatureInterface {
 
     use Hook;
 
+    /**
+     * Unique feature ID for settings and filtering.
+     *
+     * @var string
+     */
     private $features_id = 'password-protection';
 
+    /**
+     * Register hooks for the feature.
+     *
+     * @return void
+     */
     public function register_hooks() {
-        $this->filter( 'tpsa_password-protection_password-expiry', [$this, 'modify_the_password_expiry_field'], 10, 2 );
-        $this->action('template_redirect', [$this, 'password_protection'], 0);
+        $this->filter( 'tpsa_password-protection_password-expiry', [ $this, 'modify_the_password_expiry_field' ], 10, 2 );
+        $this->action( 'template_redirect', [ $this, 'password_protection' ], 0 );
     }
 
+    /**
+     * Modify the password expiry input field in the settings UI.
+     *
+     * @param string $template HTML template for the field.
+     * @param array  $args     Arguments passed to the field.
+     *
+     * @return string Modified HTML template.
+     */
     public function modify_the_password_expiry_field( $template, $args ) {
         $template = str_replace(
             '<input type="number" id="%2$s" name="%2$s" value="%3$s">',
             '<input type="number" id="%2$s" name="%2$s" value="%3$s">' . ' Days',
             $template
         );
+
         return $template;
     }
 
+    /**
+     * Main password protection logic.
+     * Blocks access to all front-end pages unless password is submitted or user is logged in.
+     *
+     * @return void
+     */
     public function password_protection() {
-        // Skip for logged in users
+        // Skip password check for logged-in users.
         if ( is_user_logged_in() ) {
             return;
         }
 
         $settings = $this->get_settings();
 
+        // Skip if the feature is not enabled.
         if ( ! $this->is_enabled( $settings ) ) {
             return;
         }
 
-        // Password set in the settings (fallback to 'tpsm')
+        // Get password from settings, fallback to 'tpsm'.
         $password = isset( $settings['password'] ) ? trim( $settings['password'] ) : 'tpsm';
-        $password_expiry   = isset( $settings['password-expiry'] ) ? trim( $settings['password-expiry'] ) : 15;
-        // $password_second = $password_expiry * 86400;
-        $password_second = 10;
 
-        // Cookie name
+        // Get expiry days and convert to seconds.
+        $password_expiry = isset( $settings['password-expiry'] ) ? (int) $settings['password-expiry'] : 15;
+        $password_second = $password_expiry * DAY_IN_SECONDS;
+
+        // Cookie key used to store password hash.
         $cookie_name = 'tpsa_site_password';
 
-        // If password form is submitted
+        // Handle form submission.
         if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_site_password'] ) ) {
-            if ( trim( $_POST['tpsa_site_password'] ) === $password) {
-                setcookie( $cookie_name, md5( $password ), time() + $password_second, COOKIEPATH, COOKIE_DOMAIN);
+            if ( trim( $_POST['tpsa_site_password'] ) === $password ) {
+                setcookie( $cookie_name, md5( $password ), time() + $password_second, COOKIEPATH, COOKIE_DOMAIN );
                 wp_redirect( $_SERVER['REQUEST_URI'] );
                 exit;
             } else {
-                $GLOBALS['tpsa_password_error'] = 'Incorrect password.';
+                $GLOBALS['tpsa_password_error'] = __( 'Incorrect password.', 'tp-secure-plugin' );
             }
         }
 
-        // If cookie not set or incorrect
-        if ( !isset( $_COOKIE[$cookie_name] ) || $_COOKIE[$cookie_name] !== md5( $password ) ) {
+        // If the cookie is not set or invalid, show password form.
+        if ( ! isset( $_COOKIE[ $cookie_name ] ) || $_COOKIE[ $cookie_name ] !== md5( $password ) ) {
             $this->render_password_form();
             exit;
         }
     }
 
+    /**
+     * Render the password entry form.
+     *
+     * @return void
+     */
     private function render_password_form() {
-        $error = isset( $GLOBALS['tpsa_password_error'] ) ? '<div style="color:red;">' . esc_html( $GLOBALS['tpsa_password_error'] ) . '</div>' : '';
+        $error = isset( $GLOBALS['tpsa_password_error'] )
+            ? '<div style="color:red;">' . esc_html( $GLOBALS['tpsa_password_error'] ) . '</div>'
+            : '';
         ?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
         <head>
-            <meta charset="<?php bloginfo('charset'); ?>">
+            <meta charset="<?php bloginfo( 'charset' ); ?>">
             <meta name="robots" content="noindex, nofollow">
-            <title><?php bloginfo( 'name' ) . esc_html_e( ' - Protected', 'tp-secure-plugin' ); ?></title>
+            <title><?php bloginfo( 'name' ); ?><?php esc_html_e( ' - Protected', 'tp-secure-plugin' ); ?></title>
             <?php wp_head(); ?>
         </head>
         <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f9f9f9;">
             <form method="post" style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
-                <h2 style="margin-bottom:1rem;"><?php esc_html_e( 'Enter Password to Access', 'tp-secure-plugin' ) ?></h2>
+                <h2 style="margin-bottom:1rem;"><?php esc_html_e( 'Enter Password to Access', 'tp-secure-plugin' ); ?></h2>
                 <?php echo $error; ?>
                 <input type="password" name="tpsa_site_password" style="padding:10px; width:100%; margin-bottom:1rem;" required>
                 <button type="submit" style="padding:10px 20px; background:#0073aa; color:#fff; border:none; cursor:pointer;"><?php esc_html_e( 'Submit', 'tp-secure-plugin' ); ?></button>
@@ -90,12 +133,25 @@ class PasswordProtection implements FeatureInterface {
         <?php
     }
 
+    /**
+     * Retrieve feature settings from the database.
+     *
+     * @return array Settings array.
+     */
     private function get_settings() {
-        $option_name = get_tpsa_settings_option_name($this->features_id);
-        return get_option($option_name, []);
+        $option_name = get_tpsa_settings_option_name( $this->features_id );
+
+        return get_option( $option_name, [] );
     }
 
-    private function is_enabled($settings) {
-        return isset($settings['enable']) && $settings['enable'] == 1;
+    /**
+     * Check if the feature is enabled in the settings.
+     *
+     * @param array $settings Settings array.
+     *
+     * @return bool
+     */
+    private function is_enabled( $settings ) {
+        return isset( $settings['enable'] ) && (int) $settings['enable'] === 1;
     }
 }
