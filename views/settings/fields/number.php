@@ -22,6 +22,7 @@
                 <p class="tp-field-desc">%4$s</p>
             </div>
         </div>';
+    $field_template = apply_filters( $id_name, $field_template, $args );
 
     printf( $field_template,
         esc_html( $args['field']['label'] ),    // %1$s == Label

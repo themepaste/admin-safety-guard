@@ -14,7 +14,17 @@ class PasswordProtection implements FeatureInterface {
     private $features_id = 'password-protection';
 
     public function register_hooks() {
+        $this->filter( 'tpsa_password-protection_password-expiry', [$this, 'modify_the_password_expiry_field'], 10, 2 );
         $this->action('template_redirect', [$this, 'password_protection'], 0);
+    }
+
+    public function modify_the_password_expiry_field( $template, $args ) {
+        $template = str_replace(
+            '<input type="number" id="%2$s" name="%2$s" value="%3$s">',
+            '<input type="number" id="%2$s" name="%2$s" value="%3$s">' . ' Days',
+            $template
+        );
+        return $template;
     }
 
     public function password_protection() {
@@ -30,7 +40,10 @@ class PasswordProtection implements FeatureInterface {
         }
 
         // Password set in the settings (fallback to 'tpsm')
-        $password = isset( $settings['disable-for-admin'] ) ? trim( $settings['disable-for-admin'] ) : 'tpsm';
+        $password = isset( $settings['password'] ) ? trim( $settings['password'] ) : 'tpsm';
+        $password_expiry   = isset( $settings['password-expiry'] ) ? trim( $settings['password-expiry'] ) : 15;
+        // $password_second = $password_expiry * 86400;
+        $password_second = 10;
 
         // Cookie name
         $cookie_name = 'tpsa_site_password';
@@ -38,7 +51,7 @@ class PasswordProtection implements FeatureInterface {
         // If password form is submitted
         if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_site_password'] ) ) {
             if ( trim( $_POST['tpsa_site_password'] ) === $password) {
-                setcookie( $cookie_name, md5( $password ), time() + 86400, COOKIEPATH, COOKIE_DOMAIN);
+                setcookie( $cookie_name, md5( $password ), time() + $password_second, COOKIEPATH, COOKIE_DOMAIN);
                 wp_redirect( $_SERVER['REQUEST_URI'] );
                 exit;
             } else {
@@ -66,10 +79,10 @@ class PasswordProtection implements FeatureInterface {
         </head>
         <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f9f9f9;">
             <form method="post" style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
-                <h2 style="margin-bottom:1rem;">Enter Password to Access</h2>
+                <h2 style="margin-bottom:1rem;"><?php esc_html_e( 'Enter Password to Access', 'tp-secure-plugin' ) ?></h2>
                 <?php echo $error; ?>
                 <input type="password" name="tpsa_site_password" style="padding:10px; width:100%; margin-bottom:1rem;" required>
-                <button type="submit" style="padding:10px 20px; background:#0073aa; color:#fff; border:none; cursor:pointer;">Submit</button>
+                <button type="submit" style="padding:10px 20px; background:#0073aa; color:#fff; border:none; cursor:pointer;"><?php esc_html_e( 'Submit', 'tp-secure-plugin' ); ?></button>
             </form>
             <?php wp_footer(); ?>
         </body>

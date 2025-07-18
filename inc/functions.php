@@ -257,6 +257,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Password-protect the entire site to hide the content from public view and search engine bots / crawlers.', 'tp-secure-plugin' ),
                             'default' => '',
                         ),
+                        'password-expiry' => array(
+                            'type'  => 'number',
+                            'label' => __( 'Password Access Duration', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'How long visitors can access the site after entering the correct password.', 'tp-secure-plugin' ),
+                            'default' => '15',
+                        ),
                     ),
                 ),
             )

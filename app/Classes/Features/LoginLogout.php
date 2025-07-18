@@ -125,8 +125,7 @@ class LoginLogout implements FeatureInterface
     /**
      * Add site URL in login/logout input
      */
-    public function modify_the_custom_login_logout_url_field($template, $args)
-    {
+    public function modify_the_custom_login_logout_url_field( $template, $args ){
         $site_url = get_site_url();
         $template = str_replace(
             '<input type="text" id="%2$s" name="%2$s" value="%3$s">',
