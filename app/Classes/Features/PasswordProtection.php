@@ -2,73 +2,87 @@
 
 namespace ThemePaste\SecureAdmin\Classes\Features;
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
-/**
- * Feature: PasswordProtection
- *
- * Hides the WordPress admin bar based on plugin settings.
- *
- * @package ThemePaste\SecureAdmin\Classes\Features
- * @since   1.0.0
- */
 class PasswordProtection implements FeatureInterface {
 
     use Hook;
 
-    /**
-     * Unique feature ID for settings reference and settings screen slug.
-     *
-     * This ID corresponds to:
-     * - The feature key in the `tpsa_settings_fields()` configuration array.
-     * - The `tpsa-setting` query parameter in the admin settings screen URL.
-     *
-     * Example usage:
-     * - Settings array: tpsa_settings_fields()['password-protection']
-     * - Admin page URL: wp-admin/admin.php?page=tp-secure-admin&tpsa-setting=password-protection
-     *
-     * @since 1.0.0
-     * @var string
-     */
     private $features_id = 'password-protection';
 
-    /**
-     * Registers the WordPress hooks for the HideAdminBar feature.
-     *
-     * Hooks the 'init' action to the 'password_protection' method.
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
-
     public function register_hooks() {
-        $this->action( 'init', [$this, 'password_protection']);
+        $this->action('template_redirect', [$this, 'password_protection'], 0);
     }
 
-    
     public function password_protection() {
+        // Skip for logged in users
+        if ( is_user_logged_in() ) {
+            return;
+        }
+
         $settings = $this->get_settings();
-        if( $this->is_enabled( $settings ) ) {
-            
+
+        if ( ! $this->is_enabled( $settings ) ) {
+            return;
+        }
+
+        // Password set in the settings (fallback to 'tpsm')
+        $password = isset( $settings['disable-for-admin'] ) ? trim( $settings['disable-for-admin'] ) : 'tpsm';
+
+        // Cookie name
+        $cookie_name = 'tpsa_site_password';
+
+        // If password form is submitted
+        if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_site_password'] ) ) {
+            if ( trim( $_POST['tpsa_site_password'] ) === $password) {
+                setcookie( $cookie_name, md5( $password ), time() + 86400, COOKIEPATH, COOKIE_DOMAIN);
+                wp_redirect( $_SERVER['REQUEST_URI'] );
+                exit;
+            } else {
+                $GLOBALS['tpsa_password_error'] = 'Incorrect password.';
+            }
+        }
+
+        // If cookie not set or incorrect
+        if ( !isset( $_COOKIE[$cookie_name] ) || $_COOKIE[$cookie_name] !== md5( $password ) ) {
+            $this->render_password_form();
+            exit;
         }
     }
 
-    /**
-     * Get plugin settings.
-     */
-    private function get_settings() {
-        $option_name = get_tpsa_settings_option_name( $this->features_id );
-        return get_option( $option_name, [] );
+    private function render_password_form() {
+        $error = isset( $GLOBALS['tpsa_password_error'] ) ? '<div style="color:red;">' . esc_html( $GLOBALS['tpsa_password_error'] ) . '</div>' : '';
+        ?>
+        <!DOCTYPE html>
+        <html <?php language_attributes(); ?>>
+        <head>
+            <meta charset="<?php bloginfo('charset'); ?>">
+            <meta name="robots" content="noindex, nofollow">
+            <title><?php bloginfo( 'name' ) . esc_html_e( ' - Protected', 'tp-secure-plugin' ); ?></title>
+            <?php wp_head(); ?>
+        </head>
+        <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f9f9f9;">
+            <form method="post" style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+                <h2 style="margin-bottom:1rem;">Enter Password to Access</h2>
+                <?php echo $error; ?>
+                <input type="password" name="tpsa_site_password" style="padding:10px; width:100%; margin-bottom:1rem;" required>
+                <button type="submit" style="padding:10px 20px; background:#0073aa; color:#fff; border:none; cursor:pointer;">Submit</button>
+            </form>
+            <?php wp_footer(); ?>
+        </body>
+        </html>
+        <?php
     }
 
-    /**
-     * Check if the feature is enabled.
-     */
-    private function is_enabled( $settings ) {
-        return isset( $settings['enable'] ) && $settings['enable'] == 1;
+    private function get_settings() {
+        $option_name = get_tpsa_settings_option_name($this->features_id);
+        return get_option($option_name, []);
+    }
+
+    private function is_enabled($settings) {
+        return isset($settings['enable']) && $settings['enable'] == 1;
     }
 }
