@@ -87,14 +87,20 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
                             'default' => 0
                         ),
-                        'disable-for-admin' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Disable for Administrator', 'tp-secure-plugin' ),
+                        'exclude' => array(
+                            'type'  => 'multi-check',
+                            'label' => __( 'Exclude', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
-                            'default' => 0
-                        )
+                            'desc'  => __( 'Exclude user this features', 'tp-secure-plugin' ),
+                            'default' => 'light',
+                            'options' => array_merge(
+                                array(
+                                    'all-login-user' => 'All login user',
+                                ),
+                                get_tps_all_user_roles()
+                            ),
+                        ),
                     )
                 ),
                 'custom-login-url' => array(
@@ -270,12 +276,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Exclude', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Exclude user from this password protection', 'tp-secure-plugin' ),
                             'default' => 'light',
-                            'options' => array(
-                                'light' => 'Light Theme',
-                                'dark'  => 'Dark Theme',
-                            )
+                            'options' => array_merge(
+                                array(
+                                    'all-login-user' => 'All login user',
+                                ),
+                                get_tps_all_user_roles()
+                            ),
                         ),
                     ),
                 ),
@@ -349,4 +357,21 @@ function get_tpsa_db_table_name( $table_name ) {
     global $wpdb;
     $prefix          = $wpdb->prefix . TPSA_PREFIX . '_';
     return $prefix . $table_name;
+}
+
+function get_tps_all_user_roles() {
+    global $wp_roles;
+
+    if ( ! isset( $wp_roles ) ) {
+        $wp_roles = new WP_Roles();
+    }
+
+    $roles = $wp_roles->roles;
+    $role_names = [];
+
+    foreach ( $roles as $key => $role ) {
+        $role_names[ $key ] = $role['name'];
+    }
+
+    return $role_names;
 }
