@@ -265,6 +265,18 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'How long visitors can access the site after entering the correct password.', 'tp-secure-plugin' ),
                             'default' => '15',
                         ),
+                        'exclude' => array(
+                            'type'  => 'multi-check',
+                            'label' => __( 'Exclude', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'default' => 'light',
+                            'options' => array(
+                                'light' => 'Light Theme',
+                                'dark'  => 'Dark Theme',
+                            )
+                        ),
                     ),
                 ),
             )

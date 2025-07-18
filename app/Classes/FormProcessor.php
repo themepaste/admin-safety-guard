@@ -40,6 +40,10 @@ class FormProcessor {
                 case 'text':
                     $sanitized[ $key ] = sanitize_text_field( $raw );
                     break;
+                case 'multi-check':
+                    $raw = isset( $_POST[ $field_name ] ) ? (array) $_POST[ $field_name ] : [];
+                    $sanitized[ $key ] = array_map( 'sanitize_text_field', $raw );
+                    break;
                 default:
                     $sanitized[ $key ] = sanitize_text_field( $raw );
                     break;
