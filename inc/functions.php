@@ -160,11 +160,19 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                         'block-for' => array(
                             'type'  => 'number',
-                            'label' => __( 'Block For', 'tp-secure-plugin' ),
+                            'label' => __( 'Lock for', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Add How many munite block', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Add How many munite will lock', 'tp-secure-plugin' ),
                             'default' => 15,
+                        ),
+                        'max-lockout' => array(
+                            'type'  => 'number',
+                            'label' => __( 'Max Lockouts', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Maximum number of lockout within 24 hours for temporary block IP/user.', 'tp-secure-plugin' ),
+                            'default' => 3,
                         ),
                         'block-message' => array(
                             'type'  => 'textarea',
