@@ -64,33 +64,28 @@ class HideAdminBar implements FeatureInterface {
         $settings = $this->get_settings();
         if( $this->is_enabled( $settings ) ) {
             $exclude = isset( $settings['exclude'] ) ? $settings['exclude'] : [];
-            
+
             if ( is_array( $exclude ) && ! empty( $exclude ) ) {
-
+                
                 $this->filter( 'show_admin_bar', function( $show ) use ( $exclude ) {
-
                     $user = wp_get_current_user();
                     $user_roles = (array) $user->roles;
 
-                    // Special case: allow admin bar for all logged-in users
                     if ( in_array( 'all-login-user', $exclude ) ) {
-                        return $show; // Do not change anything
+                        return $show;
                     }
 
-                    // Allow admin bar for users whose roles are in the exclude list
                     foreach ( $user_roles as $role ) {
                         if ( in_array( $role, $exclude ) ) {
-                            return $show; // Allow admin bar
+                            return $show;
                         }
                     }
 
                     // For everyone else, hide admin bar
                     return false;
-
                 } );
 
             } else {
-                // No roles in exclude list = hide for everyone
                 $this->filter( 'show_admin_bar', '__return_false' );
             }
         }
