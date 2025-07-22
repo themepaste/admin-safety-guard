@@ -117,10 +117,19 @@ const SuccessfulLogins = () => {
                         <thead>
                             <tr>
                                 <th>
-                                    Username <br /> Login Count
+                                    Username /{' '}
+                                    <span style={{ fontSize: '12px' }}>
+                                        Login Count
+                                    </span>
                                 </th>
-                                <th>User Agent</th>
-                                <th>IP Address</th>
+                                <th>
+                                    User Agent{' '}
+                                    <QuestionMarkTooltip message="Showing last login User Agent only" />{' '}
+                                </th>
+                                <th>
+                                    IP Address{' '}
+                                    <QuestionMarkTooltip message="Showing last login IP address only" />
+                                </th>
                                 <th>
                                     Date & Time{' '}
                                     <QuestionMarkTooltip message="Showing last login date & time only" />{' '}
@@ -132,7 +141,7 @@ const SuccessfulLogins = () => {
                                 loginData.map((login) => (
                                     <tr key={login.id}>
                                         <td>
-                                            {login.username} <br />(
+                                            {login.username} / (
                                             {login.login_count})
                                         </td>
                                         <td>{login.user_agent}</td>
