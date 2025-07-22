@@ -115,22 +115,18 @@ const BlockUsers = () => {
                     <table className="tpsa-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Username</th>
+                                <th>Date & Time</th>
                                 <th>User Agent</th>
                                 <th>IP Address</th>
-                                <th>Date & Time</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loginData.length > 0 ? (
                                 loginData.map((login) => (
                                     <tr key={login.id}>
-                                        <td>{login.id}</td>
-                                        <td>{login.username}</td>
+                                        <td>{formatDate(login.login_time)}</td>
                                         <td>{login.user_agent}</td>
                                         <td>{login.ip_address}</td>
-                                        <td>{formatDate(login.login_time)}</td>
                                     </tr>
                                 ))
                             ) : (
