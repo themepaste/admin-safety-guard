@@ -73,7 +73,6 @@ class LimitLoginAttempts implements FeatureInterface {
         $failed_logins[$ip] = $attempts;
         update_option( 'tpsa_failed_logins', $failed_logins );
 
-        // Count attempts
         $attempt_count = count( $attempts );
         $is_blocked    = false;
 
@@ -93,9 +92,10 @@ class LimitLoginAttempts implements FeatureInterface {
 
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
         $login_time = current_time('mysql');
+        $lockouts   = 0;
 
         if ( $existing ) {
-            // Update login_attempts and maybe lockouts
+            $lockouts = $existing->lockouts;
             $update_data = [
                 'login_attempts' => $existing->login_attempts + 1,
                 'login_time'     => $login_time,
@@ -103,7 +103,8 @@ class LimitLoginAttempts implements FeatureInterface {
             ];
 
             if ( $is_blocked ) {
-                $update_data['lockouts'] = $existing->lockouts + 1;
+                $lockouts++;
+                $update_data['lockouts'] = $lockouts;
             }
 
             $wpdb->update(
@@ -114,7 +115,8 @@ class LimitLoginAttempts implements FeatureInterface {
                 [ '%d' ]
             );
         } else {
-            // Insert first attempt
+            $lockouts = $is_blocked ? 1 : 0;
+
             $wpdb->insert(
                 $table,
                 [
@@ -123,10 +125,35 @@ class LimitLoginAttempts implements FeatureInterface {
                     'ip_address'     => $ip,
                     'login_time'     => $login_time,
                     'login_attempts' => 1,
-                    'lockouts'       => $is_blocked ? 1 : 0
+                    'lockouts'       => $lockouts
                 ],
                 [ '%s', '%s', '%s', '%s', '%d', '%d' ]
             );
+        }
+
+        // ✅ If lockouts exceed the max-lockout setting → insert into block_users
+        if ( $lockouts >= $settings['max-lockout'] ) {
+            $block_table = get_tpsa_db_table_name( 'block_users' );
+
+            // Check if IP is already in block_users
+            $already_blocked = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT COUNT(*) FROM $block_table WHERE ip_address = %s LIMIT 1",
+                    $ip
+                )
+            );
+
+            if ( ! $already_blocked ) {
+                $wpdb->insert(
+                    $block_table,
+                    [
+                        'user_agent' => $user_agent,
+                        'ip_address' => $ip,
+                        'login_time' => $login_time
+                    ],
+                    [ '%s', '%s', '%s' ]
+                );
+            }
         }
     }
 
