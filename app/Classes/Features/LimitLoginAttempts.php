@@ -166,7 +166,7 @@ class LimitLoginAttempts implements FeatureInterface {
         if ( $tpsa_ip ) {
             wp_die(
                 '<h2 style="color:red;text-align:center;">
-                    Access Denied
+                    Access Denied for ' . $settings['block-for'] . ' minutes
                 </h2>
                 <p style="text-align:center;">
                     ' . $block_message . '
