@@ -71,10 +71,6 @@ class HideAdminBar implements FeatureInterface {
                     $user = wp_get_current_user();
                     $user_roles = (array) $user->roles;
 
-                    if ( in_array( 'all-login-user', $exclude ) ) {
-                        return $show;
-                    }
-
                     foreach ( $user_roles as $role ) {
                         if ( in_array( $role, $exclude ) ) {
                             return $show;

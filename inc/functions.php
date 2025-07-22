@@ -94,12 +94,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'id'    => '',
                             'desc'  => __( 'Exclude user this features', 'tp-secure-plugin' ),
                             'default' => 'light',
-                            'options' => array_merge(
-                                array(
-                                    'all-login-user' => 'All login user',
-                                ),
-                                get_tps_all_user_roles()
-                            ),
+                            'options' => get_tps_all_user_roles()
                         ),
                     )
                 ),
