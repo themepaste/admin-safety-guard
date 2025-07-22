@@ -115,7 +115,6 @@ const FailedLogins = () => {
                     <table className="tpsa-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Username</th>
                                 <th>User Agent</th>
                                 <th>IP Address</th>
@@ -126,7 +125,6 @@ const FailedLogins = () => {
                             {loginData.length > 0 ? (
                                 loginData.map((login) => (
                                     <tr key={login.id}>
-                                        <td>{login.id}</td>
                                         <td>{login.username}</td>
                                         <td>{login.user_agent}</td>
                                         <td>{login.ip_address}</td>
