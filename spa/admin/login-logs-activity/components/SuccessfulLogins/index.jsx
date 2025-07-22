@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import QuestionMarkTooltip from '../../../part/QuestionMarkTooltip';
 
 const SuccessfulLogins = () => {
     const [loginData, setLoginData] = useState([]);
@@ -115,19 +116,25 @@ const SuccessfulLogins = () => {
                     <table className="tpsa-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Username</th>
+                                <th>
+                                    Username <br /> Login Count
+                                </th>
                                 <th>User Agent</th>
                                 <th>IP Address</th>
-                                <th>Date & Time</th>
+                                <th>
+                                    Date & Time{' '}
+                                    <QuestionMarkTooltip message="Showing last login date & time only" />{' '}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {loginData.length > 0 ? (
                                 loginData.map((login) => (
                                     <tr key={login.id}>
-                                        <td>{login.id}</td>
-                                        <td>{login.username}</td>
+                                        <td>
+                                            {login.username} <br />(
+                                            {login.login_count})
+                                        </td>
                                         <td>{login.user_agent}</td>
                                         <td>{login.ip_address}</td>
                                         <td>{formatDate(login.login_time)}</td>
