@@ -80,9 +80,25 @@ class Admin {
                 'screen_slug'   => Settings::$SETTING_PAGE_ID,
                 'setting_slug'  => $current_setting_screen,
                 'rest_url'      => esc_url_raw( rest_url() ),
+                'limit_login'   => $this->is_enabled( $this->get_settings() ),
             ] );
         }
         
+    }
+
+    /**
+     * Get plugin settings.
+     */
+    private function get_settings() {
+        $option_name = get_tpsa_settings_option_name( 'limit-login-attempts' );
+        return get_option( $option_name, [] );
+    }
+
+    /**
+     * Check if the feature is enabled.
+     */
+    private function is_enabled( $settings ) {
+        return isset( $settings['enable'] ) && $settings['enable'] == 1;
     }
 
 }

@@ -75,90 +75,101 @@ const BlockUsers = () => {
     return (
         <div className="tpsa-login-log-activity">
             <h1>Block Users</h1>
-            <div className="tpsa-login-log-activity-header">
-                <div className="tpsa-login-log-activity-items-per-page">
-                    <label>Items per page: </label>
-                    <select
-                        value={itemsPerPage}
-                        onChange={(e) =>
-                            setItemsPerPage(Number(e.target.value))
-                        }
-                    >
-                        <option value="1">1</option>
-                        <option value="3">3</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <div className="tpsa-login-log-activity-search">
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => {
-                            setSearchTerm(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                    />
-                </div>
-            </div>
-
-            {loading ? (
-                <p>Loading...</p>
-            ) : error ? (
-                <p style={{ color: 'red' }}>Error: {error}</p>
-            ) : (
-                <>
-                    <table className="tpsa-table">
-                        <thead>
-                            <tr>
-                                <th>Date & Time</th>
-                                <th>User Agent</th>
-                                <th>IP Address</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loginData.length > 0 ? (
-                                loginData.map((login) => (
-                                    <tr key={login.id}>
-                                        <td>{formatDate(login.login_time)}</td>
-                                        <td>{login.user_agent}</td>
-                                        <td>{login.ip_address}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="7">
-                                        No results available in table
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-
-                    <div className="tpsa-login-log-activity-pagination">
-                        <button
-                            onClick={handlePrevPage}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        <span>
-                            Page {currentPage} of {totalPages || 1}
-                        </span>
-                        <button
-                            onClick={handleNextPage}
-                            disabled={
-                                currentPage === totalPages || totalEntries === 0
-                            }
-                        >
-                            Next
-                        </button>
+            {tpsaAdmin.limit_login ? (
+                <div>
+                    <div className="tpsa-login-log-activity-header">
+                        <div className="tpsa-login-log-activity-items-per-page">
+                            <label>Items per page: </label>
+                            <select
+                                value={itemsPerPage}
+                                onChange={(e) =>
+                                    setItemsPerPage(Number(e.target.value))
+                                }
+                            >
+                                <option value="1">1</option>
+                                <option value="3">3</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                        <div className="tpsa-login-log-activity-search">
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                            />
+                        </div>
                     </div>
-                </>
+
+                    {loading ? (
+                        <p>Loading...</p>
+                    ) : error ? (
+                        <p style={{ color: 'red' }}>Error: {error}</p>
+                    ) : (
+                        <>
+                            <table className="tpsa-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>User Agent</th>
+                                        <th>IP Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {loginData.length > 0 ? (
+                                        loginData.map((login) => (
+                                            <tr key={login.id}>
+                                                <td>
+                                                    {formatDate(
+                                                        login.login_time
+                                                    )}
+                                                </td>
+                                                <td>{login.user_agent}</td>
+                                                <td>{login.ip_address}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="7">
+                                                No results available in table
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+
+                            <div className="tpsa-login-log-activity-pagination">
+                                <button
+                                    onClick={handlePrevPage}
+                                    disabled={currentPage === 1}
+                                >
+                                    Previous
+                                </button>
+                                <span>
+                                    Page {currentPage} of {totalPages || 1}
+                                </span>
+                                <button
+                                    onClick={handleNextPage}
+                                    disabled={
+                                        currentPage === totalPages ||
+                                        totalEntries === 0
+                                    }
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            ) : (
+                <p>Need enable limit login Setting</p>
             )}
         </div>
     );
