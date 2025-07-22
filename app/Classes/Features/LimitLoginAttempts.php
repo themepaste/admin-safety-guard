@@ -158,27 +158,38 @@ class LimitLoginAttempts implements FeatureInterface {
     }
 
     public function maybe_hide_login_form() {
+        global $wpdb;
+
         $settings = $this->get_settings();
         $ip       = $this->get_ip_address();
-        $tpsa_ip = get_transient( 'tpsa_blocked_ip_' . $ip );
+        $tpsa_ip  = get_transient( 'tpsa_blocked_ip_' . $ip );
         $block_message = $settings['block-message'];
 
-        if ( $tpsa_ip ) {
+        // ✅ Check permanent block from block_users table
+        $block_table = get_tpsa_db_table_name( 'block_users' );
+        $is_permanently_blocked = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM $block_table WHERE ip_address = %s LIMIT 1",
+                $ip
+            )
+        );
+
+        // Show error if permanently or temporarily blocked
+        if ( $tpsa_ip || $is_permanently_blocked ) {
+            $message = $is_permanently_blocked
+                ? 'Access Denied - You have been permanently blocked due to too many login failures & lockouts.'
+                : 'Access Denied for ' . $settings['block-for'] . ' minutes';
+
             wp_die(
-                '<h2 style="color:red;text-align:center;">
-                    Access Denied for ' . $settings['block-for'] . ' minutes
-                </h2>
-                <p style="text-align:center;">
-                    ' . $block_message . '
-                </p>',
+                '<h2 style="color:red;text-align:center;">' . esc_html( $message ) . '</h2>
+                <p style="text-align:center;">' . esc_html( $block_message ) . '</p>',
                 'Login Blocked',
                 [ 'response' => 403 ]
             );
             exit;
         }
-        
-        
     }
+
 
     private function get_ip_address() {
         if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
