@@ -150,8 +150,8 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Max Login Attempts', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Maximum number of login attempts within 24 hours.', 'tp-secure-plugin' ),
-                            'default' => 5,
+                            'desc'  => __( 'Maximum number of login attempts within 1 day for temporary block IP/user.', 'tp-secure-plugin' ),
+                            'default' => 3,
                         ),
                         'block-for' => array(
                             'type'  => 'number',
@@ -166,7 +166,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Max Lockouts', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Maximum number of lockout within 24 hours for temporary block IP/user.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Maximum number of lockout within 1 days for temporary block IP/user.', 'tp-secure-plugin' ),
                             'default' => 3,
                         ),
                         'block-message' => array(
