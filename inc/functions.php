@@ -177,6 +177,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Block user can see this message when they are locked out.', 'tp-secure-plugin' ),
                             'default' => __( 'You have been locked out due to too many login attempts.', 'tp-secure-plugin' ),
                         ),
+                        'ip-block' => array(
+                            'type'  => 'textarea',
+                            'label' => __( 'Ip Address', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Add ip addresses with comma separated', 'tp-secure-plugin' ),
+                            'default' => '',
+                        ),
                     )
                 ),
                 'login-logs-activity' => array(
