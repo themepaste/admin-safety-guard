@@ -116,6 +116,9 @@ const FailedLogins = () => {
                         <thead>
                             <tr>
                                 <th>Username</th>
+                                <th>
+                                    Login Attemps <br /> Lockouts
+                                </th>
                                 <th>User Agent</th>
                                 <th>IP Address</th>
                                 <th>Date & Time</th>
@@ -126,6 +129,10 @@ const FailedLogins = () => {
                                 loginData.map((login) => (
                                     <tr key={login.id}>
                                         <td>{login.username}</td>
+                                        <td>
+                                            {login.login_attempts} <br />{' '}
+                                            {login.lockouts}
+                                        </td>
                                         <td>{login.user_agent}</td>
                                         <td>{login.ip_address}</td>
                                         <td>{formatDate(login.login_time)}</td>
