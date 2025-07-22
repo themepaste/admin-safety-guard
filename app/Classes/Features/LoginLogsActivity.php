@@ -81,29 +81,46 @@ class LoginLogsActivity implements FeatureInterface {
         $table      = get_tpsa_db_table_name( 's_logins' );
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
+        $login_time = current_time('mysql');
 
-        // Count how many times this user has logged in before
-        $login_count = (int) $wpdb->get_var(
+        // Check if user already exists in the table
+        $existing = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM $table WHERE username = %s",
+                "SELECT * FROM $table WHERE username = %s LIMIT 1",
                 $user_login
             )
         );
 
-        $login_count++; // Add current login
-
-        $wpdb->insert(
-            $table,
-            [
-                'username'    => $user_login,
-                'ip_address'  => $ip_address,
-                'user_agent'  => $user_agent,
-                'login_time'  => current_time('mysql'),
-                'login_count' => $login_count
-            ],
-            [
-                '%s', '%s', '%s', '%s', '%d'
-            ]
-        );
+        if ( $existing ) {
+            // Update existing row: increment login count and update other details
+            $wpdb->update(
+                $table,
+                [
+                    'ip_address'  => $ip_address,
+                    'user_agent'  => $user_agent,
+                    'login_time'  => $login_time,
+                    'login_count' => $existing->login_count + 1
+                ],
+                [ 'username' => $user_login ],
+                [ '%s', '%s', '%s', '%d' ],
+                [ '%s' ]
+            );
+        } else {
+            // Insert new row for first-time login
+            $wpdb->insert(
+                $table,
+                [
+                    'username'    => $user_login,
+                    'ip_address'  => $ip_address,
+                    'user_agent'  => $user_agent,
+                    'login_time'  => $login_time,
+                    'login_count' => 1
+                ],
+                [
+                    '%s', '%s', '%s', '%s', '%d'
+                ]
+            );
+        }
     }
+
 }
