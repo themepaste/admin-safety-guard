@@ -74,26 +74,35 @@ class LoginLogsActivity implements FeatureInterface {
             ]
         );
     }
-
-
+    
     public function save_successful_login_log( $user_login, $user ) {
-         global $wpdb;
+        global $wpdb;
 
         $table      = get_tpsa_db_table_name( 's_logins' );
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
 
+        // Count how many times this user has logged in before
+        $login_count = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM $table WHERE username = %s",
+                $user_login
+            )
+        );
+
+        $login_count++; // Add current login
+
         $wpdb->insert(
             $table,
             [
-                'id'         => $user->ID,
-                'username'   => $user_login,
-                'ip_address' => $ip_address,
-                'user_agent' => $user_agent,
-                'login_time' => current_time('mysql')
+                'username'    => $user_login,
+                'ip_address'  => $ip_address,
+                'user_agent'  => $user_agent,
+                'login_time'  => current_time('mysql'),
+                'login_count' => $login_count
             ],
             [
-                '%d', '%s', '%s', '%s', '%s'
+                '%s', '%s', '%s', '%s', '%d'
             ]
         );
     }

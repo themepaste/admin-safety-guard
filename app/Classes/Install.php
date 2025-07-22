@@ -33,6 +33,7 @@ class Install {
                 user_agent TEXT NOT NULL,
                 ip_address VARCHAR(45) NOT NULL,
                 login_time DATETIME NOT NULL,
+                login_count INT UNSIGNED NOT NULL DEFAULT 1,
                 PRIMARY KEY (id)
                 "
             );
