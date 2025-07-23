@@ -20,12 +20,8 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'admin-bar' => array(
-                    'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
-                    'class' => '',
-                ),
                 'custom-login-url' => array(
-                    'label' => __( 'Login/Logout', 'tp-secure-plugin' ),
+                    'label' => __( 'Custom Login/Logout', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'limit-login-attempts' => array(
@@ -46,6 +42,14 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                 ),
                 'password-protection' => array(
                     'label' => __( 'Password Protection', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
+                'privacy-hardening' => array(
+                    'label' => __( 'Privacy Hardening', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
+                'admin-bar' => array(
+                    'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'customize' => array(
