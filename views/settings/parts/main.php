@@ -30,7 +30,7 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
                         <p style="margin-top: 50px; font-size: 16px;">
                             <?php // esc_html_e( 'To Enable this Feature you need to purchase Pro', 'shipping-manager' ); ?>
                         </p>
-                        <button style="padding:10px 35px; background:#f25500; color: #fff; border:none; cursor:pointer; border-radius: 4px;">
+                        <button style="padding:10px 35px; background:#814bfe; color: #fff; border:none; cursor:pointer; border-radius: 4px;">
                             <?php // esc_html_e( 'Upgrade to Pro', 'shipping-manager' ); ?>
                         </button>
                     </div> -->

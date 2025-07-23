@@ -20,25 +20,35 @@
     margin: 0;
     margin-top: 5px;
     font-size: 12px;
-    color: #a9a8a8;
+    color: #9e8cca;
     font-weight: 400;
 }
-
+.tp-field .tp-field-input {
+    width: 300px;
+}
 .tp-field .tp-field-input input[type='text'],
+.tp-field .tp-field-input input[type='email'],
+.tp-field .tp-field-input input[type='number'],
+.tp-field .tp-field-input input[type='password'],
 .tp-field .tp-field-input input[type='text']:focus {
-    width: 50%;
-    border: 1px solid #a8a8a8;
-    border-radius: 4px;
+    width: 100%;
+    border: 1px solid #bba8e7;
+    border-radius: 6px;
     box-shadow: none;
+    padding: 3px 10px;
 }
 .tp-field .tp-field-input textarea {
-    min-height: 68px;
+    min-height: 80px;
+    border: 1px solid #bba8e7;
+    padding: 3px 10px;
+    width: 100%;
 }
 .tp-field .tp-field-input select {
-    width: 50%;
-    border: 1px solid #a8a8a8;
+    width: 100%;
+    border: 1px solid #bba8e7;
     border-radius: 4px;
     box-shadow: none;
+    padding: 3px 10px;
 }
 /* End fieldset */
 
@@ -58,7 +68,7 @@
     text-indent: -9999px;
     width: 40px;
     height: 20px;
-    background: grey;
+    background: #665f7a;
     display: block;
     border-radius: 100px;
     position: relative;
@@ -77,7 +87,7 @@
 }
 
 .tp-switch:checked + label {
-    background: #f25500;
+    background: #814bfe;
 }
 
 .tp-switch:checked + label:after {
