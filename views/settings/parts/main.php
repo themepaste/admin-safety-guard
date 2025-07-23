@@ -38,10 +38,6 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
                 }
             }
         }
-    ?>
-
-    <?php 
-    // Display the "Rate Us" section using a shared template part
-    // echo Utility::get_template( 'settings/parts/rate-us.php' ); 
+        echo Utility::get_template( 'settings/parts/rate-us.php' ); 
     ?>
 </div>
