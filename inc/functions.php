@@ -183,7 +183,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                         'ip-block' => array(
                             'type'  => 'textarea',
-                            'label' => __( 'Ip Address', 'tp-secure-plugin' ),
+                            'label' => __( 'Block with Ip Address', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
                             'desc'  => __( 'Add ip addresses with comma separated', 'tp-secure-plugin' ),
