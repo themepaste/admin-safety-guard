@@ -35,6 +35,7 @@ class FeatureManager {
             Features\Recaptcha::class,
             Features\TwoFactorAuth::class,
             Features\PasswordProtection::class,
+            Features\PrivacyHardening::class
         ];
 
         foreach ( $features as $feature ) {

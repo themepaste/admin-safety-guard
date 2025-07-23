@@ -304,7 +304,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                 ),
                 'privacy-hardening' => array(
                     'fields' => array(
-                        'enable' => array(
+                        'xml-rpc-enable' => array(
                             'type'  => 'switch',
                             'label' => __( 'Disable XML-RPC', 'tp-secure-plugin' ),
                             'class' => '',
