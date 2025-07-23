@@ -20,16 +20,16 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'custom-login-url' => array(
-                    'label' => __( 'Custom Login/Logout', 'tp-secure-plugin' ),
-                    'class' => '',
-                ),
                 'limit-login-attempts' => array(
                     'label' => __( 'Limit Login Attempts', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'login-logs-activity' => array(
                     'label' => __( 'Login Logs & Activity', 'tp-secure-plugin' ),
+                    'class' => '',
+                ),
+                'custom-login-url' => array(
+                    'label' => __( 'Custom Login/Logout', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'recaptcha' => array(
@@ -302,6 +302,18 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                     ),
                 ),
+                'privacy-hardening' => array(
+                    'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Disable XML-RPC', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'To disable/enable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        )
+                    )
+                )
             )
         );
     }
