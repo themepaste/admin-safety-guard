@@ -47,7 +47,8 @@ class LimitLoginAttempts implements FeatureInterface {
 
     public function register_hooks() {
         $this->action( 'wp_login_failed', [$this, 'tpsa_track_failed_login_24hr']);
-        $this->action( 'login_init', [ $this, 'maybe_hide_login_form' ] );
+        $this->action( 'login_init', [ $this, 'hide_login_form_with_ip_address_status' ] );
+        $this->action( 'login_init', [ $this, 'hide_login_form_with_login_attempts' ] );
     }
 
     public function tpsa_track_failed_login_24hr( $username ) {
@@ -157,7 +158,31 @@ class LimitLoginAttempts implements FeatureInterface {
         }
     }
 
-    public function maybe_hide_login_form() {
+    public function hide_login_form_with_ip_address_status() {
+        $settings       = $this->get_settings();
+        if ( ! $this->is_enabled( $settings ) ) {
+            return;
+        }
+        $block_ip_lists = isset( $settings['block-ip-address'] ) ? $settings['block-ip-address'] : '';
+
+        if( empty( $block_ip_lists ) ) {
+            return;
+        }
+        $block_ip_lists = array_map( 'trim', explode( ',', $block_ip_lists ) );
+        $current_ip_address = $this->get_ip_address();
+
+        if ( in_array( $current_ip_address, $block_ip_lists ) ) {
+            wp_die(
+                '<h2 style="color:red;text-align:center;">' . esc_html( 'Your IP address is not permitted to log in to this site.' ) . '</h2>',
+                'Login Blocked',
+                [ 'response' => 403 ]
+            );
+            exit;
+        }
+    }
+
+    
+    public function hide_login_form_with_login_attempts() {
         global $wpdb;
 
         $settings = $this->get_settings();

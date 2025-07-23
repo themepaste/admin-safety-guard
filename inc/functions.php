@@ -181,7 +181,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Block user can see this message when they are locked out.', 'tp-secure-plugin' ),
                             'default' => __( 'You have been locked out due to too many login attempts.', 'tp-secure-plugin' ),
                         ),
-                        'ip-block' => array(
+                        'block-ip-address' => array(
                             'type'  => 'textarea',
                             'label' => __( 'Block with Ip Address', 'tp-secure-plugin' ),
                             'class' => '',
