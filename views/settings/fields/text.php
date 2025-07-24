@@ -28,7 +28,7 @@
         esc_html( $args['field']['label'] ),    // %1$s == Label
         $id_name,                               // %2$s == ID & Name
         esc_attr( $value ),                     // %3$s == value
-        esc_html( $args['field']['desc'] )      // %4$s == Description
+        $args['field']['desc']      // %4$s == Description
     );
 ?>
 
