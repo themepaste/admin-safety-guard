@@ -62,12 +62,33 @@ class PasswordProtection implements FeatureInterface {
      * @return void
      */
     public function password_protection() {
-        // Skip password check for logged-in users.
-        if ( is_user_logged_in() ) {
+        
+        $current_user = wp_get_current_user();
+        $current_user_roles = (array) $current_user->roles; // roles is an array
+
+        // Assuming single-role users (most common)
+        $current_user_role_key = $current_user_roles[0] ?? null;
+
+        $settings = $this->get_settings();
+        $exclude_users = $settings['exclude'] ?? [];
+
+        if( in_array( 'all-login-user', $exclude_users ) ) {
+            if( is_user_logged_in() ) {
+                return;
+            }
+        }
+
+        if ( $current_user_role_key && in_array( $current_user_role_key, $exclude_users ) ) {
+            return; // Exit early if the current user's role is in the exclude list
+        }
+
+        if ( array_intersect( $current_user_roles, $exclude_users ) ) {
             return;
         }
 
-        $settings = $this->get_settings();
+        if ( in_array( get_current_user_id(), $exclude_users ) ) {
+            return;
+        }
 
         // Skip if the feature is not enabled.
         if ( ! $this->is_enabled( $settings ) ) {
