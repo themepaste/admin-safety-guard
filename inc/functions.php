@@ -316,6 +316,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                 ),
                 'customize' => array(
                     'fields' => array(
+                        'enable' => array(
+                            'type'  => 'switch',
+                            'label' => __( 'Enable', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
                         'logo' => array(
                             'type'  => 'upload',
                             'label' => __( 'Logo', 'tp-secure-plugin' ),

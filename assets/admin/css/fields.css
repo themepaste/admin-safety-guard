@@ -103,3 +103,10 @@
 .tp-image-container {
     margin-top: 10px;
 }
+.tp-upload-button {
+    color: #814bfe !important;
+    border-color: #814bfe !important;
+}
+.tp-upload-button:focus {
+    box-shadow: none !important;
+}

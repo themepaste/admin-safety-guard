@@ -43,7 +43,6 @@ printf( $field_template,
     <script>
     jQuery(document).ready(function($) {
         $('.tp-upload-button').on('click', function(e) {
-        console.log("Hello");
             e.preventDefault();
             var button = $(this);
             var target = $('#' + button.data('target'));
