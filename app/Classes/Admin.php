@@ -56,6 +56,8 @@ class Admin {
 
         if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen ) {
 
+            wp_enqueue_media();
+
             $this->enqueue_script(
                 'tpsa-admin',
                 TPSA_ASSETS_URL . '/admin/js/admin.js',

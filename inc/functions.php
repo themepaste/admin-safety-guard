@@ -313,6 +313,42 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'default' => 0,
                         )
                     )
+                ),
+                'customize' => array(
+                    'fields' => array(
+                        'logo' => array(
+                            'type'  => 'upload',
+                            'label' => __( 'Logo', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Upload login form logo', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                        'logo-url' => array(
+                            'type'  => 'text',
+                            'label' => __( 'Logo URL', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( 'Enter logo url', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                        'logo-width' => array(
+                            'type'  => 'number',
+                            'label' => __( 'Logo Width', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                        'logo-height' => array(
+                            'type'  => 'number',
+                            'label' => __( 'Logo Height', 'tp-secure-plugin' ),
+                            'class' => '',
+                            'id'    => '',
+                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        )
+                    )
                 )
             )
         );
