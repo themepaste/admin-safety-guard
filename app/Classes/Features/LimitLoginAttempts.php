@@ -46,9 +46,35 @@ class LimitLoginAttempts implements FeatureInterface {
      */
 
     public function register_hooks() {
+        $this->action( 'admin_init', [$this, 'check_wp_cron_status'] );
         $this->action( 'wp_login_failed', [$this, 'tpsa_track_failed_login_24hr']);
         $this->action( 'login_init', [ $this, 'hide_login_form_with_ip_address_status' ] );
         $this->action( 'login_init', [ $this, 'hide_login_form_with_login_attempts' ] );
+    }
+
+    public function check_wp_cron_status() {
+        $settings = $this->get_settings();
+        if ( ! $this->is_enabled( $settings ) ) {
+            return;
+        }
+
+        // Check if the constant is defined before using it
+        if ( defined('DISABLE_WP_CRON') && DISABLE_WP_CRON === true) {
+            add_action( 'admin_notices', function() {
+                ?>
+                    <div class="notice notice-error is-dismissible">
+                        <p><strong><?php _e('Warning:', 'tp-secure-plugin'); ?></strong> <?php _e('WordPress Cron is currently disabled.', 'tp-secure-plugin'); ?></p>
+                        <p><?php _e('Please check the following to resolve the issue:', 'tp-secure-plugin'); ?></p>
+                        <ul>
+                            <li><?php _e('Ensure the <code>DISABLE_WP_CRON</code> constant is <strong>not</strong> defined in your <code>wp-config.php</code> file. If it is, remove or comment out the line: <code>define(\'DISABLE_WP_CRON\', true);</code>', 'tp-secure-plugin'); ?></li>
+                            <li><?php _e('Ensure your server cron is properly configured to trigger <code>wp-cron.php</code> periodically. You may need to set up a server-side cron job (using <code>cron</code> on Linux or Task Scheduler on Windows).', 'tp-secure-plugin'); ?></li>
+                            <li><?php _e('If you\'re unsure how to configure the server cron, please consult your hosting provider for assistance.', 'tp-secure-plugin'); ?></li>
+                        </ul>
+                        <p><strong><?php _e('Note:', 'tp-secure-plugin'); ?></strong> <?php _e('This plugin will not function properly without a working cron job. The blocked users will not be unblocked automatically if the cron is not running.', 'tp-secure-plugin'); ?></p>
+                    </div>
+                <?php
+            } );
+        }
     }
 
     public function tpsa_track_failed_login_24hr( $username ) {

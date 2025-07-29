@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Themepaste Secure Admin
+Plugin Name: Admin Safety Guard
 Plugin URI: http://themepaste.com/product/themepaste-secure-admin-pro/
-Description: Secure your admin panel with Themepaste Secure Admin
+Description: Secure your admin panel with Admin Safety Guard
 Version: 1.1
 Author: Themepaste Team
 Author URI: http://themepaste.com/
