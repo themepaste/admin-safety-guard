@@ -46,13 +46,20 @@ class Customize implements FeatureInterface {
      */
 
     public function register_hooks() {
-        $this->action( 'init', [$this, 'customize']);
         $this->action( 'login_enqueue_scripts', [$this, 'customize_login_form']);
         $this->action( 'register_form', [$this, 'customize_registration_form']);
     }
 
+    
     /**
      * Customize login form logo
+     *
+     * Retrieves settings to customize the login form by injecting a custom logo
+     * and optionally changing the logo URL. If the feature is enabled and a logo
+     * is specified, it applies the custom logo styles. If a logo URL is provided,
+     * it changes the login header URL using a filter.
+     *
+     * @since 1.0.0
      */
     public function customize_login_form() {
         $settings = $this->get_settings();
