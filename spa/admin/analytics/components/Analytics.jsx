@@ -15,10 +15,6 @@ const Analytics = () => {
             <h1 style={styles.title}>Plugin Features Overview</h1>
             <div style={styles.featuresSection}>
                 <FeatureItem
-                    title="Analytics"
-                    description="Track and analyze user behavior with real-time data."
-                />
-                <FeatureItem
                     title="Limit Login Attempts"
                     description="Protect your site from brute force attacks by limiting login attempts."
                 />
@@ -60,13 +56,13 @@ const Analytics = () => {
 };
 
 const styles = {
-    container: {
-        backgroundColor: '#fff',
-        color: '#1d2327',
-        borderRadius: '8px',
-        padding: '20px',
-        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-    },
+    // container: {
+    //     backgroundColor: '#fff',
+    //     color: '#1d2327',
+    //     borderRadius: '8px',
+    //     padding: '20px',
+    //     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+    // },
     title: {
         textAlign: 'center',
         color: '#814bfe',
