@@ -14,30 +14,32 @@ class LoginLogout implements FeatureInterface
     private $features_id        = 'custom-login-url';
     private $custom_login_slug  = ''; 
     private $redirect_slug      = ''; 
+    private $logout_url         = ''; 
 
-    public function register_hooks()
-    {
-        $this->filter( 'logout_redirect', [$this, 'logout_redirect'], 10, 3 );
-        $this->filter( 'tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
-        $this->filter( 'tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
-        $this->filter( 'tpsa_custom-login-url_redirect-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
-
+    public function register_hooks() {
         $settings       = $this->get_settings();
 
         // Get the custom login slug from settings, fallback to empty string
         $this->custom_login_slug = !empty( $settings['login-url'] ) ? trim( $settings['login-url'], '/' ) : '';
         $this->redirect_slug = !empty( $settings['redirect-url'] ) ? trim( $settings['redirect-url'], '/' ) : '';
-        if( ! $this->is_enabled( $settings ) || empty( $this->custom_login_slug ) ) {
-            return;
+        $this->logout_url = !empty( $settings['logout-url'] ) ? trim( $settings['logout-url'], '/' ) : '';
+
+        if( $this->is_enabled( $settings ) && !empty( $this->custom_login_slug ) ) {
+            $this->action( 'init', [$this, 'rewrite_url'] );
+            $this->action( 'init', [$this, 'show_404'] );
+            $this->action( 'init', [$this, 'redirect_wp_admin'] );
+            $this->action( 'template_redirect', [$this, 'force_custom_login_url'] );
+    
+            $this->filter( 'site_url', [$this, 'override_site_url'], 10, 4 );
         }
 
-        $this->action( 'init', [$this, 'rewrite_url'] );
-        $this->action( 'init', [$this, 'show_404'] );
-        $this->action( 'init', [$this, 'redirect_wp_admin'] );
-        $this->action( 'template_redirect', [$this, 'force_custom_login_url'] );
+        if( $this->is_enabled( $settings ) && !empty( $this->logout_url ) ) {
+            $this->filter( 'logout_redirect', [$this, 'logout_redirect'], 10, 3 );
+        }
 
-        $this->filter( 'site_url', [$this, 'override_site_url'], 10, 4 );
-
+        $this->filter( 'tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
+        $this->filter( 'tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
+        $this->filter( 'tpsa_custom-login-url_redirect-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
     }
 
     /**
@@ -100,15 +102,13 @@ class LoginLogout implements FeatureInterface
     /**
      * Logout redirect to custom URL
      */
-    public function logout_redirect($redirect_to, $requested_redirect_to, $user)
+    public function logout_redirect( $redirect_to, $requested_redirect_to, $user )
     {
-        $settings       = $this->get_settings();
-        $redirect_to    = $settings['logout-url'];
-        if( $this->is_enabled( $settings ) ) {
-            return home_url( $redirect_to );
-        }
+        // If feature is enabled, redirect to custom logout URL
+        $settings = $this->get_settings();
+        $redirect_to = $settings['logout-url'];
 
-        return $redirect_to;
+        return home_url( $redirect_to );
     }
 
     private function get_settings()
