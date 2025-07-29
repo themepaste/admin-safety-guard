@@ -60,8 +60,8 @@ class Settings {
 	 */
 	public function register_settings_page() {
 		add_menu_page(
-			esc_html__( 'Themepaste Secure Admin', 'shipping-manager' ),
-			esc_html__( 'TP Secure Admin', 'shipping-manager' ),
+			esc_html__( 'Admin Safety Guard', 'shipping-manager' ),
+			esc_html__( 'Admin Safety Guard', 'shipping-manager' ),
 			'manage_options',
 			self::$SETTING_PAGE_ID,
 			[ $this, 'render_settings_page' ],
