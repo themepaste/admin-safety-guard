@@ -8,7 +8,7 @@ const FailedLogins = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const [itemsPerPage, setItemsPerPage] = useState(3);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString.replace(' ', 'T'));

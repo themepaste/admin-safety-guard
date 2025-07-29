@@ -6,7 +6,7 @@ import SuccessfulLogins from './components/SuccessfulLogins';
 import BlockUsers from './components/BlockUsers';
 
 function Main() {
-    const [activeComponent, setActiveComponent] = useState('SuccessfulLogins');
+    const [activeComponent, setActiveComponent] = useState('FailedLogins');
 
     const renderComponent = () => {
         switch (activeComponent) {

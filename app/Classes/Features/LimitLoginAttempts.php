@@ -59,7 +59,7 @@ class LimitLoginAttempts implements FeatureInterface {
         }
 
         // Check if the constant is defined before using it
-        if ( defined('DISABLE_WP_CRON') && DISABLE_WP_CRON === true) {
+        if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON === true) {
             add_action( 'admin_notices', function() {
                 ?>
                     <div class="notice notice-error is-dismissible">
