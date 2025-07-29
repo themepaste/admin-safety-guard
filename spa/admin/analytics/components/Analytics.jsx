@@ -12,7 +12,6 @@ const FeatureItem = ({ title, description }) => {
 const Analytics = () => {
     return (
         <div style={styles.container}>
-            <h1 style={styles.title}>Plugin Features Overview</h1>
             <div style={styles.featuresSection}>
                 <FeatureItem
                     title="Limit Login Attempts"
