@@ -101,9 +101,9 @@ class Customize implements FeatureInterface {
                 echo '<style>
                     .register h1 a { 
                         background-image: url(' . esc_url( $logo ) . ') !important;
-                        background-size: ' . esc_attr( $logo_width ) . ' ' . esc_attr( $logo_height ) . ' !important;
-                        width: ' . esc_attr( $logo_width ) . ' !important;
-                        height: ' . esc_attr( $logo_height ) . ' !important;
+                        background-size: ' . esc_attr( $logo_width ) . 'px ' . esc_attr( $logo_height ) . 'px !important;
+                        width: ' . esc_attr( $logo_width ) . 'px !important;
+                        height: ' . esc_attr( $logo_height ) . 'px !important;
                     }
                 </style>';
             }
