@@ -45,7 +45,8 @@ class Install {
                 username VARCHAR(100) NOT NULL,
                 user_agent TEXT NOT NULL,
                 ip_address VARCHAR(45) NOT NULL,
-                login_time DATETIME NOT NULL,
+                first_login_time DATETIME NOT NULL,
+                last_login_time DATETIME NOT NULL,
                 login_attempts INT UNSIGNED NOT NULL DEFAULT 1,
                 lockouts INT UNSIGNED NOT NULL DEFAULT 0,
                 PRIMARY KEY (id)

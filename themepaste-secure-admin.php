@@ -3,7 +3,7 @@
 Plugin Name: Admin Safety Guard
 Plugin URI: http://themepaste.com/product/themepaste-secure-admin-pro/
 Description: Secure your admin panel with Admin Safety Guard
-Version: 1.1
+Version: 1.0.0
 Author: Themepaste Team
 Author URI: http://themepaste.com/
 License: GPL2 or Later
@@ -38,7 +38,7 @@ if ( !defined( 'ABSPATH' ) ) {
 
        define( 'TPSA_PLUGIN_FILE', __FILE__ );
        define( 'TPSA_PREFIX', 'tpsa' );
-       define( 'TPSA_PLUGIN_VERSION', '1.0.1' );
+       define( 'TPSA_PLUGIN_VERSION', '1.0.0' );
        define( 'TPSA_PLUGIN_DIRNAME', dirname( TPSA_PLUGIN_FILE ) );
        define( 'TPSA_PLUGIN_BASENAME', plugin_basename( TPSA_PLUGIN_FILE ) );
        define( 'TPSA_PLUGIN_DIR', plugin_dir_path( TPSA_PLUGIN_FILE ) );

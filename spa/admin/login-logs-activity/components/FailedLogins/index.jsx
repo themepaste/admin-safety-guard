@@ -139,7 +139,7 @@ const FailedLogins = () => {
                                                 <td>{login.ip_address}</td>
                                                 <td>
                                                     {formatDate(
-                                                        login.login_time
+                                                        login.last_login_time
                                                     )}
                                                 </td>
                                             </tr>
