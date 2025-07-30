@@ -32,6 +32,9 @@
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+.feature-section:last-child {
+    margin-bottom: 0;
+}
 
 /* Feature title (Heading) */
 .feature-title {
@@ -68,6 +71,7 @@
 
 /* Button hover effect */
 .configure-button:hover {
+    color: #fff;
     background: linear-gradient(90deg, #9c5bff, #814bfe);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -204,5 +208,139 @@
     .tpsa-login-attempts-analytics-item {
         width: 80%;
         margin-bottom: 20px;
+    }
+}
+
+/**adfbdadfbdfbdafbadfbadf**/
+/* Main container with custom gradient background */
+.section-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(
+        225deg,
+        hsla(356, 68%, 91%, 1) 0%,
+        hsla(297, 99%, 66%, 1) 0%,
+        hsla(242, 100%, 65%, 1) 100%
+    ); /* Your gradient */
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    margin: 30px 0;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    padding: 30px 20px;
+}
+
+/* Hover effect for the whole section */
+.section-container:hover {
+    transform: scale(1.03);
+}
+
+/* Inner content with flexible layout */
+.section-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    color: #fff; /* White text for high contrast */
+    max-width: 1200px;
+}
+
+/* Left side: Paragraph content */
+.left-side {
+    max-width: 60%; /* Occupying 60% of the section width */
+    padding-right: 20px;
+}
+
+/* Section title - Bold and colorful typography */
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    color: #ffdd57; /* Bright yellow to make the heading stand out */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Adding text shadow for a better contrast */
+}
+
+/* Section description with colorful accent */
+.section-description {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #f0f0f0; /* Soft light gray for description */
+    margin-bottom: 30px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Right side: Button styling */
+.right-side {
+    max-width: 35%; /* Occupying 35% of the section width */
+    text-align: right;
+}
+
+/* Colorful button with gradient and modern style */
+.section-container .configure-button {
+    display: inline-block;
+    background: linear-gradient(
+        145deg,
+        #f8a5c2,
+        #ff6f61
+    ); /* Vibrant pink-red gradient */
+    color: white;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* Button hover effect with interactivity */
+.section-container .configure-button:hover {
+    background: linear-gradient(
+        145deg,
+        #ff6f61,
+        #f8a5c2
+    ); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Slight elevation on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow */
+}
+
+/* Responsive design adjustments for mobile */
+@media (max-width: 768px) {
+    .section-container {
+        height: auto; /* Adjust height for mobile */
+    }
+
+    .section-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-side {
+        max-width: 100%; /* Full width for small screens */
+        padding-right: 0;
+        text-align: center; /* Center-align text on mobile */
+    }
+
+    .right-side {
+        max-width: 100%; /* Full width for small screens */
+        text-align: center; /* Center-align button on mobile */
+        margin-top: 20px;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    .section-description {
+        font-size: 14px;
+    }
+
+    .configure-button {
+        padding: 12px 24px;
+        font-size: 16px;
     }
 }

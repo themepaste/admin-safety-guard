@@ -1,7 +1,7 @@
 import React from 'react';
 
 const LoginAttemps = () => {
-    const url = tpsaAdmin.admin_url + 'admin.php?page=login-logs-activity';
+    const url = tpsaAdmin.admin_url + 'admin.php?page=customize';
     return (
         <>
             <div className="tpsa-login-attempts-analytics">
