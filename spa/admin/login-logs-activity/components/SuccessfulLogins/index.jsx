@@ -55,7 +55,7 @@ const SuccessfulLogins = () => {
         } catch (err) {
             setError(err.message || 'Unknown error');
         } finally {
-            setLoading(false);
+            // setLoading(false);
         }
     };
 
@@ -75,109 +75,119 @@ const SuccessfulLogins = () => {
 
     return (
         <div className="tpsa-login-log-activity">
-            <h1>Successful Logins</h1>
-            <div className="tpsa-login-log-activity-header">
-                <div className="tpsa-login-log-activity-items-per-page">
-                    <label>Items per page: </label>
-                    <select
-                        value={itemsPerPage}
-                        onChange={(e) =>
-                            setItemsPerPage(Number(e.target.value))
-                        }
-                    >
-                        <option value="1">1</option>
-                        <option value="3">3</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <div className="tpsa-login-log-activity-search">
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => {
-                            setSearchTerm(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                    />
-                </div>
-            </div>
-
             {loading ? (
-                <p>Loading...</p>
+                <div className="tpsa-preloader">
+                    Loading...{' '}
+                    <img
+                        src={tpsaAdmin.assets_url + '/admin/img/preloader.gif'}
+                        alt="abc"
+                    />{' '}
+                </div>
             ) : error ? (
                 <p style={{ color: 'red' }}>Error: {error}</p>
             ) : (
                 <>
-                    <table className="tpsa-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Username /{' '}
-                                    <span style={{ fontSize: '12px' }}>
-                                        Login Count
-                                    </span>
-                                </th>
-                                <th>
-                                    User Agent{' '}
-                                    <QuestionMarkTooltip message="Showing last login User Agent only" />{' '}
-                                </th>
-                                <th>
-                                    IP Address{' '}
-                                    <QuestionMarkTooltip message="Showing last login IP address only" />
-                                </th>
-                                <th>
-                                    Date & Time{' '}
-                                    <QuestionMarkTooltip message="Showing last login date & time only" />{' '}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loginData.length > 0 ? (
-                                loginData.map((login) => (
-                                    <tr key={login.id}>
-                                        <td>
-                                            {login.username} / (
-                                            {login.login_count})
-                                        </td>
-                                        <td>{login.user_agent}</td>
-                                        <td>{login.ip_address}</td>
-                                        <td>{formatDate(login.login_time)}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="7">
-                                        No results available in table
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-
-                    <div className="tpsa-login-log-activity-pagination">
-                        <button
-                            onClick={handlePrevPage}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        <span>
-                            Page {currentPage} of {totalPages || 1}
-                        </span>
-                        <button
-                            onClick={handleNextPage}
-                            disabled={
-                                currentPage === totalPages || totalEntries === 0
-                            }
-                        >
-                            Next
-                        </button>
+                    <h1>Successful Logins</h1>
+                    <div className="tpsa-login-log-activity-header">
+                        <div className="tpsa-login-log-activity-items-per-page">
+                            <label>Items per page: </label>
+                            <select
+                                value={itemsPerPage}
+                                onChange={(e) =>
+                                    setItemsPerPage(Number(e.target.value))
+                                }
+                            >
+                                <option value="1">1</option>
+                                <option value="3">3</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                        <div className="tpsa-login-log-activity-search">
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                            />
+                        </div>
                     </div>
+                    <>
+                        <table className="tpsa-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Username /{' '}
+                                        <span style={{ fontSize: '12px' }}>
+                                            Login Count
+                                        </span>
+                                    </th>
+                                    <th>
+                                        User Agent{' '}
+                                        <QuestionMarkTooltip message="Showing last login User Agent only" />{' '}
+                                    </th>
+                                    <th>
+                                        IP Address{' '}
+                                        <QuestionMarkTooltip message="Showing last login IP address only" />
+                                    </th>
+                                    <th>
+                                        Date & Time{' '}
+                                        <QuestionMarkTooltip message="Showing last login date & time only" />{' '}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {loginData.length > 0 ? (
+                                    loginData.map((login) => (
+                                        <tr key={login.id}>
+                                            <td>
+                                                {login.username} / (
+                                                {login.login_count})
+                                            </td>
+                                            <td>{login.user_agent}</td>
+                                            <td>{login.ip_address}</td>
+                                            <td>
+                                                {formatDate(login.login_time)}
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="7">
+                                            No results available in table
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+
+                        <div className="tpsa-login-log-activity-pagination">
+                            <button
+                                onClick={handlePrevPage}
+                                disabled={currentPage === 1}
+                            >
+                                Previous
+                            </button>
+                            <span>
+                                Page {currentPage} of {totalPages || 1}
+                            </span>
+                            <button
+                                onClick={handleNextPage}
+                                disabled={
+                                    currentPage === totalPages ||
+                                    totalEntries === 0
+                                }
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </>
                 </>
             )}
         </div>

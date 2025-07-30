@@ -113,5 +113,13 @@
     margin-right: 10px;
 }
 
-.tpsa-link {
+/**Preloader**/
+.tpsa-preloader {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column-reverse;
+    margin-top: 50px;
 }
