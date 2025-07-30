@@ -18,8 +18,8 @@
 
         <!-- Plugin title and tagline -->
         <div class="tpsa-titles">
-            <h1><?php esc_html_e( 'Admin Safety Guard', 'tp-secure-plugin' ); // Plugin title ?></h1>
-            <p style="margin:0; color:#814bfe;"><?php esc_html_e( 'Secure your site & keep it safe', 'tp-secure-plugin' ); // Plugin tagline ?></p>
+            <h1><?php esc_html_e( 'Admin Safety Guard', 'tp-secure-plugin' ); ?></h1>
+            <p style="margin:0; color:#814bfe;"><?php esc_html_e( 'Shield Your Site with Confidence', 'tp-secure-plugin' ); ?></p>
         </div>
     </div>
 
