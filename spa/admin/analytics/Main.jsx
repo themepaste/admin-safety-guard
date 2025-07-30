@@ -2,14 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/style.css';
 import Analytics from './components/Analytics';
+import LoginAttemps from './components/LoginAttemps';
 
 function Main() {
     return (
         <>
-            {/* <div className="tpsa-analytics-wrapper">
+            <div className="tpsa-analytics-wrapper">
                 <h1>Analytics</h1>
-            </div> */}
-            <Analytics />
+            </div>
+            <LoginAttemps />
+            {/* <Analytics /> */}
         </>
     );
 }

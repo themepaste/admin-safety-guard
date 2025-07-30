@@ -6,10 +6,65 @@
     align-items: center;
     justify-content: center;
     border-radius: 30px;
+    margin-bottom: 30px;
 }
 
 .tpsa-analytics-wrapper h1 {
     color: #fff;
     font-size: 60px;
     margin: 0;
+}
+.tpsa-login-attempts-analytics {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 30px;
+}
+.tpsa-login-attempts-analytics-item {
+    width: 30%;
+    background-color: #814bfe;
+    border-radius: 10px;
+    padding: 20px;
+}
+.tpsa-login-attempts-analytics-item p {
+    display: block;
+    font-size: 56px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #5f5f68;
+    font-weight: 500;
+}
+.tpsa-login-attempts-analytics-item p sub {
+    font-size: 12px;
+}
+.tpsa-login-attempts-analytics-item h2 {
+    color: #fff;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border: none;
+}
+.tpsa-login-attempts-analytics-item:first-child {
+    background-color: #e1f3e1;
+}
+.tpsa-login-attempts-analytics-item:first-child h2 {
+    color: #446d36;
+}
+.tpsa-login-attempts-analytics-item:nth-child(2) {
+    background-color: #ffefda;
+}
+.tpsa-login-attempts-analytics-item:nth-child(2) h2 {
+    color: #804e02;
+}
+.tpsa-login-attempts-analytics-item:last-child {
+    background-color: #ffdbe0;
+}
+.tpsa-login-attempts-analytics-item:last-child h2 {
+    color: #cc3300;
+}
+.tpsa-login-attempts-analytics-item .tp-details {
+    display: flex;
+    margin-top: 20px;
+}
+.tpsa-login-attempts-analytics-item .tp-details a {
+    color: #7b6f7c;
 }
