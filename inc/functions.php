@@ -53,7 +53,7 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'class' => '',
                 ),
                 'customize' => array(
-                    'label' => __( 'Customize', 'tp-secure-plugin' ),
+                    'label' => __( 'Customizer', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
             )
@@ -88,7 +88,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  =>  __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'desc'  =>  __( 'To enable/disable admin bar', 'tp-secure-plugin' ),
                             'default' => 0
                         ),
                         'exclude' => array(
@@ -96,7 +96,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Exclude', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Exclude user this features', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Exclude users', 'tp-secure-plugin' ),
                             'default' => 'light',
                             'options' => get_tps_all_user_roles()
                         ),
@@ -109,7 +109,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'To enable/disable custom login/logut url.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
                         'login-url' => array(
@@ -146,7 +146,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'To enable/disable limit login attempts.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
                         'max-attempts' => array(
@@ -203,7 +203,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'To enable/disable reCAPTCHA.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
                         'version' => array(
@@ -267,7 +267,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'To enable/disable password protection.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
                         'password' => array(
@@ -295,7 +295,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'default' => 'light',
                             'options' => array_merge(
                                 array(
-                                    'all-login-user' => 'All login user',
+                                    'all-login-user' => 'All logged in users',
                                 ),
                                 get_tps_all_user_roles()
                             ),
@@ -309,7 +309,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Disable XML-RPC', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'To disable/enable this feature.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'To disable/enable XML-RPC.', 'tp-secure-plugin' ),
                             'default' => 0,
                         )
                     )
@@ -321,7 +321,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Enable', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'To enable/disable this feature.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'To enable/disable customizer.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
                         'logo' => array(
