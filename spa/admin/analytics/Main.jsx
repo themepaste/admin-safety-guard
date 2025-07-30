@@ -8,9 +8,9 @@ function Main() {
     const custom_page_url = tpsaAdmin.admin_url + 'admin.php?page=customize';
     return (
         <>
-            {/* <div className="tpsa-analytics-wrapper">
-                <h1>Analytics</h1>
-            </div> */}
+            <div className="tpsa-analytics-wrapper">
+                <h1>Get insights into your site's safety</h1>
+            </div>
             <LoginAttemps />
             <Analytics />
             <div className="section-container tp-cutomize-your-login">
