@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/style.css';
 import FailedLogins from './components/FailedLogins';
@@ -6,7 +6,41 @@ import SuccessfulLogins from './components/SuccessfulLogins';
 import BlockUsers from './components/BlockUsers';
 
 function Main() {
-    const [activeComponent, setActiveComponent] = useState('FailedLogins');
+    const [activeComponent, setActiveComponent] = useState('SuccessfulLogins');
+    const [loading, setLoading] = useState(true);
+
+    // Update the active component based on the URL hash during initial load
+    useEffect(() => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+            setActiveComponent(hash);
+        }
+
+        // Set loading to false after the URL hash is processed
+        setLoading(false);
+
+        // Add event listener to detect hash changes
+        const onHashChange = () => {
+            const updatedHash = window.location.hash.replace('#', '');
+            if (updatedHash) {
+                setActiveComponent(updatedHash);
+            }
+        };
+
+        window.addEventListener('hashchange', onHashChange);
+
+        return () => {
+            // Cleanup the event listener
+            window.removeEventListener('hashchange', onHashChange);
+        };
+    }, []);
+
+    // Update the URL hash when the active component changes
+    useEffect(() => {
+        if (activeComponent) {
+            window.history.pushState(null, '', `#${activeComponent}`);
+        }
+    }, [activeComponent]);
 
     const renderComponent = () => {
         switch (activeComponent) {
@@ -14,13 +48,17 @@ function Main() {
                 return <BlockUsers />;
             case 'FailedLogins':
                 return <FailedLogins />;
-
             case 'SuccessfulLogins':
                 return <SuccessfulLogins />;
             default:
                 return <SuccessfulLogins />;
         }
     };
+
+    // If the page is still loading, don't render the component yet
+    if (loading) {
+        return null; // Or you could return a loader, e.g. <div>Loading...</div>
+    }
 
     return (
         <>
