@@ -1,77 +1,4 @@
-.tpsa-analytics-wrapper {
-    width: 100%;
-    height: 200px;
-    background-color: #814bfe;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 30px;
-    margin-bottom: 30px;
-}
-
-.tpsa-analytics-wrapper h1 {
-    color: #fff;
-    font-size: 60px;
-    margin: 0;
-}
-.tpsa-login-attempts-analytics {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    gap: 30px;
-}
-.tpsa-login-attempts-analytics-item {
-    width: 30%;
-    background-color: #814bfe;
-    border-radius: 10px;
-    padding: 20px;
-}
-.tpsa-login-attempts-analytics-item p {
-    display: block;
-    font-size: 56px;
-    margin-top: 0;
-    margin-bottom: 30px;
-    color: #5f5f68;
-    font-weight: 500;
-}
-.tpsa-login-attempts-analytics-item p sub {
-    font-size: 12px;
-}
-.tpsa-login-attempts-analytics-item h2 {
-    color: #fff;
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border: none;
-}
-.tpsa-login-attempts-analytics-item:first-child {
-    background-color: #e1f3e1;
-}
-.tpsa-login-attempts-analytics-item:first-child h2 {
-    color: #446d36;
-}
-.tpsa-login-attempts-analytics-item:nth-child(2) {
-    background-color: #ffefda;
-}
-.tpsa-login-attempts-analytics-item:nth-child(2) h2 {
-    color: #804e02;
-}
-.tpsa-login-attempts-analytics-item:last-child {
-    background-color: #ffdbe0;
-}
-.tpsa-login-attempts-analytics-item:last-child h2 {
-    color: #cc3300;
-}
-.tpsa-login-attempts-analytics-item .tp-details {
-    display: flex;
-    margin-top: 20px;
-}
-.tpsa-login-attempts-analytics-item .tp-details a {
-    color: #7b6f7c;
-}
-
-/*Analytics component*/
-
-/* Main container for the overview page */
+/* Main container for the plugin overview and other elements */
 .plugin-overview {
     margin: 30px auto;
     padding: 30px;
@@ -81,7 +8,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Section for each feature */
+/* Feature section layout */
 .feature-section {
     margin-bottom: 40px;
     background-color: white;
@@ -90,7 +17,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Heading Style */
+/* Feature title (Heading) */
 .feature-title {
     font-size: 26px;
     color: #1d2327;
@@ -99,10 +26,10 @@
     font-weight: 600;
 }
 
-/* Paragraph Style for descriptions */
+/* Paragraph for descriptions */
 .feature-description {
     font-size: 16px;
-    color: #555;
+    color: #5f5f68;
     line-height: 1.6;
     margin-bottom: 20px;
     font-family: 'Roboto', sans-serif;
@@ -123,15 +50,114 @@
     border: 1px solid transparent;
 }
 
-/* Button Hover Effect */
+/* Button hover effect */
 .configure-button:hover {
-    color: white;
     background: linear-gradient(90deg, #9c5bff, #814bfe);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive Design - Ensure it works well on mobile screens */
+/* Analytics section styles */
+.tpsa-login-attempts-analytics {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+    /* flex-wrap: wrap; */
+}
+
+.tpsa-login-attempts-analytics-item {
+    width: 30%;
+    background: linear-gradient(
+        145deg,
+        #e1c5ff,
+        #c3a7f3
+    ); /* Soft gradient background */
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tpsa-login-attempts-analytics-item:hover {
+    transform: translateY(-4px);
+}
+
+.tpsa-login-attempts-analytics-item p {
+    display: block;
+    font-size: 56px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #5f5f68;
+    font-weight: 500;
+}
+
+.tpsa-login-attempts-analytics-item p sub {
+    font-size: 12px;
+}
+
+.tpsa-login-attempts-analytics-item h2 {
+    color: #fff;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border: none;
+}
+
+/* Color scheme adjustments for each analytics item */
+.tpsa-login-attempts-analytics-item:first-child {
+    background: linear-gradient(
+        145deg,
+        #c8f4c3,
+        #a8e1a3
+    ); /* Soft green gradient */
+}
+
+.tpsa-login-attempts-analytics-item:first-child h2 {
+    color: #446d36;
+}
+
+.tpsa-login-attempts-analytics-item:nth-child(2) {
+    background: linear-gradient(
+        145deg,
+        #ffecb3,
+        #ffdf80
+    ); /* Soft yellow gradient */
+}
+
+.tpsa-login-attempts-analytics-item:nth-child(2) h2 {
+    color: #804e02;
+}
+
+.tpsa-login-attempts-analytics-item:last-child {
+    background: linear-gradient(
+        145deg,
+        #ffb3d9,
+        #ff80b3
+    ); /* Soft pink gradient */
+}
+
+.tpsa-login-attempts-analytics-item:last-child h2 {
+    color: #cc3300;
+}
+
+.tpsa-login-attempts-analytics-item .tp-details {
+    display: flex;
+    margin-top: 20px;
+}
+
+.tpsa-login-attempts-analytics-item .tp-details a {
+    color: #7b6f7c;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tpsa-login-attempts-analytics-item .tp-details a:hover {
+    color: #814bfe;
+    text-decoration: underline;
+}
+
+/* Media query for responsiveness */
 @media screen and (max-width: 768px) {
     .plugin-overview {
         padding: 20px;
@@ -148,5 +174,15 @@
 
     .feature-description {
         font-size: 14px;
+    }
+
+    .tpsa-login-attempts-analytics {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tpsa-login-attempts-analytics-item {
+        width: 80%;
+        margin-bottom: 20px;
     }
 }

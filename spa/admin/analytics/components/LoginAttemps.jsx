@@ -1,6 +1,4 @@
 import React from 'react';
-import SuccessfulLogins from '../../login-logs-activity/components/SuccessfulLogins/index';
-import Analytics from './Analytics';
 
 const LoginAttemps = () => {
     const url = tpsaAdmin.admin_url + 'admin.php?page=login-logs-activity';
