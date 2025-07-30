@@ -5,6 +5,7 @@ import Analytics from './components/Analytics';
 import LoginAttemps from './components/LoginAttemps';
 
 function Main() {
+    const custom_page_url = tpsaAdmin.admin_url + 'admin.php?page=customize';
     return (
         <>
             {/* <div className="tpsa-analytics-wrapper">
@@ -12,13 +13,10 @@ function Main() {
             </div> */}
             <LoginAttemps />
             <Analytics />
-            <div className="section-container">
+            <div className="section-container tp-cutomize-your-login">
+                <h2 className="section-title">Customize Your Login Page</h2>
                 <div className="section-content">
-                    {/* Left side: Paragraph */}
                     <div className="left-side">
-                        <h2 className="section-title">
-                            Customize Your Login Page
-                        </h2>
                         <p className="section-description">
                             Make your login page unique by customizing its
                             appearance, including the background, colors, and
@@ -30,13 +28,11 @@ function Main() {
 
                     {/* Right side: Button */}
                     <div className="right-side">
-                        <a
-                            href="your-configure-page-url"
-                            className="configure-button"
-                        >
+                        <a href={custom_page_url} className="configure-button">
                             Customize Now
                         </a>
                     </div>
+                    {/* </div> */}
                 </div>
             </div>
         </>
