@@ -8,7 +8,7 @@ const BlockUsers = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const [itemsPerPage, setItemsPerPage] = useState(3);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString.replace(' ', 'T'));
@@ -71,6 +71,10 @@ const BlockUsers = () => {
     const handleNextPage = () => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
+
+    const limit_login_attempts =
+        tpsaAdmin.admin_url +
+        '?page=tp-secure-admin&tpsa-setting=limit-login-attempts';
 
     return (
         <div className="tpsa-login-log-activity">
@@ -169,7 +173,20 @@ const BlockUsers = () => {
                     )}
                 </div>
             ) : (
-                <p>Need enable limit login Setting</p>
+                <div className="tpsa-warning-message">
+                    <p>
+                        To view this table data, you need to enable the Limit
+                        Login Attempts settings.{' '}
+                        <strong>
+                            <a
+                                className="tpsa-link"
+                                href={limit_login_attempts}
+                            >
+                                Enable it now
+                            </a>{' '}
+                        </strong>
+                    </p>
+                </div>
             )}
         </div>
     );

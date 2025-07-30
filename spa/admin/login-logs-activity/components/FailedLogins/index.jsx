@@ -178,7 +178,20 @@ const FailedLogins = () => {
                     )}
                 </div>
             ) : (
-                <p>Need enable limit login Setting</p>
+                <div className="tpsa-warning-message">
+                    <p>
+                        To view this table data, you need to enable the Limit
+                        Login Attempts settings.{' '}
+                        <strong>
+                            <a
+                                className="tpsa-link"
+                                href={limit_login_attempts}
+                            >
+                                Enable it now
+                            </a>{' '}
+                        </strong>
+                    </p>
+                </div>
             )}
         </div>
     );

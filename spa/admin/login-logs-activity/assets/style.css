@@ -86,3 +86,32 @@
     font-weight: 500;
     color: #333;
 }
+
+/*Worning message design*/
+.tpsa-warning-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    position: relative;
+}
+
+.tpsa-warning-message p {
+    margin: 0;
+}
+
+.tpsa-warning-message::before {
+    content: '⚠️';
+    margin-right: 10px;
+}
+
+.tpsa-link {
+}
