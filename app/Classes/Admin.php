@@ -83,6 +83,7 @@ class Admin {
                 'setting_slug'  => $current_setting_screen,
                 'rest_url'      => esc_url_raw( rest_url() ),
                 'limit_login'   => $this->is_enabled( $this->get_settings() ),
+                'admin_url'     => admin_url(),
             ] );
         }
         

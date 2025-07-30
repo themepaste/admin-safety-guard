@@ -3,6 +3,7 @@ import SuccessfulLogins from '../../login-logs-activity/components/SuccessfulLog
 import Analytics from './Analytics';
 
 const LoginAttemps = () => {
+    const url = tpsaAdmin.admin_url + 'admin.php?page=login-logs-activity';
     return (
         <>
             <div className="tpsa-login-attempts-analytics">
@@ -13,7 +14,7 @@ const LoginAttemps = () => {
                     </p>
 
                     <div className="tp-details">
-                        <a href="#">View Details Analytics</a>
+                        <a href={url}>View Details Analytics</a>
                     </div>
                 </div>
                 <div className="tpsa-login-attempts-analytics-item">
@@ -22,7 +23,7 @@ const LoginAttemps = () => {
                         10<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
-                        <a href="#">View Details Analytics</a>
+                        <a href={url}>View Details Analytics</a>
                     </div>
                 </div>
                 <div className="tpsa-login-attempts-analytics-item">
@@ -31,7 +32,7 @@ const LoginAttemps = () => {
                         10<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
-                        <a href="#">View Details Analytics</a>
+                        <a href={url}>View Details Analytics</a>
                     </div>
                 </div>
             </div>

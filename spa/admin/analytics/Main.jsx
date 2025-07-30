@@ -7,9 +7,9 @@ import LoginAttemps from './components/LoginAttemps';
 function Main() {
     return (
         <>
-            <div className="tpsa-analytics-wrapper">
+            {/* <div className="tpsa-analytics-wrapper">
                 <h1>Analytics</h1>
-            </div>
+            </div> */}
             <LoginAttemps />
             {/* <Analytics /> */}
         </>
