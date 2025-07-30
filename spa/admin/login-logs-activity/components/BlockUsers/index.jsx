@@ -74,7 +74,7 @@ const BlockUsers = () => {
 
     return (
         <div className="tpsa-login-log-activity">
-            <h1>Block Users</h1>
+            <h1>Blocked Users</h1>
             {tpsaAdmin.limit_login ? (
                 <div>
                     <div className="tpsa-login-log-activity-header">

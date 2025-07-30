@@ -33,7 +33,7 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'class' => '',
                 ),
                 'recaptcha' => array(
-                    'label' => __( 'reCAPTCHA', 'tp-secure-plugin' ),
+                    'label' => __( 'Google reCAPTCHA', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'two-factor-auth' => array(
@@ -125,7 +125,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Redirect URL', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Wp Admin redirect URL. Default: home_url()', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Wp Admin redirect URL. <strong>Default</strong>: home_url()', 'tp-secure-plugin' ),
                             'default' => '',
                         ),
                         'logout-url' => array(
@@ -133,7 +133,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Redirect URL After Logout', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Redirect URL After Logout', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Redirect URL after Logout', 'tp-secure-plugin' ),
                             'default' => get_tpsa_site_login_path(),
                         ),
 
@@ -211,7 +211,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Version', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Select Google reCAPTCHA version', 'tp-secure-plugin' ),
                             'default' => '',
                             'options' => array(
                                 'v2' => 'v2',
@@ -223,15 +223,15 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Site Key', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => "Enter you Google recaptcha site key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Site Key</a>",
+                            'desc'  => "Enter you Google reCAPTCHA site key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Site Key</a>",
                             'default' => '',
                         ),
                         'secret-key' => array(
                             'type'  => 'text',
-                            'label' => __( 'Screet Key', 'tp-secure-plugin' ),
+                            'label' => __( 'Scret Key', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => "Enter you Google recaptcha screet key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Screet Key</a>",
+                            'desc'  => "Enter you Google reCAPTCHA scret key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Scret Key</a>",
                             'default' => '',
                         ),
                         'theme' => array(
@@ -239,7 +239,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Theme', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( '', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Select your preferred theme', 'tp-secure-plugin' ),
                             'default' => 'light',
                             'options' => array(
                                 'light' => 'Light Theme',

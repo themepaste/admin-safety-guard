@@ -71,7 +71,7 @@ function Main() {
                         type="button"
                         onClick={() => setActiveComponent('BlockUsers')}
                     >
-                        Block Users
+                        Blocked Users
                     </button>
                     <button
                         className={
