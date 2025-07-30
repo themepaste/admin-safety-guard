@@ -17,7 +17,7 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
             'tpsa_settings_option',
             array(
                 'analytics' => array(
-                    'label' => __( 'Analytics', 'tp-secure-plugin' ),
+                    'label' => __( 'Safety Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'limit-login-attempts' => array(

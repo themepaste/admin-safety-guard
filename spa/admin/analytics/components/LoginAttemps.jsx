@@ -12,7 +12,7 @@ const LoginAttemps = () => {
                     </p>
 
                     <div className="tp-details">
-                        <a href={url}>View Details Analytics</a>
+                        <a href={url}>View Details</a>
                     </div>
                 </div>
                 <div className="tpsa-login-attempts-analytics-item">
@@ -21,16 +21,16 @@ const LoginAttemps = () => {
                         10<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
-                        <a href={url}>View Details Analytics</a>
+                        <a href={url}>View Details</a>
                     </div>
                 </div>
                 <div className="tpsa-login-attempts-analytics-item">
-                    <h2>Block users</h2>
+                    <h2>Blocked users</h2>
                     <p>
                         10<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
-                        <a href={url}>View Details Analytics</a>
+                        <a href={url}>View Details</a>
                     </div>
                 </div>
             </div>
