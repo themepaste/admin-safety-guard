@@ -1,7 +1,9 @@
 import React from 'react';
 
 const LoginAttemps = () => {
-    const url = tpsaAdmin.admin_url + 'admin.php?page=login-logs-activity';
+    const url =
+        tpsaAdmin.admin_url +
+        'admin.php?page=tp-secure-admin&tpsa-setting=login-logs-activity';
     return (
         <>
             <div className="tpsa-login-attempts-analytics">
@@ -12,7 +14,7 @@ const LoginAttemps = () => {
                     </p>
 
                     <div className="tp-details">
-                        <a href={url}>View Details</a>
+                        <a href={url + '#BlockUsers'}>View Details</a>
                     </div>
                 </div>
                 <div className="tpsa-login-attempts-analytics-item">
@@ -21,7 +23,7 @@ const LoginAttemps = () => {
                         10<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
-                        <a href={url}>View Details</a>
+                        <a href={url + '#FailedLogins'}>View Details</a>
                     </div>
                 </div>
                 <div className="tpsa-login-attempts-analytics-item">
@@ -30,7 +32,7 @@ const LoginAttemps = () => {
                         10<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
-                        <a href={url}>View Details</a>
+                        <a href={url + '#SuccessfulLogins'}>View Details</a>
                     </div>
                 </div>
             </div>
