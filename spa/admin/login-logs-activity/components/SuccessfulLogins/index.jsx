@@ -55,7 +55,7 @@ const SuccessfulLogins = () => {
         } catch (err) {
             setError(err.message || 'Unknown error');
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 
