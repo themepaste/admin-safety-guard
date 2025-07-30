@@ -74,124 +74,135 @@ const FailedLogins = () => {
 
     return (
         <div className="tpsa-login-log-activity">
-            <h1>Failed Logins</h1>
-            {tpsaAdmin.limit_login ? (
-                <div>
-                    <div className="tpsa-login-log-activity-header">
-                        <div className="tpsa-login-log-activity-items-per-page">
-                            <label>Items per page: </label>
-                            <select
-                                value={itemsPerPage}
-                                onChange={(e) =>
-                                    setItemsPerPage(Number(e.target.value))
-                                }
-                            >
-                                <option value="1">1</option>
-                                <option value="3">3</option>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                        </div>
-                        <div className="tpsa-login-log-activity-search">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={(e) => {
-                                    setSearchTerm(e.target.value);
-                                    setCurrentPage(1);
-                                }}
-                            />
-                        </div>
-                    </div>
+            {loading ? (
+                <div className="tpsa-preloader">
+                    Loading...{' '}
+                    <img
+                        src={tpsaAdmin.assets_url + '/admin/img/preloader.gif'}
+                        alt="abc"
+                    />{' '}
+                </div>
+            ) : error ? (
+                <p style={{ color: 'red' }}>Error: {error}</p>
+            ) : (
+                <>
+                    <h1>Failed Logins</h1>
+                    {tpsaAdmin.limit_login ? (
+                        <div>
+                            <div className="tpsa-login-log-activity-header">
+                                <div className="tpsa-login-log-activity-items-per-page">
+                                    <label>Items per page: </label>
+                                    <select
+                                        value={itemsPerPage}
+                                        onChange={(e) =>
+                                            setItemsPerPage(
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                    >
+                                        <option value="1">1</option>
+                                        <option value="3">3</option>
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <div className="tpsa-login-log-activity-search">
+                                    <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        value={searchTerm}
+                                        onChange={(e) => {
+                                            setSearchTerm(e.target.value);
+                                            setCurrentPage(1);
+                                        }}
+                                    />
+                                </div>
+                            </div>
 
-                    {loading ? (
-                        <p>Loading...</p>
-                    ) : error ? (
-                        <p style={{ color: 'red' }}>Error: {error}</p>
-                    ) : (
-                        <>
-                            <table className="tpsa-table">
-                                <thead>
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>
-                                            Login Attemps <br /> Lockouts
-                                        </th>
-                                        <th>User Agent</th>
-                                        <th>IP Address</th>
-                                        <th>Date & Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {loginData.length > 0 ? (
-                                        loginData.map((login) => (
-                                            <tr key={login.id}>
-                                                <td>{login.username}</td>
-                                                <td>
-                                                    {login.login_attempts}{' '}
-                                                    <br /> {login.lockouts}
-                                                </td>
-                                                <td>{login.user_agent}</td>
-                                                <td>{login.ip_address}</td>
-                                                <td>
-                                                    {formatDate(
-                                                        login.last_login_time
-                                                    )}
+                            <>
+                                <table className="tpsa-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>
+                                                Login Attemps <br /> Lockouts
+                                            </th>
+                                            <th>User Agent</th>
+                                            <th>IP Address</th>
+                                            <th>Date & Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {loginData.length > 0 ? (
+                                            loginData.map((login) => (
+                                                <tr key={login.id}>
+                                                    <td>{login.username}</td>
+                                                    <td>
+                                                        {login.login_attempts}{' '}
+                                                        <br /> {login.lockouts}
+                                                    </td>
+                                                    <td>{login.user_agent}</td>
+                                                    <td>{login.ip_address}</td>
+                                                    <td>
+                                                        {formatDate(
+                                                            login.last_login_time
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="7">
+                                                    No results available in
+                                                    table
                                                 </td>
                                             </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="7">
-                                                No results available in table
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                        )}
+                                    </tbody>
+                                </table>
 
-                            <div className="tpsa-login-log-activity-pagination">
-                                <button
-                                    onClick={handlePrevPage}
-                                    disabled={currentPage === 1}
-                                >
-                                    Previous
-                                </button>
-                                <span>
-                                    Page {currentPage} of {totalPages || 1}
-                                </span>
-                                <button
-                                    onClick={handleNextPage}
-                                    disabled={
-                                        currentPage === totalPages ||
-                                        totalEntries === 0
-                                    }
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        </>
+                                <div className="tpsa-login-log-activity-pagination">
+                                    <button
+                                        onClick={handlePrevPage}
+                                        disabled={currentPage === 1}
+                                    >
+                                        Previous
+                                    </button>
+                                    <span>
+                                        Page {currentPage} of {totalPages || 1}
+                                    </span>
+                                    <button
+                                        onClick={handleNextPage}
+                                        disabled={
+                                            currentPage === totalPages ||
+                                            totalEntries === 0
+                                        }
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </>
+                        </div>
+                    ) : (
+                        <div className="tpsa-warning-message">
+                            <p>
+                                To view this table data, you need to enable the
+                                Limit Login Attempts settings.{' '}
+                                <strong>
+                                    <a
+                                        className="tpsa-link"
+                                        href={limit_login_attempts}
+                                    >
+                                        Enable it now
+                                    </a>{' '}
+                                </strong>
+                            </p>
+                        </div>
                     )}
-                </div>
-            ) : (
-                <div className="tpsa-warning-message">
-                    <p>
-                        To view this table data, you need to enable the Limit
-                        Login Attempts settings.{' '}
-                        <strong>
-                            <a
-                                className="tpsa-link"
-                                href={limit_login_attempts}
-                            >
-                                Enable it now
-                            </a>{' '}
-                        </strong>
-                    </p>
-                </div>
+                </>
             )}
         </div>
     );
