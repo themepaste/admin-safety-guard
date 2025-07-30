@@ -68,3 +68,85 @@
 .tpsa-login-attempts-analytics-item .tp-details a {
     color: #7b6f7c;
 }
+
+/*Analytics component*/
+
+/* Main container for the overview page */
+.plugin-overview {
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #ece6f9;
+    border-radius: 8px;
+    max-width: 900px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Section for each feature */
+.feature-section {
+    margin-bottom: 40px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading Style */
+.feature-title {
+    font-size: 26px;
+    color: #1d2327;
+    margin-bottom: 15px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 600;
+}
+
+/* Paragraph Style for descriptions */
+.feature-description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Modern gradient button */
+.configure-button {
+    display: inline-block;
+    background: linear-gradient(90deg, #814bfe, #9c5bff);
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+/* Button Hover Effect */
+.configure-button:hover {
+    color: white;
+    background: linear-gradient(90deg, #9c5bff, #814bfe);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design - Ensure it works well on mobile screens */
+@media screen and (max-width: 768px) {
+    .plugin-overview {
+        padding: 20px;
+        margin: 15px;
+    }
+
+    .feature-section {
+        padding: 15px;
+    }
+
+    .feature-title {
+        font-size: 22px;
+    }
+
+    .feature-description {
+        font-size: 14px;
+    }
+}

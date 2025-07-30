@@ -11,7 +11,7 @@ function Main() {
                 <h1>Analytics</h1>
             </div> */}
             <LoginAttemps />
-            {/* <Analytics /> */}
+            <Analytics />
         </>
     );
 }
