@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 const LoginAttempsReports = () => {
-    const [loginData, setLoginData] = useState({
-        s_logins: 0,
-        failed_logins: 0,
-        block_users: 0,
-    });
+    const [loginData, setLoginData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const url =
         tpsaAdmin.admin_url +
@@ -27,40 +24,44 @@ const LoginAttempsReports = () => {
                 setLoginData(data);
             } catch (err) {
                 console.error('Fetch error:', err);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchLoginCounts();
     }, []);
 
+    const renderCount = (key) => {
+        if (loading)
+            return <span className="loading-placeholder">Loading...</span>;
+        return (
+            <>
+                {loginData?.[key] ?? 0}
+                <sub> Past 24hrs</sub>
+            </>
+        );
+    };
+
     return (
         <div className="tpsa-login-attempts-analytics">
             <div className="tpsa-login-attempts-analytics-item">
                 <h2>Successful Logins</h2>
-                <p>
-                    {loginData.s_logins}
-                    <sub> Past 24hrs</sub>
-                </p>
+                <p>{renderCount('s_logins')}</p>
                 <div className="tp-details">
                     <a href={url + '#BlockUsers'}>View Details</a>
                 </div>
             </div>
             <div className="tpsa-login-attempts-analytics-item">
                 <h2>Failed Logins</h2>
-                <p>
-                    {loginData.failed_logins}
-                    <sub> Past 24hrs</sub>
-                </p>
+                <p>{renderCount('failed_logins')}</p>
                 <div className="tp-details">
                     <a href={url + '#FailedLogins'}>View Details</a>
                 </div>
             </div>
             <div className="tpsa-login-attempts-analytics-item">
                 <h2>Blocked Users</h2>
-                <p>
-                    {loginData.block_users}
-                    <sub> Past 24hrs</sub>
-                </p>
+                <p>{renderCount('block_users')}</p>
                 <div className="tp-details">
                     <a href={url + '#SuccessfulLogins'}>View Details</a>
                 </div>

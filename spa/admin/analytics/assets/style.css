@@ -268,3 +268,23 @@
         margin-bottom: 15px;
     }
 }
+
+.loading-placeholder {
+    display: inline-block;
+    font-weight: bold;
+    color: #aaa;
+    animation: colorPulse 1.5s infinite;
+    font-size: 20px;
+}
+
+@keyframes colorPulse {
+    0% {
+        color: #ccc;
+    }
+    50% {
+        color: #888;
+    }
+    100% {
+        color: #ccc;
+    }
+}
