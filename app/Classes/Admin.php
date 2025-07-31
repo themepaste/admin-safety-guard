@@ -66,19 +66,13 @@ class Admin {
             if( $current_setting_screen === 'login-logs-activity' ) {
                 $this->enqueue_script(
                     'tpsa-login-log-activity',
-                    TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js',
-                    [],
-                    null,
-                    false
+                    TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js'
                 );
             }
             if( $current_setting_screen === 'analytics' ) {
                 $this->enqueue_script(
                     'tpsa-analytics',
-                    TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js',
-                    [],
-                    null,
-                    false
+                    TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js'
                 );
             }
 

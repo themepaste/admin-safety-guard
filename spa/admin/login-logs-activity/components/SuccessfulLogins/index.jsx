@@ -24,7 +24,7 @@ const SuccessfulLogins = () => {
     };
 
     const fetchData = async () => {
-        setLoading(true);
+        setLoading(false);
         setError(null);
         try {
             const params = new URLSearchParams({
