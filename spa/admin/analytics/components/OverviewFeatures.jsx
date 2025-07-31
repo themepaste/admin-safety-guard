@@ -1,6 +1,10 @@
 import React from 'react';
 
 const OverviewFeatures = () => {
+    const url =
+        tpsaAdmin.admin_url +
+        'admin.php?page=tp-admin-safety-guard&tpsa-setting=';
+
     return (
         <div className="plugin-overview">
             {/* Setup reCaptcha Section */}
@@ -14,7 +18,7 @@ const OverviewFeatures = () => {
                     settings and integrate with your forms for enhanced
                     protection.
                 </p>
-                <a href="your-configure-page-url" className="configure-button">
+                <a href={url + 'recaptcha'} className="configure-button">
                     Setup reCaptcha
                 </a>
             </div>
@@ -29,7 +33,7 @@ const OverviewFeatures = () => {
                     authorized users can log in. Enable it for critical accounts
                     to reduce the risk of unauthorized access.
                 </p>
-                <a href="your-configure-page-url" className="configure-button">
+                <a href={url + 'two-factor-auth'} className="configure-button">
                     Enable 2FA
                 </a>
             </div>
@@ -44,7 +48,7 @@ const OverviewFeatures = () => {
                     routes for both actions to protect your site from common
                     brute-force attacks.
                 </p>
-                <a href="your-configure-page-url" className="configure-button">
+                <a href={url + 'custom-login-url'} className="configure-button">
                     Configure URLs
                 </a>
             </div>
@@ -59,7 +63,10 @@ const OverviewFeatures = () => {
                     a password for all visitors. It gives you full control over
                     who sees what.
                 </p>
-                <a href="your-configure-page-url" className="configure-button">
+                <a
+                    href={url + 'password-protection'}
+                    className="configure-button"
+                >
                     Configure Password Protection
                 </a>
             </div>
