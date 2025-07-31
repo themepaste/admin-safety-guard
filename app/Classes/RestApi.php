@@ -5,6 +5,7 @@ namespace ThemePaste\SecureAdmin\Classes;
 use ThemePaste\SecureAdmin\Classes\APIs\FailedLoginsController;
 use ThemePaste\SecureAdmin\Classes\APIs\SuccessLoginsController;
 use ThemePaste\SecureAdmin\Classes\APIs\BlockUsersController;
+use ThemePaste\SecureAdmin\Classes\APIs\Reports;
 
 class RestApi {
 
@@ -61,5 +62,20 @@ class RestApi {
                 },
             ]
         );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/dahboard/limit-login-attempts/reports',
+            [
+                'methods'             => 'GET',
+                'callback' => function( $request ) {
+                    return Reports::get()->get_data( $request );
+                },
+                'permission_callback' => function( $request ) {
+                    return Reports::get()->authorize_request( $request );
+                },
+            ]
+        );
+
     }
 }
