@@ -23,7 +23,7 @@ const FailedLogins = () => {
     };
 
     const fetchData = async () => {
-        setLoading(true);
+        setLoading(false);
         setError(null);
         try {
             const params = new URLSearchParams({
@@ -72,9 +72,13 @@ const FailedLogins = () => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
 
+    const limit_login_attempts =
+        tpsaAdmin.admin_url +
+        '?page=tp-admin-safety-guard&tpsa-setting=limit-login-attempts';
+
     return (
         <div className="tpsa-login-log-activity">
-            {loading ? (
+            {false ? (
                 <div className="tpsa-preloader">
                     Loading...{' '}
                     <img

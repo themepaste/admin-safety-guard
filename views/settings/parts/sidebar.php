@@ -13,7 +13,7 @@
                 // Build the URL for each settings tab using add_query_arg
                 $setting_url = esc_url( add_query_arg(
                     array(
-                        'page'          => 'tp-secure-admin',
+                        'page'          => 'tp-admin-safety-guard',
                         'tpsa-setting'  => $key,
                     ),
                     admin_url( 'admin.php' )

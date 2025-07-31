@@ -25,7 +25,7 @@ class Settings {
 	 *
 	 * @var string
 	 */
-	public static $SETTING_PAGE_ID = 'tp-secure-admin';
+	public static $SETTING_PAGE_ID = 'tp-admin-safety-guard';
 
 	/**
 	 * Admin settings page URL.

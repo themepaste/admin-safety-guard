@@ -23,7 +23,7 @@ const BlockUsers = () => {
     };
 
     const fetchData = async () => {
-        setLoading(true);
+        setLoading(false);
         setError(null);
         try {
             const params = new URLSearchParams({
@@ -74,7 +74,7 @@ const BlockUsers = () => {
 
     const limit_login_attempts =
         tpsaAdmin.admin_url +
-        '?page=tp-secure-admin&tpsa-setting=limit-login-attempts';
+        '?page=tp-admin-safety-guard&tpsa-setting=limit-login-attempts';
 
     return (
         <div className="tpsa-login-log-activity">
