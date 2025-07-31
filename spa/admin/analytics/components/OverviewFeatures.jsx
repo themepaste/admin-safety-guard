@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Analytics = () => {
+const OverviewFeatures = () => {
     return (
         <div className="plugin-overview">
             {/* Setup reCaptcha Section */}
@@ -67,4 +67,4 @@ const Analytics = () => {
     );
 };
 
-export default Analytics;
+export default OverviewFeatures;

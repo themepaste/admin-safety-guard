@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LoginAttemps = () => {
+const LoginAttempsReports = () => {
     const url =
         tpsaAdmin.admin_url +
         'admin.php?page=tp-secure-admin&tpsa-setting=login-logs-activity';
@@ -40,4 +40,4 @@ const LoginAttemps = () => {
     );
 };
 
-export default LoginAttemps;
+export default LoginAttempsReports;
