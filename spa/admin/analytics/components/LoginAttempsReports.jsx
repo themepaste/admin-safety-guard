@@ -6,7 +6,7 @@ const LoginAttempsReports = () => {
 
     const url =
         tpsaAdmin.admin_url +
-        'admin.php?page=tp-secure-admin&tpsa-setting=login-logs-activity';
+        'admin.php?page=tp-admin-safety-guard&tpsa-setting=login-logs-activity';
 
     useEffect(() => {
         const fetchLoginCounts = async () => {
