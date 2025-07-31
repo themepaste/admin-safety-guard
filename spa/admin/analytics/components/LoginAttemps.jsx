@@ -10,7 +10,7 @@ const LoginAttemps = () => {
                 <div className="tpsa-login-attempts-analytics-item">
                     <h2>Successful Logins</h2>
                     <p>
-                        1000<sub>Past 24hrs</sub>
+                        0<sub>Past 24hrs</sub>
                     </p>
 
                     <div className="tp-details">
@@ -20,7 +20,7 @@ const LoginAttemps = () => {
                 <div className="tpsa-login-attempts-analytics-item">
                     <h2>Failed Logins</h2>
                     <p>
-                        10<sub>Past 24hrs</sub>
+                        0<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
                         <a href={url + '#FailedLogins'}>View Details</a>
@@ -29,7 +29,7 @@ const LoginAttemps = () => {
                 <div className="tpsa-login-attempts-analytics-item">
                     <h2>Blocked users</h2>
                     <p>
-                        10<sub>Past 24hrs</sub>
+                        0<sub>Past 24hrs</sub>
                     </p>
                     <div className="tp-details">
                         <a href={url + '#SuccessfulLogins'}>View Details</a>
