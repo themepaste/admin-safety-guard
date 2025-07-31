@@ -44,6 +44,13 @@ class FormProcessor {
                     $raw = isset( $_POST[ $field_name ] ) ? (array) $_POST[ $field_name ] : [];
                     $sanitized[ $key ] = array_map( 'sanitize_text_field', $raw );
                     break;
+                case 'single-repeater':
+                    $raw = isset( $_POST[ $field_name ] ) ? (array) $_POST[ $field_name ] : [];
+                    $sanitized[ $key ] = array_filter(
+                        array_map( 'sanitize_text_field', $raw ),
+                        fn($v) => !empty($v)
+                    );
+                    break;
                 default:
                     $sanitized[ $key ] = sanitize_text_field( $raw );
                     break;
