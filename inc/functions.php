@@ -162,7 +162,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Lock for', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Add How many minutes will be locked.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Add how many minutes will be locked.', 'tp-secure-plugin' ),
                             'default' => 15,
                         ),
                         'max-lockout' => array(

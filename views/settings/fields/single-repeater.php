@@ -20,7 +20,7 @@ $values  = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'
         <div class="tp-repeater-wrapper">
             <?php foreach ( $values as $val ) : ?>
                 <div class="tp-repeater-item">
-                    <input type="text" name="<?php echo esc_attr($id_base); ?>[]" value="<?php echo esc_attr($val); ?>" class="tp-repeater-text" />
+                    <input type="text" name="<?php echo esc_attr($id_base); ?>[]" value="<?php echo esc_attr($val); ?>" class="tp-repeater-text" placeholder="192.168.1.1" />
                     <button type="button" class="tp-repeater-remove">➖</button>
                 </div>
             <?php endforeach; ?>
@@ -53,9 +53,10 @@ document.addEventListener("DOMContentLoaded", function () {
             newItem.classList.add('tp-repeater-item');
 
             newItem.innerHTML = `
-                <input type="text" name="${idBase}[]" value="" class="tp-repeater-text" />
+                <input type="text" name="${idBase}[]" value="" class="tp-repeater-text" placeholder="192.168.1.1" />
                 <button type="button" class="tp-repeater-remove">➖</button>
             `;
+
             repeaterWrapper.appendChild(newItem);
             updateRemoveButtons();
         });
@@ -86,6 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
     border: 1px solid #bba8e7;
     border-radius: 6px;
     font-size: 14px;
+}
+
+.tp-repeater-text::placeholder {
+    opacity: 0.5;
 }
 
 .tp-repeater-remove,

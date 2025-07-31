@@ -226,7 +226,7 @@ class LimitLoginAttempts implements FeatureInterface {
         if( empty( $block_ip_lists ) ) {
             return;
         }
-        $block_ip_lists = array_map( 'trim', explode( ',', $block_ip_lists ) );
+        
         $current_ip_address = $this->get_ip_address();
 
         if ( in_array( $current_ip_address, $block_ip_lists ) ) {
