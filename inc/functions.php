@@ -162,7 +162,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Lock for', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Add How many munites will be locked.', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Add How many minutes will be locked.', 'tp-secure-plugin' ),
                             'default' => 15,
                         ),
                         'max-lockout' => array(
@@ -182,11 +182,11 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'default' => __( 'You have been locked out due to too many login attempts.', 'tp-secure-plugin' ),
                         ),
                         'block-ip-address' => array(
-                            'type'  => 'textarea',
+                            'type'  => 'single-repeater',
                             'label' => __( 'Block with IP Address', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Add IP addresses with comma separated', 'tp-secure-plugin' ),
+                            'desc'  => __( 'IP addresses', 'tp-secure-plugin' ),
                             'default' => '',
                         ),
                     )
