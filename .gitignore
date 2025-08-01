@@ -18,7 +18,6 @@ pnpm-debug.log*
 /composer.lock
 
 # Build artifacts (if any)
-build/
 *.map
 
 # OS-specific files
