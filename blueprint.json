@@ -1,7 +1,7 @@
 {
     "name": "Admin Safety Guard",
     "slug": "admin-safety-guard",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Secure your WordPress admin with Admin safety guard to ensure secured access with smart login,  2FA, and activity tracking.",
     "author": "Themepaste Team",
     "author_uri": "http://themepaste.com/",
