@@ -120,6 +120,19 @@ This feature automatically saves your progress at regular intervals, ensuring th
 
 This feature conditionally hides the admin bar for specific user roles or chosen pages, enabling cleaner interfaces and tailored backend visibility.
 
+== Screenshots ==
+
+1. screenshot-1
+2. screenshot-2
+3. screenshot-3
+4. screenshot-4
+5. screenshot-5
+6. screenshot-6
+7. screenshot-7
+8. screenshot-8
+9. screenshot-9
+10. screenshot-10
+
 
 == Installation ==
 
