@@ -228,10 +228,10 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                         'secret-key' => array(
                             'type'  => 'text',
-                            'label' => __( 'Scret Key', 'tp-secure-plugin' ),
+                            'label' => __( 'Screet Key', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => "Enter you Google reCAPTCHA scret key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Scret Key</a>",
+                            'desc'  => "Enter you Google reCAPTCHA screet key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Screet Key</a>",
                             'default' => '',
                         ),
                         'theme' => array(
@@ -329,7 +329,7 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Logo', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => __( 'Upload login form logo', 'tp-secure-plugin' ),
+                            'desc'  => __( 'Preferred logo size: 84×84 px. Please upload accordingly.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
                         'logo-url' => array(
