@@ -137,7 +137,7 @@
 .tp-feature {
     position: relative;
     display: inline-block;
-    margin: 20px;
+    margin-right: 20px;
 }
 
 .tp-help-icon {

@@ -22,8 +22,6 @@
                 <p>This feature automatically saves your progress at regular intervals, ensuring that no data is lost due to unexpected issues such as system crashes.</p>
             </div>
         </div>
-    </div>
-
         </h2>
         
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
