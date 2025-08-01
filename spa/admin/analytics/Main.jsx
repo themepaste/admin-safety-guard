@@ -8,9 +8,9 @@ import CustomizerBanner from './components/CustomizerBanner';
 function Main() {
     return (
         <>
-            <div className="tpsa-analytics-wrapper">
+            {/* <div className="tpsa-analytics-wrapper">
                 <h1>Get insights into your site's safety</h1>
-            </div>
+            </div> */}
             <LoginAttempsReports />
             <OverviewFeatures />
             <CustomizerBanner />

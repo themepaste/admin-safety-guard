@@ -97,6 +97,9 @@
     margin-bottom: 35px;
     border-bottom: 1px solid #e2d8fb;
     padding-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .tpsa-setting-row {
     margin-bottom: 35px;
@@ -128,4 +131,50 @@
     font-size: 14px;
     margin: 0 5px;
     font-weight: 500;
+}
+
+/*Tooltip style*/
+.tp-feature {
+    position: relative;
+    display: inline-block;
+    margin: 20px;
+}
+
+.tp-help-icon {
+    background-color: #814bfe;
+    color: #fff;
+    font-size: 14px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tooltip styles */
+.tp-tooltip {
+    visibility: hidden;
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ece6f9;
+    color: #1d2327;
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 150px;
+    font-size: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Show tooltip when hovering over the help icon */
+.tp-feature:hover .tp-tooltip {
+    visibility: visible;
+    opacity: 1;
 }
