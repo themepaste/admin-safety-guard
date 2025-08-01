@@ -34,7 +34,6 @@ Admin Safety Guard is ideal for anyone seeking greater control, security, and st
 
 Explore more about Admin Safety Guard - 
 
-✅ [Documentation](https://themepaste.com/documentation/admin-safety-guard)
 ✅ [Support](https://themepaste.com/contact-us)
 
 == Features ==
