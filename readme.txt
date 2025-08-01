@@ -1,13 +1,12 @@
 === Admin Safety Guard ===
-Plugin Name: Admin Safety Guard
-Plugin URI: http://themepaste.com/product/themepaste-secure-admin-pro/
-Description: Secure your WordPress admin with Admin safety guard to ensure secured access with smart login, 2FA, and activity tracking.
-Version: 1.0.0
-Author: Themepaste Team
-Author URI: http://themepaste.com/
-License: GPL2 or Later
+Contributors: themepaste, habibnote
+Tags: Admin Safety Guard, Limit login Attempts, 2fa, reCaptcha, Password Protection
+Requires at least: 5.8
+Tested up to: 6.8
+Requires PHP: 7.0
+Stable tag: 1.0.0
+License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: tp-secure-plugin
  
 Secure your WordPress admin with Admin safety guard to ensure secured access with smart login,  2FA, and activity tracking.  
 
