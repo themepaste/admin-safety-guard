@@ -16,12 +16,12 @@
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
         <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label; ?>
-        <div class="tp-feature">
-            <button class="tp-help-icon">?</button>
-            <div class="tp-tooltip">
-                <p>This feature automatically saves your progress at regular intervals, ensuring that no data is lost due to unexpected issues such as system crashes.</p>
+            <div class="tp-feature">
+                <button class="tp-help-icon">?</button>
+                <div class="tp-tooltip">
+                    <p>This feature conditionally hides the admin bar for specific user roles or chosen pages, enabling cleaner interfaces and tailored backend visibility.</p>
+                </div>
             </div>
-        </div>
         </h2>
         
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
