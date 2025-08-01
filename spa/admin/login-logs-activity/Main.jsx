@@ -63,36 +63,52 @@ function Main() {
     return (
         <>
             <div className="tpsa-login-log-activity-wrapper">
-                <div className="tpsa-login-log-activity-tabs">
-                    <button
-                        className={
-                            activeComponent === 'BlockUsers' ? 'active' : ''
-                        }
-                        type="button"
-                        onClick={() => setActiveComponent('BlockUsers')}
-                    >
-                        Blocked Users
-                    </button>
-                    <button
-                        className={
-                            activeComponent === 'FailedLogins' ? 'active' : ''
-                        }
-                        type="button"
-                        onClick={() => setActiveComponent('FailedLogins')}
-                    >
-                        Failed Logins
-                    </button>
-                    <button
-                        className={
-                            activeComponent === 'SuccessfulLogins'
-                                ? 'active'
-                                : ''
-                        }
-                        type="button"
-                        onClick={() => setActiveComponent('SuccessfulLogins')}
-                    >
-                        Successful Logins
-                    </button>
+                <div className="tpsa-login-log-activity-header">
+                    <div className="tpsa-login-log-activity-tabs">
+                        <button
+                            className={
+                                activeComponent === 'BlockUsers' ? 'active' : ''
+                            }
+                            type="button"
+                            onClick={() => setActiveComponent('BlockUsers')}
+                        >
+                            Blocked Users
+                        </button>
+                        <button
+                            className={
+                                activeComponent === 'FailedLogins'
+                                    ? 'active'
+                                    : ''
+                            }
+                            type="button"
+                            onClick={() => setActiveComponent('FailedLogins')}
+                        >
+                            Failed Logins
+                        </button>
+                        <button
+                            className={
+                                activeComponent === 'SuccessfulLogins'
+                                    ? 'active'
+                                    : ''
+                            }
+                            type="button"
+                            onClick={() =>
+                                setActiveComponent('SuccessfulLogins')
+                            }
+                        >
+                            Successful Logins
+                        </button>
+                    </div>
+                    <div class="tp-feature">
+                        <button class="tp-help-icon">?</button>
+                        <div class="tp-tooltip">
+                            <p>
+                                This feature records login attempts and admin
+                                interactions, empowering you to audit usage
+                                patterns and identify suspicious behaviors fast.
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div className="tpsa-login-log-activity-container">
                     {renderComponent()}

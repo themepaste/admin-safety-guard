@@ -1,8 +1,6 @@
 .tpsa-login-log-activity-tabs {
     display: flex;
     gap: 10px;
-    border-bottom: 1px solid #bba8e7;
-    padding-bottom: 10px;
 }
 .tpsa-login-log-activity-tabs button {
     padding: 10px 20px;
@@ -122,4 +120,12 @@
     justify-content: center;
     flex-direction: column-reverse;
     margin-top: 50px;
+}
+
+.tpsa-login-log-activity-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #bba8e7;
+    padding-bottom: 10px;
 }
