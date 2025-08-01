@@ -60,8 +60,8 @@ class Settings {
 	 */
 	public function register_settings_page() {
 		add_menu_page(
-			esc_html__( 'Admin Safety Guard', 'shipping-manager' ),
-			esc_html__( 'Admin Safety Guard', 'shipping-manager' ),
+			esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
+			esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
 			'manage_options',
 			self::$SETTING_PAGE_ID,
 			[ $this, 'render_settings_page' ],
@@ -110,7 +110,7 @@ class Settings {
 		$settings_link = sprintf(
 			'<a href="%1$s">%2$s</a>',
 			esc_url( $this->setting_page_url ),
-			esc_html__( 'Settings', 'shipping-manager' )
+			esc_html__( 'Settings', 'tp-secure-plugin' )
 		);
 
 		array_unshift( $links, $settings_link );

@@ -28,10 +28,10 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
                     ?>
                     <!-- <div style="text-align: center;">
                         <p style="margin-top: 50px; font-size: 16px;">
-                            <?php // esc_html_e( 'To Enable this Feature you need to purchase Pro', 'shipping-manager' ); ?>
+                            <?php // esc_html_e( 'To Enable this Feature you need to purchase Pro', 'tp-secure-plugin' ); ?>
                         </p>
                         <button style="padding:10px 35px; background:#814bfe; color: #fff; border:none; cursor:pointer; border-radius: 4px;">
-                            <?php // esc_html_e( 'Upgrade to Pro', 'shipping-manager' ); ?>
+                            <?php // esc_html_e( 'Upgrade to Pro', 'tp-secure-plugin' ); ?>
                         </button>
                     </div> -->
                     <?php

@@ -36,7 +36,7 @@ switch ( $current_screen ) {
         break;
     default:
         // Fallback to base documentation if no matching section
-        $doc_url = 'https://themepaste.com/documentation/shipping-manager-documentation';
+        $doc_url = 'https://themepaste.com/documentation/tp-secure-plugin-documentation';
         break;
 }
 
@@ -45,7 +45,7 @@ if( $current_screen != 'analytics' ) {
         <!-- Button linking to the relevant documentation section -->
         <button class="tpsm-guide-me-button" id="tpsm-guide-me-button">
             <a href="<?php echo esc_url( $doc_url ); ?>" target="_blank" rel="noopener noreferrer">
-                <?php esc_html_e( 'Guide Me', 'shipping-manager' ); ?>
+                <?php esc_html_e( 'Guide Me', 'tp-secure-plugin' ); ?>
             </a>
         </button>
     <?php 

@@ -55,12 +55,12 @@ class Utility {
 	}
 
 	/**
-	 * Includes a template file from the 'shipping-manager-pro/views' directory.
+	 * Includes a template file from the 'tp-secure-plugin-pro/views' directory.
 	 *
 	 * This method is used to load a view/template file specifically from the pro version
 	 * of the plugin. It supports passing variables to the template via an associative array.
 	 *
-	 * @param string $template The relative path to the template file inside the 'shipping-manager-pro/views/' directory.
+	 * @param string $template The relative path to the template file inside the 'tp-secure-plugin-pro/views/' directory.
 	 * @param array  $args     Optional. An associative array of variables to extract into the template's scope.
 	 *
 	 * @return string|null The output of the template file, or null if the file doesn't exist.

@@ -26,8 +26,8 @@
     <!-- Right-aligned topbar info area -->
     <div class="tpsa-topbar-info-area">
         <!-- Link to plugin documentation -->
-        <a href="https://themepaste.com/documentation/shipping-manager-documentation" target="_blank">
-            <?php esc_html_e( 'Documentation', 'shipping-manager' ); ?>
+        <a href="https://wordpress.org/plugins/admin-safety-guard/#description" target="_blank">
+            <?php esc_html_e( 'Documentation', 'tp-secure-plugin' ); ?>
         </a>
     </div>
 </div>
