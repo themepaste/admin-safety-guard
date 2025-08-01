@@ -1,0 +1,17 @@
+.wordpress-org
+.git
+.github
+.distignore
+.gitignore
+*.sql
+*.tar.gz
+*.zip
+postcss.config.js
+webpack.config.js
+composer.json
+composer.lock
+.DS_Store
+package.json
+package-lock.json
+node_modules
+spa/
