@@ -4,7 +4,7 @@ Tags: Admin Safety Guard, Limit login Attempts, 2fa, reCaptcha, Password Protect
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
  
@@ -151,6 +151,9 @@ A2: You can change the default login URL under `Settings > Admin Safety Guard > 
 A3: Yes, login logs and user activity tracking can be enabled under `Settings > Admin Safety Guard > Security Settings`. This will log and monitor user activities in the admin dashboard.
 
 == Changelog ==
+
+= 1.0.1 =
+[fix] build file issue
 
 = 1.0.0 =
 * Initial release with features such as Two-Factor Authentication, Limit login attempts, Login Logs & Activity, CAPTCHA, Login URL customization, Password password protection and IP Blocking.
