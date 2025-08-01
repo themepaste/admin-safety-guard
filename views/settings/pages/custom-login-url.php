@@ -19,7 +19,7 @@
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p></p>
+                    <p>This feature lets you redefine the default WordPress login URL, making it harder for attackers to locate and exploit standard entry points.</p>
                 </div>
             </div>
         </h2>

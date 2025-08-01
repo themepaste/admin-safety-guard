@@ -15,7 +15,14 @@
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label; ?></h2>
+        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label; ?>
+            <div class="tp-feature">
+                <button class="tp-help-icon">?</button>
+                <div class="tp-tooltip">
+                    <p>This feature turns off WordPress’s XML-RPC functions, plugging a known vulnerability often exploited in remote-access attacks.</p>
+                </div>
+            </div>
+        </h2>
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
             <input type="hidden" name="action" value="tpsa_process_form">

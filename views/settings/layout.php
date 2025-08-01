@@ -24,6 +24,6 @@ $args = array(
             <?php echo Utility::get_template( 'settings/parts/sidebar.php', $args ); ?>
             <?php echo Utility::get_template( 'settings/parts/main.php', $args ); ?>
         </div>
-        <?php echo Utility::get_template( 'settings/parts/guide-me.php', $args ); ?>
+        <?php // echo Utility::get_template( 'settings/parts/guide-me.php', $args ); ?>
     </div>
 </div>
