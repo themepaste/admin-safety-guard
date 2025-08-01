@@ -8,7 +8,6 @@ Author URI: http://themepaste.com/
 License: GPL2 or Later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: tp-secure-plugin
-
  
 Secure your WordPress admin with Admin safety guard to ensure secured access with smart login,  2FA, and activity tracking.  
 
@@ -153,4 +152,4 @@ This is the first release of the Admin Safety Guard plugin. No previous versions
 
 == Support ==
 
-If you encounter any issues or need help, please contact us at [Link to Support Page].
+If you encounter any issues or need help, please contact us at [Support](https://themepaste.com/contact-us).
