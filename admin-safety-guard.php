@@ -2,7 +2,7 @@
 /*
 Plugin Name: Admin Safety Guard
 Plugin URI: http://themepaste.com/product/themepaste-secure-admin-pro/
-Description: Secure your admin panel with Admin Safety Guard
+Description: Secure your WordPress admin with Admin safety guard to ensure secured access with smart login,  2FA, and activity tracking.
 Version: 1.0.0
 Author: Themepaste Team
 Author URI: http://themepaste.com/
