@@ -141,6 +141,9 @@ This feature conditionally hides the admin bar for specific user roles or chosen
 
 == Changelog ==
 
+= 1.0.2 =
+[fix] Fix issues
+
 = 1.0.1 =
 [fix] build file issue
 
