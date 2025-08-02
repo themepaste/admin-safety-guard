@@ -4,7 +4,7 @@ Tags: Admin Safety Guard, Limit login Attempts, 2fa, reCaptcha, Password Protect
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
  
@@ -139,17 +139,6 @@ This feature conditionally hides the admin bar for specific user roles or chosen
 3. Click `Choose File`, select the downloaded zip file, and click `Install Now`.
 4. After installation, click `Activate` to enable the plugin on your site.
 
-== Frequently Asked Questions ==
-
-**Q1: How can I enable Two-Factor Authentication (2FA)?**  
-A1: Navigate to the plugin settings under `Settings > Admin Safety Guard` and enable Two-Factor Authentication. Follow the setup wizard to configure it for your site.
-
-**Q2: How can I change the login URL?**  
-A2: You can change the default login URL under `Settings > Admin Safety Guard > Login Settings`. Simply enter your desired custom URL.
-
-**Q3: Can I track login activity and user actions?**  
-A3: Yes, login logs and user activity tracking can be enabled under `Settings > Admin Safety Guard > Security Settings`. This will log and monitor user activities in the admin dashboard.
-
 == Changelog ==
 
 = 1.0.1 =
@@ -160,9 +149,6 @@ A3: Yes, login logs and user activity tracking can be enabled under `Settings > 
 * Added Dashboard Overview and customizable Login Page styling.
 
 == Upgrade Notice ==
-
-= 1.0.0 =
-This is the first release of the Admin Safety Guard plugin. No previous versions to upgrade from.
 
 == Support ==
 
