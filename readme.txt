@@ -50,13 +50,8 @@ Free Features at a Glance:
 ✅ IP Blocking  
 ✅ Two-Factor Authentication (2FA)  
 ✅ Password Protection  
-✅ Obfuscate Author Slugs  
-✅ Custom Admin CSS  
-✅ Email Address Obfuscator  
 ✅ Disable XML-RPC  
 ✅ Add Custom Logo on Login Form  
-✅ Live Login Page Customizer  
-✅ Pre-Designed Login Templates  
 ✅ Custom Logo & Branding  
 
 == Feature Details ==
