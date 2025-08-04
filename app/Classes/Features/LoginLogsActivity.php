@@ -47,32 +47,6 @@ class LoginLogsActivity implements FeatureInterface {
 
     public function register_hooks() {
         $this->action( 'wp_login', [$this, 'save_successful_login_log'], 10, 2 );
-        $this->action( 'wp_login_failed', [$this, 'save_failed_login_log'] );
-    }
-
-    public function save_failed_login_log( $username ) {
-        global $wpdb;
-
-        $table      = get_tpsa_db_table_name( 'failed_logins' );
-        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
-        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
-
-        if ( empty( $username ) ) {
-            $username = 'Unknown';
-        }
-
-        $wpdb->insert(
-            $table,
-            [
-                'username'   => $username,
-                'user_agent' => $user_agent,
-                'ip_address' => $ip_address,
-                'login_time' => current_time('mysql')
-            ],
-            [
-                '%s', '%s', '%s', '%s'
-            ]
-        );
     }
     
     public function save_successful_login_log( $user_login, $user ) {

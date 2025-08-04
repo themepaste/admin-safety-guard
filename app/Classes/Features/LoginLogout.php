@@ -56,8 +56,8 @@ class LoginLogout implements FeatureInterface
      * Redirect /wp-admin to home if not logged in
      */
     function redirect_wp_admin() {
-        if (strpos($_SERVER['REQUEST_URI'], '/wp-admin') === 0 && !is_user_logged_in()) {
-            wp_redirect(home_url($this->redirect_slug));
+        if ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin' ) === 0 && !is_user_logged_in() ) {
+            wp_redirect( home_url( $this->redirect_slug ) );
             exit;
         }
     }
@@ -67,12 +67,12 @@ class LoginLogout implements FeatureInterface
      */
     public function show_404() {
         if (
-            strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false &&
-            strpos($_SERVER['REQUEST_URI'], '/' . $this->custom_login_slug) === false
+            strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false &&
+            strpos( $_SERVER['REQUEST_URI'], '/' . $this->custom_login_slug ) === false
         ) {
             global $wp_query;
             $wp_query->set_404();
-            status_header(404);
+            status_header( 404 );
             nocache_headers();
             include get_404_template();
             exit;
@@ -83,7 +83,7 @@ class LoginLogout implements FeatureInterface
      * Rewrite /habib-login → wp-login.php with all query args
      */
     public function rewrite_url() {
-        add_rewrite_rule('^' . $this->custom_login_slug . '/?$', 'wp-login.php', 'top');
+        add_rewrite_rule( '^' . $this->custom_login_slug . '/?$', 'wp-login.php', 'top' );
     }
 
     /**
@@ -93,22 +93,33 @@ class LoginLogout implements FeatureInterface
         $request_uri = $_SERVER['REQUEST_URI'];
 
         // Normalize custom login slug match
-        if (preg_match('#^/' . $this->custom_login_slug . '(/|\?|$)#', $request_uri)) {
+        if ( preg_match( '#^/' . $this->custom_login_slug . '(/|\?|$)#', $request_uri ) ) {
+
+            // Define missing expected variables to avoid PHP warnings
+            global $user_login, $error;
+
+            // Set them to empty string if not set
+            if (!isset($user_login)) {
+                $user_login = '';
+            }
+
+            if (!isset($error)) {
+                $error = '';
+            }
+            
             require ABSPATH . 'wp-login.php';
             exit;
         }
     }
 
-    /**
-     * Logout redirect to custom URL
-     */
-    public function logout_redirect( $redirect_to, $requested_redirect_to, $user )
-    {
-        // If feature is enabled, redirect to custom logout URL
+    public function logout_redirect($redirect_to, $requested_redirect_to, $user) {
+        // Check if logout URL is set in settings
         $settings = $this->get_settings();
-        $redirect_to = $settings['logout-url'];
+        if ( !empty( $settings['logout-url'] ) ) {
+            return home_url( $settings['logout-url'] );
+        }
 
-        return home_url( $redirect_to );
+        return $redirect_to; // Fallback to default redirect
     }
 
     private function get_settings()
