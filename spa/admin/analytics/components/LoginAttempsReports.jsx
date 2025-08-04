@@ -49,7 +49,7 @@ const LoginAttempsReports = () => {
                 <h2>Successful Logins</h2>
                 <p>{renderCount('s_logins')}</p>
                 <div className="tp-details">
-                    <a href={url + '#BlockUsers'}>View Details</a>
+                    <a href={url + '#SuccessfulLogins'}>View Details</a>
                 </div>
             </div>
             <div className="tpsa-login-attempts-analytics-item">
@@ -63,7 +63,7 @@ const LoginAttempsReports = () => {
                 <h2>Blocked Users</h2>
                 <p>{renderCount('block_users')}</p>
                 <div className="tp-details">
-                    <a href={url + '#SuccessfulLogins'}>View Details</a>
+                    <a href={url + '#BlockUsers'}>View Details</a>
                 </div>
             </div>
         </div>
