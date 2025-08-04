@@ -48,9 +48,7 @@ class LimitLoginAttempts implements FeatureInterface {
     public function register_hooks() {
         $this->action( 'admin_init', [$this, 'check_wp_cron_status'] );
         $this->action( 'wp_login_failed', [$this, 'tpsa_track_failed_login_24hr']);
-        // $this->action( 'login_init', [ $this, 'hide_login_form_with_ip_address_status' ] );
-        // $this->action( 'login_init', [ $this, 'hide_login_form_with_login_attempts' ] );
-
+        $this->action( 'login_init', [ $this, 'hide_login_form_with_ip_address_status' ] );
         $this->action( 'login_init', [$this, 'maybe_block_login_form'] );
         $this->action( 'template_redirect', [$this, 'maybe_block_custom_login'] );
 
@@ -297,40 +295,6 @@ class LimitLoginAttempts implements FeatureInterface {
         if ( in_array( $current_ip_address, $block_ip_lists ) ) {
             wp_die(
                 '<h2 style="color:red;text-align:center;">' . esc_html( 'Your IP address is not permitted to log in to this site.' ) . '</h2>',
-                'Login Blocked',
-                [ 'response' => 403 ]
-            );
-            exit;
-        }
-    }
-
-    
-    public function hide_login_form_with_login_attempts() {
-        global $wpdb;
-
-        $settings = $this->get_settings();
-        $ip       = $this->get_ip_address();
-        $tpsa_ip  = get_transient( 'tpsa_blocked_ip_' . $ip );
-        $block_message = $settings['block-message'];
-
-        // ✅ Check permanent block from block_users table
-        $block_table = get_tpsa_db_table_name( 'block_users' );
-        $is_permanently_blocked = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COUNT(*) FROM $block_table WHERE ip_address = %s LIMIT 1",
-                $ip
-            )
-        );
-
-        // Show error if permanently or temporarily blocked
-        if ( $tpsa_ip || $is_permanently_blocked ) {
-            $message = $is_permanently_blocked
-                ? 'Access Denied - You have been permanently blocked due to too many login failures & lockouts.'
-                : 'Access Denied for ' . $settings['block-for'] . ' minutes';
-
-            wp_die(
-                '<h2 style="color:red;text-align:center;">' . esc_html( $message ) . '</h2>
-                <p style="text-align:center;">' . esc_html( $block_message ) . '</p>',
                 'Login Blocked',
                 [ 'response' => 403 ]
             );
