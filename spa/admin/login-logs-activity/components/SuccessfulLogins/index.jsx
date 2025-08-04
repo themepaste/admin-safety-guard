@@ -130,7 +130,7 @@ const SuccessfulLogins = () => {
                                     </th>
                                     <th>
                                         User Agent{' '}
-                                        <QuestionMarkTooltip message="Showing last login User Agent only" />{' '}
+                                        <QuestionMarkTooltip message="Showing last login user agent only" />{' '}
                                     </th>
                                     <th>
                                         IP Address{' '}
