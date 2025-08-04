@@ -54,7 +54,7 @@ class LimitLoginAttempts implements FeatureInterface {
 
         $this->filter('authenticate', function( $user ) {
             if ( $this->is_ip_locked_out() ) {
-                return new \WP_Error('access_denied', '🚫 You are temporarily blocked due to too many failed login attempts.');
+                return new \WP_Error( 'access_denied', '🚫 You are temporarily blocked due to too many failed login attempts.' );
             }
             return $user;
         }, 0);
@@ -63,9 +63,11 @@ class LimitLoginAttempts implements FeatureInterface {
 
     public function maybe_block_custom_login() {
 
+
+
         if ( $this->is_permanently_blocked_ip() ) {
             wp_die(
-                '🚫 Access Denied – You have been permanently blocked due to repeated login failures.',
+                '🚫 Access Denied – You have been permanently blocked for 1day due to repeated login failures.',
                 'Access Denied',
                 ['response' => 403]
             );
@@ -87,15 +89,19 @@ class LimitLoginAttempts implements FeatureInterface {
 
     public function maybe_block_login_form() {
 
+        $settings       = $this->get_settings();
+        $block_message  = isset( $settings['block-message'] ) ? $settings['block-message'] : 'You have been permanently blocked due to repeated login failures.';
+        $block_for      = isset( $settings['block-for'] ) ? $settings['block-fore'] : '15';
+
         if ( $this->is_permanently_blocked_ip() ) {
             wp_die(
-                '🚫 Access Denied – You have been permanently blocked due to repeated login failures.',
+                '🚫 Access Denied – You have been permanently blocked for 1day due to repeated login failures.',
                 'Access Denied',
                 ['response' => 403]
             );
         } elseif ( $this->is_ip_locked_out() ) {
             wp_die(
-                '🚫 Access Denied – You have been temporarily blocked due to too many failed login attempts. Please try again after 15 minutes.',
+                '🚫 Access Denied – ' . $block_message . '. Please try again after ' . $block_for . ' minutes.',
                 'Access Denied',
                 ['response' => 403]
             );
