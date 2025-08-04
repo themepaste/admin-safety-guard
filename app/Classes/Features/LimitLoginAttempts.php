@@ -64,7 +64,14 @@ class LimitLoginAttempts implements FeatureInterface {
     }
 
     public function maybe_block_custom_login() {
-        if ( $this->is_ip_locked_out() ) {
+
+        if ( $this->is_permanently_blocked_ip() ) {
+            wp_die(
+                '🚫 Access Denied – You have been permanently blocked due to repeated login failures.',
+                'Access Denied',
+                ['response' => 403]
+            );
+        }elseif ( $this->is_ip_locked_out() ) {
             global $wp;
             $current_path = $wp->request;
 
@@ -81,7 +88,14 @@ class LimitLoginAttempts implements FeatureInterface {
 
 
     public function maybe_block_login_form() {
-        if ( $this->is_ip_locked_out() ) {
+
+        if ( $this->is_permanently_blocked_ip() ) {
+            wp_die(
+                '🚫 Access Denied – You have been permanently blocked due to repeated login failures.',
+                'Access Denied',
+                ['response' => 403]
+            );
+        } elseif ( $this->is_ip_locked_out() ) {
             wp_die(
                 '🚫 Access Denied – You have been temporarily blocked due to too many failed login attempts. Please try again after 15 minutes.',
                 'Access Denied',
@@ -127,7 +141,8 @@ class LimitLoginAttempts implements FeatureInterface {
 
     public function tpsa_track_failed_login_24hr( $username ) {
         $settings       = $this->get_settings();
-        $max_attempts   =  isset( $settings['max-attempts'] ) ? $settings['max-attempts'] : '3';
+        $max_attempts   = intval( isset( $settings['max-attempts'] ) ? $settings['max-attempts'] : '3' );
+        $max_lockouts   = intval( isset( $settings['max-lockout'] ) ? $settings['max-lockout'] : '3' );
         if ( ! $this->is_enabled( $settings ) ) {
             return;
         }
@@ -135,6 +150,7 @@ class LimitLoginAttempts implements FeatureInterface {
         global $wpdb;
 
         $table_name = get_tpsa_db_table_name( 'failed_logins' );
+        $blocked_table = get_tpsa_db_table_name( 'block_users' );
         $ip = $this->get_ip_address();
         $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : 'Unknown';
         $now = current_time( 'mysql' );
@@ -149,14 +165,37 @@ class LimitLoginAttempts implements FeatureInterface {
 
         if ( $existing ) {
             $new_attempts = $existing->login_attempts + 1;
-            $lockouts = $existing->lockouts;
+            $lockouts = intval( $existing->lockouts );
 
             // Check if attempts reached threshold
             if ( $new_attempts >= $max_attempts ) {
                 $lockouts += 1;
-                $new_attempts = 0; // reset attempts after lockout
+                $new_attempts = 0;
                 $lockout_time = $now;
-            }else {
+
+                // If lockouts exceed threshold, permanently block
+                if ( $lockouts >= $max_lockouts ) {
+                    $already_blocked = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT COUNT(*) FROM $blocked_table WHERE ip_address = %s",
+                            $ip
+                        )
+                    );
+
+                    if ( ! $already_blocked ) {
+                        $wpdb->insert(
+                            $blocked_table,
+                            [
+                                'user_agent' => $user_agent,
+                                'ip_address' => $ip,
+                                'login_time' => $now,
+                            ],
+                            ['%s', '%s', '%s']
+                        );
+                    }
+                }
+            }
+            else {
                 $lockout_time = $existing->lockout_time;
             }
 
@@ -192,6 +231,21 @@ class LimitLoginAttempts implements FeatureInterface {
         }
         
         
+    }
+
+    public function is_permanently_blocked_ip() {
+        global $wpdb;
+
+        $blocked_table = get_tpsa_db_table_name( 'block_users' );
+        $ip = $this->get_ip_address();
+        $count = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM $blocked_table WHERE ip_address = %s",
+                $ip
+            )
+        );
+
+        return ( $count > 0 );
     }
 
     /**
