@@ -49,6 +49,7 @@ class Install {
                 last_login_time DATETIME NOT NULL,
                 login_attempts INT UNSIGNED NOT NULL DEFAULT 1,
                 lockouts INT UNSIGNED NOT NULL DEFAULT 0,
+                lockout_time DATETIME DEFAULT NULL,
                 PRIMARY KEY (id)
                 "
             );

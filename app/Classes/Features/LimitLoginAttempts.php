@@ -78,141 +78,103 @@ class LimitLoginAttempts implements FeatureInterface {
     }
 
     public function tpsa_track_failed_login_24hr( $username ) {
-        global $wpdb;
-
-        $settings = $this->get_settings();
+        $settings       = $this->get_settings();
         if ( ! $this->is_enabled( $settings ) ) {
             return;
         }
 
+        global $wpdb;
+
+        $table_name = get_tpsa_db_table_name( 'failed_logins' );
         $ip = $this->get_ip_address();
-        $failed_logins = get_option( 'tpsa_failed_logins', [] );
-        $now = time();
-        $attempts = isset( $failed_logins[$ip] ) ? $failed_logins[$ip] : [];
+        $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : 'Unknown';
+        $now = current_time( 'mysql' );
 
-        // Filter out old attempts (older than 24 hours)
-        $attempts = array_filter( $attempts, function( $entry ) use ( $now ) {
-            return ( $now - $entry['time'] ) <= DAY_IN_SECONDS;
-        });
-
-        // Add current attempt
-        $attempts[] = [ 'time' => $now ];
-        $failed_logins[$ip] = $attempts;
-        update_option( 'tpsa_failed_logins', $failed_logins );
-
-        $attempt_count = count( $attempts );
-        $is_blocked = false;
-
-        if ( $attempt_count > $settings['max-attempts'] ) {
-            $is_blocked = true;
-            set_transient( 'tpsa_blocked_ip_' . $ip, true, $settings['block-for'] * 60 );
-        }
-
-        // INSERT or UPDATE failed_logins table
-        $table = get_tpsa_db_table_name( 'failed_logins' );
-
-        // Check if there's an existing record for the IP address
+        // Check if IP already exists
         $existing = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM $table WHERE ip_address = %s LIMIT 1",
+                "SELECT * FROM $table_name WHERE ip_address = %s",
                 $ip
             )
         );
 
-        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
-        $login_time = current_time('mysql');
-        $lockouts = 0;
-
         if ( $existing ) {
-            // If a record exists, update login time and attempt count
+            $new_attempts = $existing->login_attempts + 1;
             $lockouts = $existing->lockouts;
-            $update_data = [
-                'login_attempts' => $existing->login_attempts + 1,
-                'last_login_time' => $login_time,  // Update last login time
-                'user_agent' => $user_agent,
-            ];
 
-            // If the user exceeds max attempts, increase lockouts and reset login_attempts
-            if ( $attempt_count > $settings['max-attempts'] ) {
-                $lockouts++;
-                $update_data['lockouts'] = $lockouts;
-                $update_data['login_attempts'] = 0;  // Reset login attempts after exceeding max attempts
+            // Check if attempts reached threshold
+            if ( $new_attempts >= 3 ) {
+                $lockouts += 1;
+                $new_attempts = 0; // reset attempts after lockout
+                $lockout_time = $now;
+            }else {
+                $lockout_time = $existing->lockout_time;
             }
 
-            // If it's the first login, set first_login_time
-            if ( empty($existing->first_login_time) ) {
-                $update_data['first_login_time'] = $login_time;
-            }
-
-            // Update the database with the new values
             $wpdb->update(
-                $table,
-                $update_data,
+                $table_name,
+                [
+                    'last_login_time' => $now,
+                    'login_attempts'  => $new_attempts,
+                    'lockouts'        => $lockouts,
+                    'lockout_time'    => $lockout_time,
+                    'username'        => $username,
+                    'user_agent'      => $user_agent,
+                ],
                 ['id' => $existing->id],
-                ['%d', '%s', '%s', '%d', '%d'], // Ensure proper data type for updates
+                ['%s', '%d', '%d', '%s', '%s', '%s'],
                 ['%d']
             );
         } else {
-            // If no record exists for this IP address, insert a new entry
-            $lockouts = $is_blocked ? 1 : 0;
-
+            // First failed login from this IP
             $wpdb->insert(
-                $table,
+                $table_name,
                 [
-                    'username' => $username,
-                    'user_agent' => $user_agent,
-                    'ip_address' => $ip,
-                    'first_login_time' => $login_time,  // First login time is the current login time
-                    'last_login_time' => $login_time,   // Same as first login time initially
-                    'login_attempts' => 1,              // First failed attempt
-                    'lockouts' => $lockouts
+                    'username'         => $username,
+                    'user_agent'       => $user_agent,
+                    'ip_address'       => $ip,
+                    'first_login_time' => $now,
+                    'last_login_time'  => $now,
+                    'login_attempts'   => 1,
+                    'lockouts'         => 0,
                 ],
                 ['%s', '%s', '%s', '%s', '%s', '%d', '%d']
             );
         }
+        
+        
+    }
 
-        // ✅ If lockouts exceed the max-lockout setting, move user to block_users table and remove from failed_logins
-        if ( $lockouts >= $settings['max-lockout'] ) {
-            $block_table = get_tpsa_db_table_name( 'block_users' );
+    /**
+     * Check if the current IP address is currently locked out due to too many login failures & lockouts.
+     *
+     * @since 1.0.0
+     *
+     * @return bool True if the IP is locked out, false otherwise.
+     */
+    public function is_ip_locked_out() {
+        global $wpdb;
 
-            // Check if IP is already in block_users
-            $already_blocked = $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $block_table WHERE ip_address = %s LIMIT 1",
-                    $ip
-                )
-            );
+        $settings       = $this->get_settings();
+        $blocked_munite =  isset( $settings['block-for'] ) ? $settings['block-for'] : '15';
 
-            if ( ! $already_blocked ) {
-                // Insert into block_users table
-                $wpdb->insert(
-                    $block_table,
-                    [
-                        'user_agent' => $user_agent,
-                        'ip_address' => $ip,
-                        'login_time' => $login_time
-                    ],
-                    ['%s', '%s', '%s']
-                );
 
-                // Remove from failed_logins table after exceeding lockout limit
-                $wpdb->delete(
-                    $table,
-                    ['ip_address' => $ip],
-                    ['%s']
-                );
+        $table = get_tpsa_db_table_name( 'failed_logins' );
+        $ip = $this->get_ip_address();
 
-                // ✅ Delete the transient since the user has reached the max lockout limit
-                delete_transient( 'tpsa_blocked_ip_' . $ip );
+        $row = $wpdb->get_row(
+            $wpdb->prepare("SELECT lockout_time FROM $table WHERE ip_address = %s AND lockouts > 0", $ip)
+        );
 
-                // ✅ Optionally, remove the IP from the failed_logins option
-                $failed_logins = get_option( 'tpsa_failed_logins', [] );
-                if ( isset( $failed_logins[$ip] ) ) {
-                    unset( $failed_logins[$ip] );
-                    update_option( 'tpsa_failed_logins', $failed_logins );
-                }
+        if ( $row && $row->lockout_time ) {
+            $lockout_time = strtotime( $row->lockout_time );
+            $now = time();
+            if ( ( $now - $lockout_time ) < ( $blocked_munite * 60 ) ) {
+                return true;
             }
         }
+
+        return false;
     }
 
 
@@ -273,30 +235,43 @@ class LimitLoginAttempts implements FeatureInterface {
         }
     }
 
-
     private function get_ip_address() {
         if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-            return sanitize_text_field( $_SERVER['HTTP_CLIENT_IP'] );
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-            return sanitize_text_field( explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] )[0] );
+            $ip = explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] )[0];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
         }
 
-        // If the IP address is ::1, replace with 127.0.0.1
-        $ip = $_SERVER['REMOTE_ADDR'];
-        return ( $ip === '::1' ) ? '127.0.0.1' : sanitize_text_field( $ip );
+        $ip = sanitize_text_field( $ip );
+
+        // Normalize IPv6 loopback to IPv4
+        if ( $ip === '::1' ) {
+            $ip = '127.0.0.1';
+        }
+
+        return $ip;
     }
 
-
+    
     /**
-     * Get plugin settings.
+     * Returns the settings for this feature.
+     *
+     * @return array Associative array of feature settings.
      */
     private function get_settings() {
         $option_name = get_tpsa_settings_option_name( $this->features_id );
         return get_option( $option_name, [] );
     }
 
+    
     /**
      * Check if the feature is enabled.
+     *
+     * @param array $settings Associative array of feature settings.
+     *
+     * @return bool True if the feature is enabled, false otherwise.
      */
     private function is_enabled( $settings ) {
         return isset( $settings['enable'] ) && $settings['enable'] == 1;
