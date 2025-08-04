@@ -38,7 +38,7 @@ if ( !defined( 'ABSPATH' ) ) {
 
        define( 'TPSA_PLUGIN_FILE', __FILE__ );
        define( 'TPSA_PREFIX', 'tpsa' );
-       define( 'TPSA_PLUGIN_VERSION', '1.0.3' );
+       define( 'TPSA_PLUGIN_VERSION', '1.0.2' );
        define( 'TPSA_PLUGIN_DIRNAME', dirname( TPSA_PLUGIN_FILE ) );
        define( 'TPSA_PLUGIN_BASENAME', plugin_basename( TPSA_PLUGIN_FILE ) );
        define( 'TPSA_PLUGIN_DIR', plugin_dir_path( TPSA_PLUGIN_FILE ) );
