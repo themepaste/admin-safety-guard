@@ -76,19 +76,10 @@ Free Features at a Glance:
 
 🛂🔏 **Password Protection**: Allows password-based access restrictions for pages or sections of your site to control who sees what.
 
-🧑‍💻🕶️ **Obfuscate Author Slugs**: Masks author URLs to safeguard user identification and prevent malicious user enumeration.
-
-🎨🧑‍💼 **Custom Admin CSS**: Enables custom styling for your admin area, helping you create a branded backend interface.
-
-✉️🔍❌ **Email Address Obfuscator**: Scrambles email output to prevent harvesting and reduce spam risks on your site.
 
 ⚙️🛑 **Disable XML-RPC**: Disables WordPress XML-RPC features known for being exploited by attackers, enhancing core security.
 
 🖼️🏷️ **Add Custom Logo on Login Form**: Replace the default WordPress logo with your own to showcase your brand identity right from the login screen.
-
-🧪🎨 **Live Login Page Customizer**: Lets you style and tweak your login page live, without diving into code, for instant design updates.
-
-📐🖌️ **Pre-Designed Login Templates**: Choose from professionally crafted templates to instantly enhance the visual impact of your login screen.
 
 🏷️🎯 **Custom Logo & Branding**: Offers extended branding options across admin and login pages to create a consistent, polished experience.
 
