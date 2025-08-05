@@ -66,7 +66,9 @@ class LoginLogout implements FeatureInterface
      * Show 404 if /wp-login.php is accessed
      */
     public function show_404() {
+        // Only proceed if custom slug is set
         if (
+            !empty($this->custom_login_slug) &&
             strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false &&
             strpos( $_SERVER['REQUEST_URI'], '/' . $this->custom_login_slug ) === false
         ) {
@@ -74,10 +76,21 @@ class LoginLogout implements FeatureInterface
             $wp_query->set_404();
             status_header( 404 );
             nocache_headers();
-            include get_404_template();
+
+            $template_404 = get_404_template();
+            if ( $template_404 && file_exists( $template_404 ) ) {
+                include $template_404;
+            } else {
+                // Fallback plain 404 message
+                wp_die( '404 - Page not found.' );
+            }
+
             exit;
         }
     }
+
+
+
 
     /**
      * Rewrite /habib-login → wp-login.php with all query args
