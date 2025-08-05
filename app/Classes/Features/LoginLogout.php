@@ -56,11 +56,19 @@ class LoginLogout implements FeatureInterface
      * Redirect /wp-admin to home if not logged in
      */
     function redirect_wp_admin() {
-        if ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin' ) === 0 && !is_user_logged_in() ) {
-            wp_redirect( home_url( $this->redirect_slug ) );
+        $request_uri = $_SERVER['REQUEST_URI'];
+        $admin_path = parse_url( admin_url(), PHP_URL_PATH ); // This gives the correct path to wp-admin
+        error_log( 'Request URI: ' . $request_uri );
+        error_log( 'Admin path: ' . $admin_path );
+
+        if ( strpos( $request_uri, $admin_path ) === 0 && !is_user_logged_in() ) {
+            $redirect_url = home_url( $this->redirect_slug );
+            error_log( 'Redirecting to: ' . $redirect_url );
+            wp_redirect( $redirect_url );
             exit;
         }
     }
+
 
     /**
      * Show 404 if /wp-login.php is accessed
