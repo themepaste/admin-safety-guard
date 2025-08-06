@@ -223,15 +223,15 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'label' => __( 'Site Key', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => "Enter you Google reCAPTCHA site key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Site Key</a>",
+                            'desc'  => "Enter you Google reCAPTCHA site key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get site key</a>",
                             'default' => '',
                         ),
                         'secret-key' => array(
                             'type'  => 'text',
-                            'label' => __( 'Screet Key', 'tp-secure-plugin' ),
+                            'label' => __( 'Secret Key', 'tp-secure-plugin' ),
                             'class' => '',
                             'id'    => '',
-                            'desc'  => "Enter you Google reCAPTCHA screet key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get Screet Key</a>",
+                            'desc'  => "Enter you Google reCAPTCHA screet key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get secret key</a>",
                             'default' => '',
                         ),
                         'theme' => array(
