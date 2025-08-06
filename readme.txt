@@ -4,11 +4,11 @@ Tags: Admin Safety Guard, Limit login Attempts, 2fa, reCaptcha, Password Protect
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
  
-Secure your WordPress admin with Admin safety guard to ensure secured access with smart login,  2FA, and activity tracking.  
+Secure your WordPress admin with Admin safety guard to ensure secured access with limit login attempts, 2FA, reCaptcha, IP Blocking, Disable XML-RPC and activity tracking.  
 
 == Description ==
 
@@ -126,6 +126,15 @@ This feature conditionally hides the admin bar for specific user roles or chosen
 4. After installation, click `Activate` to enable the plugin on your site.
 
 == Changelog ==
+
+= 1.0.3 =
+[new] added subdirectory Support 
+[new] added question tool tip in failed login table
+[new] added auto redirection after crossing login limit attempts
+[fix] Custom login & logout URL
+[fix] Lockout message
+[fix] Failed Login Table
+[fix] Fix issues
 
 = 1.0.2 =
 [fix] Fix issues
