@@ -37,6 +37,20 @@ class LoginLogout implements FeatureInterface
             $this->filter( 'logout_redirect', [$this, 'logout_redirect'], 10, 3 );
         }
 
+        $this->action( 'updated_option', function( $option_name, $old_value, $new_value ) {
+            if ( $option_name === 'tpsa_custom-login-url_settings' ) {
+                $keys_to_check = ['login-url', 'redirect-url', 'logout-url'];
+                
+                foreach ( $keys_to_check as $key ) {
+                    if ( isset( $old_value[$key] ) && isset( $new_value[$key] ) && $old_value[$key] !== $new_value[$key] ) {
+                        flush_rewrite_rules();
+                        break; // No need to continue checking once we've flushed
+                    }
+                }
+            }
+        }, 10, 3 );
+
+
         $this->filter( 'tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
         $this->filter( 'tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
         $this->filter( 'tpsa_custom-login-url_redirect-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
