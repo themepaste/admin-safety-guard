@@ -127,6 +127,9 @@ This feature conditionally hides the admin bar for specific user roles or chosen
 
 == Changelog ==
 
+= 1.0.4 =
+[new] Auto permalink flush added based on custom login logout url 
+
 = 1.0.3 =
 [new] added subdirectory Support 
 [new] added question tool tip in failed login table
