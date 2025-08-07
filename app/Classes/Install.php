@@ -25,6 +25,8 @@ class Install {
     public function bootstrapping() {
         if ( ! $this->is_database_up_to_date() ) {
 
+            set_transient( 'tpsm_do_activation_redirect', true, 30 );
+
             $this->create_table(
                 's_logins',
                 "
