@@ -17,6 +17,48 @@ class Wizard {
         $this->action( 'admin_init', [$this, 'redirect_to_setup_wizard_page'] );
         $this->action( 'admin_menu', [$this, 'add_setup_wizard_page'] );
         $this->action( 'admin_enqueue_scripts', [$this, 'enqueue_assets'] );
+        $this->action( 'admin_init', [$this, 'setup_wizard_process'] );
+    }
+
+    function setup_wizard_process() {
+        if ( ! isset( $_POST['tpsm_optin_submit'] ) ) {
+            return;
+        }
+
+        if ( ! isset( $_POST['tpsm-nonce_name'] ) || ! wp_verify_nonce( $_POST['tpsm-nonce_name'], 'tpsm-nonce_action' ) ) {
+            wp_die( esc_html__( 'Nonce verification failed.', 'shipping-manager' ) );
+        }
+
+        // Check capabilities if needed
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Unauthorized user', 'shipping-manager' ) );
+        }
+
+        // Sanitize the choice
+        $choice = isset( $_POST['tpsm_optin_choice'] ) ? sanitize_text_field( $_POST['tpsm_optin_choice'] ) : '0';
+
+        // Convert to int and sanitize
+        $value = (int) $choice === 1 ? 1 : 0;
+
+        // Save the option
+        update_option( 'tpsm_is_setup_wizard', $value );
+
+        // Save remote data if enabled
+        if( $value === 1 ) {
+            tpsm_saved_remote_data();
+        }
+
+        $redirect_url = add_query_arg( 
+            array(
+                'page'         => 'tp-admin-safety-guard',
+                'tpsa-setting' => 'analytics',
+            ),
+            admin_url( 'admin.php' )
+        );
+
+        wp_redirect( $redirect_url );
+        error_log( 'Redirecting to: ' . $redirect_url );
+        exit;
 
     }
 
