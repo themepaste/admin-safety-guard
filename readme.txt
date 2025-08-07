@@ -1,6 +1,6 @@
-=== Admin Safety Guard ===
+=== Admin Safety Guard – WP Security: Limit Login Attempts, IP Blocking, 2FA & reCAPTCHA ===
 Contributors: themepaste, habibnote
-Tags: Admin Safety Guard, Limit login Attempts, 2fa, reCaptcha, Password Protection
+Tags: Admin Safety Guard, Limit login Attempts, 2FA, reCaptcha, WP Security
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
@@ -8,11 +8,11 @@ Stable tag: 1.0.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
  
-Secure your WordPress admin with Admin safety guard to ensure secured access with limit login attempts, 2FA, reCaptcha, IP Blocking, Disable XML-RPC and activity tracking.  
+Secure your WordPress login with Admin safety guard to ensure secured access with limit login attempts, 2FA, reCaptcha, IP Blocking, Disable XML-RPC and activity tracking.  
 
 == Description ==
 
-Admin Safety Guard is your comprehensive solution to harden the WordPress admin area without sacrificing usability or performance. This powerful plugin features a sleek interface and robust protection tools. Administrators can secure their sites against common threats while customizing the login experience with precision and accuracy.
+For *WordPress Security* Admin Safety Guard is your comprehensive solution to harden the WordPress admin area without sacrificing usability or performance. This powerful plugin features a sleek interface and robust protection tools. Administrators can secure their sites against common threats while customizing the login experience with precision and accuracy.
 
 Whether you're looking to block suspicious IPs, enforce two-factor authentication, or add branded styling to your login screen, Admin Safety Guard has it covered.
 
@@ -35,6 +35,7 @@ Admin Safety Guard is ideal for anyone seeking greater control, security, and st
 Explore more about Admin Safety Guard - 
 
 ✅ [Support](https://themepaste.com/contact-us)
+✅ [Documentation](https://themepaste.com/documentation/admin-safety-guard-documentation)
 
 == Features ==
 
@@ -75,7 +76,6 @@ Free Features at a Glance:
 🔐 **Two-Factor Authentication (2FA)**: Adds an additional layer of login protection by requiring a one-time code sent to the user’s device.
 
 🛂🔏 **Password Protection**: Allows password-based access restrictions for pages or sections of your site to control who sees what.
-
 
 ⚙️🛑 **Disable XML-RPC**: Disables WordPress XML-RPC features known for being exploited by attackers, enhancing core security.
 
@@ -128,7 +128,10 @@ This feature conditionally hides the admin bar for specific user roles or chosen
 == Changelog ==
 
 = 1.0.4 =
-[new] Auto permalink flush added based on custom login logout url 
+[new] Auto permalink flush added, based on custom login logout url 
+[new] Admin Notice added 
+[new] Setup wizard added 
+[new] Documentation added
 
 = 1.0.3 =
 [new] added subdirectory Support 
