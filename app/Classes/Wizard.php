@@ -80,7 +80,7 @@ class Wizard {
             }
             wp_redirect( add_query_arg( 
                 array(
-                    'page'     => 'tpsm_setup_wizard',
+                    'page'     => 'tpasg_setup_wizard',
                 ),
                 admin_url( 'admin.php' )
             ) );
