@@ -1,7 +1,7 @@
 <?php defined( 'ABSPATH' ) || exit; // Exit if accessed directly ?>
 <!-- Top bar wrapper for the Shipping Manager plugin -->
 <div class="tpsa-plugin-topbar-wrapper">
-
+    
     <!-- Logo and title area -->
     <div class="tpsa-logo-title-area">
 

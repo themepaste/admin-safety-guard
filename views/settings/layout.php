@@ -18,6 +18,8 @@ $args = array(
 ?>
 
 <div class="wrap">
+    <!-- Empty h1 for showing the notice -->
+    <h1></h1>
     <div class="tp-secure-admin_wrapper">
         <?php echo Utility::get_template( 'settings/parts/topbar.php' ); ?>
         <div class="tp-secure-admin_container">
