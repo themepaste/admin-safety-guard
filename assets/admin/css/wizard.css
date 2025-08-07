@@ -1,0 +1,53 @@
+.tpsm-wizard-wrapper {
+    width: 100%;
+}
+.tpsm-wizard-container {
+    width: 500px;
+    background-color: #fff;
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0px 5px 10px 1px rgba(196, 196, 196, 0.51);
+    -webkit-box-shadow: 0px 5px 10px 1px rgba(196, 196, 196, 0.51);
+    -moz-box-shadow: 0px 5px 10px 1px rgba(196, 196, 196, 0.51);
+}
+.tpsm-wizard-container .tpsm-wizard-logo {
+    border-bottom: 1px solid #ddd;
+}
+.tpsm-wizard-container .tpsm-wizard-logo img {
+    width: 80px;
+    height: 80px;
+}
+.tpsm-wizard-container h3 {
+    font-size: 20px;
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+.tpsm-wizard-container p {
+    font-size: 15px;
+    text-align: left;
+    margin-bottom: 35px;
+}
+.tpsm-wizard-container form {
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #ddd;
+}
+.tpsm-wizard-container form button.active {
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 16px;
+    height: 37px;
+    line-height: 35px;
+    margin-bottom: 0;
+}
+.tpsm-wizard-container form button.active::after {
+    content: ' ➜';
+    position: absolute;
+    left: 0;
+    top: 0;
+}

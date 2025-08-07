@@ -26,7 +26,7 @@
     <!-- Right-aligned topbar info area -->
     <div class="tpsa-topbar-info-area">
         <!-- Link to plugin documentation -->
-        <a href="https://wordpress.org/plugins/admin-safety-guard/#description" target="_blank">
+        <a href="https://themepaste.com/documentation/admin-safety-guard-documentation" target="_blank">
             <?php esc_html_e( 'Documentation', 'tp-secure-plugin' ); ?>
         </a>
     </div>

@@ -446,3 +446,48 @@ function get_tps_all_user_roles() {
 
     return $role_names;
 }
+
+
+if( ! function_exists( 'tpsm_saved_remote_data' ) ) {
+    
+/**
+ * Sends the current user's information to a remote server.
+ *
+ * This function retrieves the currently logged-in user's full name,
+ * email address, and the site URL, and sends this data to a specified
+ * remote server endpoint using a POST request. This is intended to
+ * collect user data for integration with a remote service.
+ *
+ * @return void
+ */
+    function tpsm_saved_remote_data() {
+        $current_user = wp_get_current_user();
+
+        // Check if a user is logged in
+        if ( ! $current_user || 0 === $current_user->ID ) {
+            return;
+        }
+
+        // Get full name (first + last or fallback to display name)
+        $full_name = trim( $current_user->first_name . ' ' . $current_user->last_name );
+        if ( empty( $full_name ) ) {
+            $full_name = $current_user->display_name;
+        }
+
+        $email_address = $current_user->user_email;
+        $site_url = get_site_url();
+
+        $response = wp_remote_post( 'https://contractfinderdirect.com/wp-json/v2/collect-email/shipping-manager', [
+            'headers' => [
+                'X-Auth-Token'  => 'c7fc312817194d30c79da538204eaec3',
+                'Content-Type'  => 'application/json',
+            ],
+            'body' => json_encode([
+                'email_address' => $email_address,
+                'full_name'     => $full_name,
+                'site_url'      => $site_url,
+            ]),
+        ] );
+
+    }
+}
