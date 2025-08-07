@@ -8,7 +8,7 @@ $setup_url = esc_url( admin_url( 'admin.php?page=tpasg_setup_wizard' ) );
                 <strong>
                     <?php echo esc_html( '🎉 Welcome! Please complete the setup wizard.', 'tp-secure-plugin' ); ?>
                 </strong>
-                <?php esc_html_e( 'Before you can use Shipping Manager, you need to complete the setup wizard.', 'tp-secure-plugin' ); ?>
+                <?php esc_html_e( 'Before you can use'); ?> <strong><?php esc_html_e( 'Admin Safety Guard', 'tp-secure-plugin' ) ?></strong> <?php esc_html_e( 'you need to complete the setup wizard.', 'tp-secure-plugin' ); ?>
             </span>
             <!-- <br> -->
             <a href="<?php echo $setup_url; ?>" class="button button-primary"><?php esc_html_e( 'Launch Setup Wizard', 'tp-secure-plugin' ) ?></a>
