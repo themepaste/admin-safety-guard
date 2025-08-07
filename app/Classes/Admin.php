@@ -25,6 +25,8 @@ class Admin {
      */
     public function __construct() {
         $this->action( 'plugins_loaded', function() {
+            new Wizard();
+            new Notice();
             ( new Settings() )->init();
         } );
         $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );

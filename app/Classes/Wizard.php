@@ -1,6 +1,6 @@
 <?php 
 
-namespace ThemePaste\ShippingManager\Classes;
+namespace ThemePaste\SecureAdmin\Classes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,9 +21,9 @@ class Wizard {
     }
 
     public function enqueue_assets( $screen ) {
-        if ( 'toplevel_page_' . 'tpsm_setup_wizard' === $screen ) {
+        if ( 'toplevel_page_' . 'tpasg_setup_wizard' === $screen ) {
             $this->enqueue_style(
-                'tpsm-setup-wizard',
+                'tpasg-setup-wizard',
                 TPSA_ASSETS_URL . '/admin/css/wizard.css',
             );
         }
@@ -51,7 +51,7 @@ class Wizard {
             'Shipping Manager',                     // Page title
             'Shipping Manager',                     // Menu title (temporarily)
             'manage_options',                       
-            'tpsm_setup_wizard',                    
+            'tpasg_setup_wizard',                    
             [ $this, 'render_setup_wizard_page' ],  // Callback
             '',                                     
             100                                     
@@ -62,12 +62,12 @@ class Wizard {
             'Shipping Manager Setup Wizard',       // Page title
             'Setup Wizard',                        // Menu title (not shown)
             'manage_options',                      // Capability
-            'tpsm_setup_wizard',                   // Menu slug
+            'tpasg_setup_wizard',                   // Menu slug
             [ $this, 'render_setup_wizard_page' ]  // Callback function
         );
 
         // Remove it right after adding to hide from menu
-        remove_menu_page( 'tpsm_setup_wizard' );
+        remove_menu_page( 'tpasg_setup_wizard' );
     }
 
     public function render_setup_wizard_page() {
