@@ -33,15 +33,15 @@ class Notice {
         }
 
         // Already completed? Then skip notice
-        $setup_wizard_value = get_option( 'tpsm_is_setup_wizard', null );
-        if ( $setup_wizard_value === '0' || $setup_wizard_value === '1' || $setup_wizard_value === 0 || $setup_wizard_value === 1 ) {
-            return;
-        }
+        // $setup_wizard_value = get_option( 'tpsm_is_setup_wizard', null );
+        // if ( $setup_wizard_value === '0' || $setup_wizard_value === '1' || $setup_wizard_value === 0 || $setup_wizard_value === 1 ) {
+        //     return;
+        // }
 
         // Check if user dismissed the notice manually
-        if ( get_user_meta( get_current_user_id(), 'tpsm_dismissed_setup_notice', true ) ) {
-            return;
-        }
+        // if ( get_user_meta( get_current_user_id(), 'tpsm_dismissed_setup_notice', true ) ) {
+        //     return;
+        // }
 
         printf( '%s', Utility::get_template( 'notice/setup-wizard-notice.php' ) );
     }
