@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
         <form action="" method="post">
             <?php wp_nonce_field( 'tpsm-nonce_action', 'tpsm-nonce_name' ); ?>
             <input type="hidden" name="tpsm_optin_submit" value="1">
-            <button type="submit" name="tpsm_optin_choice" value="0" class="button button-secondary">
+            <button type="submit" name="tpsm_optin_choice" value="0" class="button button-secondary tpsm-optin-deny">
                 <?php esc_html_e( 'Not now', 'shipping-manager' ); ?>
             </button>
             
-            <button type="submit" name="tpsm_optin_choice" value="1" class="active button button-primary">
+            <button type="submit" name="tpsm_optin_choice" value="1" class="active button button-primary tpsm-optin-allow">
                 <?php esc_html_e( 'Allow & Continue', 'shipping-manager' ); ?>
             </button>
         </form>
