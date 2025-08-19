@@ -66,8 +66,8 @@ class Utility {
 	 * @return string|null The output of the template file, or null if the file doesn't exist.
 	 */
 	public static function get_pro_template( $template, $args = array() ) {
-		if ( is_plugin_active( 'shipping-manager-pro/shipping-manager-pro.php' ) ) { 
-			$path = TPSA_REAL_PATH . '/shipping-manager-pro/views/' . $template;
+		// if ( is_plugin_active( 'secure-admin-pro/admin-safety-guard-pro.php' ) ) { 
+			$path = TPASG_PRO_REAL_PATH . '/secure-admin-pro/views/' . $template;
 	
 			if ( file_exists( $path ) ) {
 				if ( ! empty( $args ) && is_array( $args ) ) {
@@ -78,7 +78,7 @@ class Utility {
 				include $path;
 				return ob_get_clean();
 			}
-		}
+		// }
 	} 
 
 	/**
