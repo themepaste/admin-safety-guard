@@ -47,6 +47,8 @@
                     }
                 ?>
             </div>
+
+            <?php do_action( 'tpsa_after_settings_fields', $screen_slug ); ?>
             
             <div class="tpsa-save-button">
                 <?php
