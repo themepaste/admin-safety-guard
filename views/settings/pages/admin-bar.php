@@ -19,7 +19,7 @@
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p>This feature conditionally hides the admin bar for specific user roles or chosen pages, enabling cleaner interfaces and tailored backend visibility.</p>
+                    <p><?php esc_html_e( 'This feature conditionally hides the admin bar for specific user roles or chosen pages, enabling cleaner interfaces and tailored backend visibility.', 'tp-secure-plugin' ); ?></p>
                 </div>
             </div>
         </h2>
