@@ -14,15 +14,6 @@ $id_base = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $arg
 // Ensure $value is an array of enabled keys.
 $enabled = isset( $args['value'] ) && is_array( $args['value'] ) ? array_map( 'sanitize_key', $args['value'] ) : [];
 
-/**
- * Expected structure:
- * $args['field']['options'] = [
- *   'google'   => [ 'label' => 'Google',   'desc' => 'Enable Google sign-in',   'logo' => 'svg|img markup' ],
- *   'facebook' => [ 'label' => 'Facebook', 'desc' => 'Enable Facebook login',   'logo' => 'svg|img markup' ],
- *   'twitter'  => [ 'label' => 'Twitter',  'desc' => 'Enable X (Twitter) login','logo' => 'svg|img markup' ],
- *   'linkedin' => [ 'label' => 'LinkedIn', 'desc' => 'Enable LinkedIn login',   'logo' => 'svg|img markup' ],
- * ];
- */
 $providers = isset( $args['field']['options'] ) && is_array( $args['field']['options'] ) ? $args['field']['options'] : [];
 
 if ( empty( $providers ) ) {
