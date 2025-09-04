@@ -19,6 +19,7 @@
         "html-react-parser": "^5.2.5",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
+        "react-modal-image": "^2.6.0",
         "react-select": "^5.10.1",
         "style-loader": "^4.0.0",
         "webpack": "^5.99.9",

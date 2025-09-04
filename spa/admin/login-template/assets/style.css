@@ -1,3 +1,21 @@
 .tp-login-template {
     width: 100%;
 }
+.template-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+.single-template {
+    border: 1px solid #ddd;
+}
+.__react_modal_image__header {
+    width: 50% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px; /* space between buttons */
+}
