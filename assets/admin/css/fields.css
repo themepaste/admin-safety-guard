@@ -110,3 +110,7 @@
 .tp-upload-button:focus {
     box-shadow: none !important;
 }
+
+#tp-login-template {
+    width: 100% !important;
+}

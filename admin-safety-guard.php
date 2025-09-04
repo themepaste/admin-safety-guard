@@ -34,7 +34,7 @@ if ( !defined( 'ABSPATH' ) ) {
      * define all constant
      */
     private function define() {
-       define( "TPSA_DEVS", false ); // 'true' | is development mode on
+       define( "TPSA_DEVS", true ); // 'true' | is development mode on
 
        define( 'TPSA_PLUGIN_FILE', __FILE__ );
        define( 'TPSA_PREFIX', 'tpsa' );

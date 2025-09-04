@@ -9,10 +9,8 @@ if( ! defined( 'ABSPATH' ) ) {
     
     $field_template = '
         <div class="tp-field">
-            <div>
-                <input type="hidden" id="%1$s" name="%1$s" value="%2$s">
-                <div id="tp-login-template"></div>
-            </div>
+            <input type="hidden" id="%1$s" name="%1$s" value="%2$s">
+            <div id="tp-login-template"></div>
         </div>
     ';
 

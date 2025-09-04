@@ -5,7 +5,9 @@ import './assets/style.css';
 function Main() {
     return (
         <>
-            <div className="tp-login-template"></div>
+            <div className="tp-login-template">
+                <h2>Login Template</h2>
+            </div>
         </>
     );
 }
