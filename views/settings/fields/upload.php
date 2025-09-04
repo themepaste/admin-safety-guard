@@ -10,7 +10,31 @@ defined( 'ABSPATH' ) || exit;
 $id_name = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
 $value   = isset( $args['value'] ) && ! empty( $args['value'] ) ? $args['value'] : '';
 
-$image_preview = $value ? '<img src="' . esc_url( $value ) . '" style="max-width:150px;height:auto;" class="tp-image-preview" />' : '<img src="" style="display:none;max-width:150px;height:auto;" class="tp-image-preview" />';
+
+// Normalize $value to a string URL
+$raw_value = $value;
+
+if ( is_array( $raw_value ) ) {
+    // common shapes: ['url' => '...'] or ['0' => '...']
+    if ( isset( $raw_value['url'] ) && is_string( $raw_value['url'] ) ) {
+        $value = $raw_value['url'];
+    } else {
+        // take the first scalar string in the array, or empty string
+        $first = reset( $raw_value );
+        $value = is_string( $first ) ? $first : '';
+    }
+} elseif ( is_object( $raw_value ) ) {
+    // very defensive: some code might pass an object with ->url
+    $value = isset( $raw_value->url ) && is_string( $raw_value->url ) ? $raw_value->url : '';
+} else {
+    $value = (string) $raw_value;
+}
+
+
+$image_preview = $value !== ''
+    ? '<img src="' . esc_url( $value ) . '" style="max-width:150px;height:auto;" class="tp-image-preview" />'
+    : '<img src="" style="display:none;max-width:150px;height:auto;" class="tp-image-preview" />';
+
 
 $field_template = '
     <div class="tp-field">
