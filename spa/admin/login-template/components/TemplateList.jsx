@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ModalImage from 'react-modal-image';
 
 const TemplateList = () => {
@@ -35,23 +35,35 @@ const TemplateList = () => {
         const inputEl = document.getElementById(
             'tpsa_customize_login-template'
         );
+        if (!inputEl) return;
 
         let currentValues = [];
-        if (inputEl.value) {
-            try {
-                currentValues = JSON.parse(inputEl.value);
-            } catch (e) {
-                currentValues = [];
+        try {
+            currentValues = JSON.parse(inputEl.value) || [];
+            if (typeof currentValues === 'string') {
+                // double-encoded case
+                currentValues = JSON.parse(currentValues);
             }
+        } catch {
+            currentValues = [];
         }
 
-        // prevent duplicate entries
-        if (!currentValues.find((item) => item.id === template.id)) {
+        if (!Array.isArray(currentValues)) currentValues = [];
+
+        // add if not exists
+        if (!currentValues.some((item) => item.id === template.id)) {
             currentValues.push({ id: template.id, name: template.name });
         }
 
         inputEl.value = JSON.stringify(currentValues);
     };
+
+    // useEffect(() => {
+    //     const a = document.getElementById(
+    //         'tpsa_customize_login-template'
+    //     )?.value;
+    //     console.log(a);
+    // }, []);
 
     return (
         <div className="template-list">

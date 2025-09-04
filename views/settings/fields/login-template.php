@@ -16,6 +16,6 @@ if( ! defined( 'ABSPATH' ) ) {
 
 
     printf( $field_template,
-        $id_name,                               // %2$s == ID & Name
-        $value,                     // %3$s == value
+        $id_name,                               // %1$s == ID & Name
+        $value,                             // %2$s == value
     );

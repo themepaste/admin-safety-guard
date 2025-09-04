@@ -41,6 +41,9 @@ class FormProcessor {
                 case 'text':
                     $sanitized[ $key ] = sanitize_text_field( $raw );
                     break;
+                case 'login-template':
+                    $sanitized[ $key ] = wp_unslash( $raw );
+                    break;
                 case 'multi-check' || 'social-login':
                     $raw = isset( $_POST[ $field_name ] ) ? (array) $_POST[ $field_name ] : [];
                     $sanitized[ $key ] = array_map( 'sanitize_text_field', $raw );
