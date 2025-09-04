@@ -4,6 +4,10 @@ module.exports = (env, argv) => {
     return {
         mode: argv.mode || 'development',
         entry: {
+            loginTemplate: path.resolve(
+                __dirname,
+                './spa/admin/login-template/Main.jsx'
+            ),
             loginLogActivity: path.resolve(
                 __dirname,
                 './spa/admin/login-logs-activity/Main.jsx'

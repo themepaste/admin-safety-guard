@@ -78,6 +78,13 @@ class Admin {
                 );
             }
 
+            if( $current_setting_screen === 'customize' ) {
+                $this->enqueue_script(
+                    'tpsa-customize',
+                    TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js'
+                );
+            }
+
             $this->localize_script( 'tpsa-admin', 'tpsaAdmin', [
                 'nonce'         => wp_create_nonce( 'tpsa-nonce' ),
                 'ajax_url'      => admin_url( 'admin-ajax.php' ),
