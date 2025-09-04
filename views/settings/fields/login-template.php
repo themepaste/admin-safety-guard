@@ -6,6 +6,8 @@ if( ! defined( 'ABSPATH' ) ) {
 
     $id_name    = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
     $value      = isset( $args['value'] ) && ! empty( $args['value'] ) ? $args['value'] : '';
+
+    $value = str_replace('"', "'", $value);
     
     $field_template = '
         <div class="tp-field">
