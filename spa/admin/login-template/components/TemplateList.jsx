@@ -6,35 +6,57 @@ const TemplateList = () => {
     const bigImg = 'https://placehold.co/800x600';
     const templateList = [
         {
-            id: 1,
+            id: 'template-1',
             name: 'Template 1',
             screenshotSmall: smalImg,
             screenshot: bigImg,
         },
         {
-            id: 2,
+            id: 'template-2',
             name: 'Template 2',
             screenshotSmall: smalImg,
             screenshot: bigImg,
         },
         {
-            id: 3,
+            id: 'template-3',
             name: 'Template 3',
             screenshotSmall: smalImg,
             screenshot: bigImg,
         },
         {
-            id: 4,
+            id: 'template-4',
             name: 'Template 4',
             screenshotSmall: smalImg,
             screenshot: bigImg,
         },
     ];
 
+    const handleUseTemplate = (template) => {
+        const inputEl = document.getElementById(
+            'tpsa_customize_login-template'
+        );
+
+        let currentValues = [];
+        if (inputEl.value) {
+            try {
+                currentValues = JSON.parse(inputEl.value);
+            } catch (e) {
+                currentValues = [];
+            }
+        }
+
+        // prevent duplicate entries
+        if (!currentValues.find((item) => item.id === template.id)) {
+            currentValues.push({ id: template.id, name: template.name });
+        }
+
+        inputEl.value = JSON.stringify(currentValues);
+    };
+
     return (
         <div className="template-list">
-            {templateList.map((template) => (
-                <div className="single-template" key={template.id}>
+            {templateList.map((template, index) => (
+                <div className="single-template" key={index}>
                     <ModalImage
                         className="template-screenshot"
                         small={template.screenshotSmall}
@@ -48,6 +70,7 @@ const TemplateList = () => {
                         <button
                             type="button"
                             className="button-primary use-template"
+                            onClick={() => handleUseTemplate(template)}
                         >
                             Use Template
                         </button>
