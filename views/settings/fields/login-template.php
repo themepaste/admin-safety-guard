@@ -9,19 +9,15 @@ if( ! defined( 'ABSPATH' ) ) {
     
     $field_template = '
         <div class="tp-field">
-            <div class="tp-field-label">
-                <label>%1$s</label>
+            <div>
+                <input type="hidden" id="%1$s" name="%1$s" value="%2$s">
+                <div id="tp-login-template"></div>
             </div>
-        </div>
-        <div>
-            <input type="hidden" id="%2$s" name="%2$s" value="%3$s">
-            <div id="tp-login-template"></div>
         </div>
     ';
 
 
     printf( $field_template,
-        esc_html( $args['field']['label'] ),    // %1$s == Label
         $id_name,                               // %2$s == ID & Name
         esc_attr( $value ),                     // %3$s == value
     );
