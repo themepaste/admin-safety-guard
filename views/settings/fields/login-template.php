@@ -13,7 +13,7 @@ if( ! defined( 'ABSPATH' ) ) {
                 <label>%1$s</label>
             </div>
         </div>
-        <div style="background-color: #f7f7f7; height: 100px; border: 1px solid #ccc; width: 800px;">
+        <div>
             <input type="hidden" id="%2$s" name="%2$s" value="%3$s">
             <div id="tp-login-template"></div>
         </div>
