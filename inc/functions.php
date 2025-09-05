@@ -491,3 +491,25 @@ if( ! function_exists( 'tpsm_saved_remote_data' ) ) {
 
     }
 }
+
+
+if( !function_exists( 'login_page_templates' ) ) {
+/**
+ * Returns an associative array of available login page templates.
+ *
+ * The array is composed of template slugs as keys and arrays of 'label' and 'css' as values.
+ *
+ * @since 1.0.0
+ *
+ * @return array Associative array of available login page templates.
+ */
+    function login_page_templates() {
+        return [
+            'default'  => [ 'label' => __( 'WordPress Default', 'tp-login-designer' ), 'css' => '' ],
+            'classic'  => [ 'label' => __( 'Classic Card', 'tp-login-designer' ),   'css' => 'classic.css' ],
+            'glass'    => [ 'label' => __( 'Frosted Glass', 'tp-login-designer' ),  'css' => 'glass.css' ],
+            'split'    => [ 'label' => __( 'Split Hero', 'tp-login-designer' ),     'css' => 'split.css' ],
+            'gradient' => [ 'label' => __( 'Soft Gradient', 'tp-login-designer' ),  'css' => 'gradient.css' ],
+        ];
+    }
+}

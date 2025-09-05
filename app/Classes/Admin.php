@@ -57,9 +57,8 @@ class Admin {
         $current_setting_screen = Settings::get_current_screen();
 
         if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen ) {
-
+            
             wp_enqueue_media();
-
             $this->enqueue_script(
                 'tpsa-admin',
                 TPSA_ASSETS_URL . '/admin/js/admin.js',
@@ -71,21 +70,21 @@ class Admin {
                     TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js'
                 );
             }
-            if( $current_setting_screen === 'analytics' ) {
+            elseif( $current_setting_screen === 'analytics' ) {
                 $this->enqueue_script(
                     'tpsa-analytics',
                     TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js'
                 );
             }
 
-            if( $current_setting_screen === 'customize' ) {
+            elseif( $current_setting_screen === 'customize' ) {
                 $this->enqueue_script(
                     'tpsa-customize',
                     TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js'
                 );
             }
 
-            $this->localize_script( 'tpsa-admin', 'tpsaAdmin', [
+            $localize = [
                 'nonce'         => wp_create_nonce( 'tpsa-nonce' ),
                 'ajax_url'      => admin_url( 'admin-ajax.php' ),
                 'screen_slug'   => Settings::$SETTING_PAGE_ID,
@@ -93,8 +92,11 @@ class Admin {
                 'rest_url'      => esc_url_raw( rest_url() ),
                 'limit_login'   => $this->is_enabled( $this->get_settings() ),
                 'admin_url'     => admin_url(),
-                'assets_url'    => TPSA_ASSETS_URL
-            ] );
+                'assets_url'    => TPSA_ASSETS_URL,
+                'login_templates' => login_page_templates(),
+            ];
+
+            $this->localize_script( 'tpsa-admin', 'tpsaAdmin', $localize );
         }
         
     }
