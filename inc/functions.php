@@ -505,11 +505,11 @@ if( !function_exists( 'login_page_templates' ) ) {
  */
     function login_page_templates() {
         return [
-            'default'  => [ 'label' => __( 'WordPress Default', 'tp-login-designer' ), 'css' => '' ],
-            'classic'  => [ 'label' => __( 'Classic Card', 'tp-login-designer' ),   'css' => 'classic.css' ],
-            'glass'    => [ 'label' => __( 'Frosted Glass', 'tp-login-designer' ),  'css' => 'glass.css' ],
-            'split'    => [ 'label' => __( 'Split Hero', 'tp-login-designer' ),     'css' => 'split.css' ],
-            'gradient' => [ 'label' => __( 'Soft Gradient', 'tp-login-designer' ),  'css' => 'gradient.css' ],
+            'default'  => [ 'label' => __( 'WordPress Default', 'tp-login-designer' ), 'css' => '', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'classic'  => [ 'label' => __( 'Classic Card', 'tp-login-designer' ),   'css' => 'classic.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'glass'    => [ 'label' => __( 'Frosted Glass', 'tp-login-designer' ),  'css' => 'glass.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'split'    => [ 'label' => __( 'Split Hero', 'tp-login-designer' ),     'css' => 'split.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'gradient' => [ 'label' => __( 'Soft Gradient', 'tp-login-designer' ),  'css' => 'gradient.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
         ];
     }
 }

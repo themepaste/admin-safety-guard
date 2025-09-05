@@ -2,10 +2,6 @@ import React, { useMemo, useState } from 'react';
 import ModalImage from 'react-modal-image';
 
 const TemplateList = () => {
-    const smalImg = 'https://placehold.co/200x200';
-    const bigImg = 'https://placehold.co/800x600';
-
-    // Read once when component mounts
     let initialActive = null;
     try {
         initialActive = JSON.parse(
@@ -17,38 +13,19 @@ const TemplateList = () => {
         initialActive = null;
     }
 
-    const [activeTemplateId] = useState(initialActive); // fixed "Activated" on load
-    const [selectedId, setSelectedId] = useState(null); // changes after user clicks
+    const [activeTemplateId] = useState(initialActive);
+    const [selectedId, setSelectedId] = useState(null);
 
-    const templateList = useMemo(
-        () => [
-            {
-                id: 'template-1',
-                name: 'Template 1',
-                screenshotSmall: smalImg,
-                screenshot: bigImg,
-            },
-            {
-                id: 'template-2',
-                name: 'Template 2',
-                screenshotSmall: smalImg,
-                screenshot: bigImg,
-            },
-            {
-                id: 'template-3',
-                name: 'Template 3',
-                screenshotSmall: smalImg,
-                screenshot: bigImg,
-            },
-            {
-                id: 'template-4',
-                name: 'Template 4',
-                screenshotSmall: smalImg,
-                screenshot: bigImg,
-            },
-        ],
-        []
-    );
+    // Convert tpsaAdmin.login_templates to array
+    const templateList = useMemo(() => {
+        if (!window.tpsaAdmin || !tpsaAdmin.login_templates) return [];
+        return Object.entries(tpsaAdmin.login_templates).map(([id, tpl]) => ({
+            id, // "classic", "default", "glass"
+            name: tpl.label, // from "label"
+            screenshotSmall: tpl.smalImg, // use given smalImg
+            screenshot: tpl.bigImg, // use given bigImg
+        }));
+    }, []);
 
     const updateHiddenInput = (template) => {
         const inputEl = document.getElementById(
@@ -61,8 +38,8 @@ const TemplateList = () => {
     };
 
     const handleUseTemplate = (template) => {
-        setSelectedId(template.id); // mark new selection
-        updateHiddenInput(template); // sync hidden input
+        setSelectedId(template.id);
+        updateHiddenInput(template);
     };
 
     const getButtonLabel = (templateId) => {
