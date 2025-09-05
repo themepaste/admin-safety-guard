@@ -57,7 +57,7 @@ class Admin {
         $current_setting_screen = Settings::get_current_screen();
 
         if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen ) {
-            
+
             wp_enqueue_media();
             $this->enqueue_script(
                 'tpsa-admin',
@@ -93,8 +93,11 @@ class Admin {
                 'limit_login'   => $this->is_enabled( $this->get_settings() ),
                 'admin_url'     => admin_url(),
                 'assets_url'    => TPSA_ASSETS_URL,
-                'login_templates' => login_page_templates(),
             ];
+
+            if( $current_setting_screen === 'customize' ) {
+                $localize['login_templates'] = login_page_templates();
+            }
 
             $this->localize_script( 'tpsa-admin', 'tpsaAdmin', $localize );
         }
