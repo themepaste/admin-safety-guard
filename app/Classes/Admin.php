@@ -101,7 +101,6 @@ class Admin {
 
             $this->localize_script( 'tpsa-admin', 'tpsaAdmin', $localize );
         }
-        
     }
 
     /**
