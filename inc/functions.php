@@ -503,13 +503,26 @@ if( !function_exists( 'login_page_templates' ) ) {
  *
  * @return array Associative array of available login page templates.
  */
+    /**
+ * Get login page templates.
+ *
+ * @return array
+ */
     function login_page_templates() {
-        return [
-            'default'  => [ 'label' => __( 'WordPress Default', 'tp-login-designer' ), 'css' => '', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'classic'  => [ 'label' => __( 'Classic Card', 'tp-login-designer' ),   'css' => 'classic.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'glass'    => [ 'label' => __( 'Frosted Glass', 'tp-login-designer' ),  'css' => 'glass.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'split'    => [ 'label' => __( 'Split Hero', 'tp-login-designer' ),     'css' => 'split.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'gradient' => [ 'label' => __( 'Soft Gradient', 'tp-login-designer' ),  'css' => 'gradient.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+        $templates = [
+            'default'  => [ 'label' => __( 'WordPress Default', 'tp-login-designer' ), 'css' => '',            'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'classic'  => [ 'label' => __( 'Classic Card',      'tp-login-designer' ), 'css' => 'classic.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'glass'    => [ 'label' => __( 'Frosted Glass',     'tp-login-designer' ), 'css' => 'glass.css',   'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'split'    => [ 'label' => __( 'Split Hero',        'tp-login-designer' ), 'css' => 'split.css',   'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'gradient' => [ 'label' => __( 'Soft Gradient',     'tp-login-designer' ), 'css' => 'gradient.css','smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
         ];
+
+        /**
+         * Filter: Modify the available login templates.
+         *
+         * @param array $templates Associative array of template definitions.
+         */
+        return apply_filters( 'customize/login_templates', $templates );
     }
+
 }
