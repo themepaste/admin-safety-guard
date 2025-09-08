@@ -31,6 +31,13 @@ class Admin {
         } );
         $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );
         $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts'] );
+
+        add_action('login_init', function () {
+            if ( isset($_GET['cdp_preview']) ) {
+                add_filter('wp_headers', function($h){ $h['Cache-Control'] = 'no-store, must-revalidate'; return $h; });
+            }
+        });
+
     }
 
     /**
@@ -84,6 +91,9 @@ class Admin {
                 );
             }
 
+            $login_url = wp_login_url();
+            $glue      = strpos($login_url, '?') !== false ? '&' : '?';
+
             $localize = [
                 'nonce'         => wp_create_nonce( 'tpsa-nonce' ),
                 'ajax_url'      => admin_url( 'admin-ajax.php' ),
@@ -93,6 +103,8 @@ class Admin {
                 'limit_login'   => $this->is_enabled( $this->get_settings() ),
                 'admin_url'     => admin_url(),
                 'assets_url'    => TPSA_ASSETS_URL,
+                'previewUrl' => $login_url . $glue . 'cdp_preview=1',
+                'sameOrigin' => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
             ];
 
             if( $current_setting_screen === 'customize' ) {
