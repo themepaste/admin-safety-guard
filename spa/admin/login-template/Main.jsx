@@ -7,7 +7,7 @@ function Main() {
     return (
         <>
             <div className="tp-login-template">
-                {/* <h2>Login Template</h2> */}
+                <h2>Login Template</h2>
                 <TemplateList />
             </div>
         </>

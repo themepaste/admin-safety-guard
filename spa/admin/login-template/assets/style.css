@@ -202,6 +202,23 @@
     background: #fff;
 }
 
+.tpsa-button-primary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #814bfe;
+    color: #fff;
+    cursor: pointer;
+    border: 1px solid #814bfe;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.active {
+    background-color: #fff;
+    color: #814bfe;
+    border: 1px solid #ccc;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .custom-template-builder {

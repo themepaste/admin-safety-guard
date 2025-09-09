@@ -224,30 +224,33 @@ const TemplateList = () => {
     };
 
     return (
-        <div className="template-list">
-            {templateList.map((template) => (
-                <div className="single-template" key={template.id}>
-                    <ModalImage
-                        className="template-screenshot"
-                        small={template.screenshotSmall}
-                        large={template.screenshot}
-                        alt={template.name}
-                        hideDownload
-                        hideZoom
-                    />
-                    <div className="template-content">
-                        <h3>{template.name}</h3>
-                        <button
-                            type="button"
-                            className="button-primary use-template"
-                            onClick={() => handleUseTemplate(template)}
-                        >
-                            {getButtonLabel(template.id)}
-                        </button>
+        <>
+            <h3 style={{ marginTop: 0 }}>Ready made templates</h3>
+            <div className="template-list">
+                {templateList.map((template) => (
+                    <div className="single-template" key={template.id}>
+                        <ModalImage
+                            className="template-screenshot"
+                            small={template.screenshotSmall}
+                            large={template.screenshot}
+                            alt={template.name}
+                            hideDownload
+                            hideZoom
+                        />
+                        <div className="template-content">
+                            <h3>{template.name}</h3>
+                            <button
+                                type="button"
+                                className="button-primary use-template"
+                                onClick={() => handleUseTemplate(template)}
+                            >
+                                {getButtonLabel(template.id)}
+                            </button>
+                        </div>
                     </div>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+        </>
     );
 };
 
@@ -401,9 +404,9 @@ const CustomTemplateBuilder = () => {
 
         const Card = (
             <div id="login">
-                <h1>
+                {/* <h1>
                     <a href="#" title="Site" />
-                </h1>
+                </h1> */}
                 <form>
                     <p>
                         <label>Username or Email Address</label>
@@ -471,7 +474,7 @@ const CustomTemplateBuilder = () => {
         >
             {/* Controls */}
             <div>
-                <h3 style={{ marginTop: 0 }}>Custom Template</h3>
+                <h3 style={{ marginTop: 0 }}>Custom Builder</h3>
 
                 <label className="field">
                     <div>Template Name</div>
@@ -616,39 +619,6 @@ const CustomTemplateBuilder = () => {
                 </fieldset>
 
                 <fieldset className="field">
-                    <legend>Branding</legend>
-                    <div>Logo URL</div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <input
-                            type="text"
-                            value={settings.logo_url}
-                            onChange={(e) =>
-                                handleChange('logo_url', e.target.value)
-                            }
-                            placeholder="https://…"
-                        />
-                        <button
-                            type="button"
-                            className="button"
-                            onClick={() => pickMedia('logo_url')}
-                        >
-                            Choose
-                        </button>
-                    </div>
-                    <div style={{ marginTop: 8 }}>
-                        Logo width (px)
-                        <input
-                            type="number"
-                            value={settings.logo_width}
-                            onChange={(e) =>
-                                handleChange(
-                                    'logo_width',
-                                    Number(e.target.value)
-                                )
-                            }
-                            style={{ width: 120, marginLeft: 8 }}
-                        />
-                    </div>
                     <label style={{ display: 'block', marginTop: 8 }}>
                         <input
                             type="checkbox"
@@ -846,44 +816,14 @@ const CustomTemplateBuilder = () => {
                         Reset
                     </button>
                 </div>
-
-                <p style={{ fontSize: 12, opacity: 0.8, marginTop: 8 }}>
-                    Saved automatically to{' '}
-                    <code>#tpsa_customize_login-template</code> as JSON.
-                </p>
             </div>
 
             {/* Preview column */}
             <div>
+                <h3>Preview</h3>
                 <style>{css}</style>
                 {/* Mock preview (always works) */}
                 <MockPreview />
-
-                {/* Optional real login preview (same origin). Adjust URL as needed. */}
-                <details style={{ marginTop: 16 }}>
-                    <summary>Preview on real login page (beta)</summary>
-                    <iframe
-                        ref={iframeRef}
-                        src={`${(window?.ajaxurl || '').replace(
-                            '/admin-ajax.php',
-                            ''
-                        )}/wp-login.php?action=login&cdp_preview=1&_t=${Date.now()}`}
-                        onLoad={onIframeLoad}
-                        style={{
-                            width: '100%',
-                            height: 600,
-                            border: '1px solid #ccd0d4',
-                            borderRadius: 8,
-                            marginTop: 8,
-                            background: '#fff',
-                        }}
-                        title="Login Preview"
-                    />
-                    <div style={{ fontSize: 12, opacity: 0.7, marginTop: 6 }}>
-                        If your admin and login are same-origin, styles will
-                        inject live.
-                    </div>
-                </details>
             </div>
         </div>
     );
@@ -908,8 +848,8 @@ const TemplateStudio = () => {
             <div className="tabs" style={{ marginBottom: 12 }}>
                 <button
                     type="button"
-                    className={`button ${
-                        tab === 'ready' ? 'button-primary' : ''
+                    className={`tpsa-button-primary ${
+                        tab === 'ready' ? 'active' : ''
                     }`}
                     onClick={() => setTab('ready')}
                     style={{ marginRight: 8 }}
@@ -918,8 +858,8 @@ const TemplateStudio = () => {
                 </button>
                 <button
                     type="button"
-                    className={`button ${
-                        tab === 'custom' ? 'button-primary' : ''
+                    className={`tpsa-button-primary ${
+                        tab === 'custom' ? 'active' : ''
                     }`}
                     onClick={() => setTab('custom')}
                 >
