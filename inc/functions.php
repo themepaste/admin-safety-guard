@@ -181,14 +181,14 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'  => __( 'Blocked users can see this message when they are locked out.', 'tp-secure-plugin' ),
                             'default' => __( 'You have been locked out due to too many login attempts.', 'tp-secure-plugin' ),
                         ),
-                        'block-ip-address' => array(
-                            'type'  => 'single-repeater',
-                            'label' => __( 'Block with IP Address', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'IP addresses', 'tp-secure-plugin' ),
-                            'default' => '',
-                        ),
+                        // 'block-ip-address' => array(
+                        //     'type'  => 'single-repeater',
+                        //     'label' => __( 'Block with IP Address', 'tp-secure-plugin' ),
+                        //     'class' => '',
+                        //     'id'    => '',
+                        //     'desc'  => __( 'IP addresses', 'tp-secure-plugin' ),
+                        //     'default' => '',
+                        // ),
                     )
                 ),
                 'login-logs-activity' => array(

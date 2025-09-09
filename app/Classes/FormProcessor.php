@@ -44,10 +44,6 @@ class FormProcessor {
                 case 'login-template':
                     $sanitized[ $key ] = wp_unslash( $raw );
                     break;
-                case 'multi-check' || 'social-login':
-                    $raw = isset( $_POST[ $field_name ] ) ? (array) $_POST[ $field_name ] : [];
-                    $sanitized[ $key ] = array_map( 'sanitize_text_field', $raw );
-                    break;
                 case 'single-repeater':
                     $raw = isset( $_POST[ $field_name ] ) ? (array) $_POST[ $field_name ] : [];
 
@@ -57,6 +53,16 @@ class FormProcessor {
 
                     // Ensure at least one item
                     $sanitized[ $key ] = !empty( $sanitized_vals ) ? array_values($sanitized_vals) : [''];
+                    break;
+                case 'number':
+                    // choose one of int/float and validate
+                    $num = filter_var( $raw, FILTER_VALIDATE_FLOAT );
+                    $sanitized[$key] = ( $num !== false ) ? $num : 0; // or null/default
+                    break;
+                case 'multi-check':
+                case 'social-login':
+                    $raw = isset($_POST[$field_name]) ? (array) $_POST[$field_name] : [];
+                    $sanitized[$key] = array_map('sanitize_text_field', $raw);
                     break;
                 default:
                     $sanitized[ $key ] = sanitize_text_field( $raw );
