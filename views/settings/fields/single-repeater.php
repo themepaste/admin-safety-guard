@@ -7,14 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$id_base       = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
-$values        = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : ['']; // At least one field
-$instance_uid  = esc_attr( wp_unique_id( 'rpt_' ) ); // unique per repeater instance on the page
+$id_base = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
+$values  = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : ['']; // At least one field
 ?>
-
 <div class="tp-field tp-repeater-field"
-     data-id-base="<?php echo esc_attr( $id_base ); ?>"
-     data-instance="<?php echo $instance_uid; ?>">
+     data-id-base="<?php echo esc_attr( $id_base ); ?>">
     <div class="tp-field-label">
         <label><?php echo esc_html( $args['field']['label'] ); ?></label>
     </div>
@@ -24,7 +21,7 @@ $instance_uid  = esc_attr( wp_unique_id( 'rpt_' ) ); // unique per repeater inst
             <?php foreach ( $values as $val ) : ?>
                 <div class="tp-repeater-item">
                     <input type="text"
-                           name="<?php echo esc_attr( $id_base . '[' . $instance_uid . '][]' ); ?>"
+                           name="<?php echo esc_attr( $id_base . '[]' ); ?>"
                            value="<?php echo esc_attr( $val ); ?>"
                            class="tp-repeater-text"
                            placeholder="192.168.1.1" />
@@ -66,19 +63,18 @@ $instance_uid  = esc_attr( wp_unique_id( 'rpt_' ) ); // unique per repeater inst
     document.addEventListener('click', function(e){
         const addBtn = e.target.closest('.tp-repeater-add');
         if (addBtn) {
-            const fieldWrapper = addBtn.closest('.tp-repeater-field');
+            const fieldWrapper   = addBtn.closest('.tp-repeater-field');
             if (!fieldWrapper) return;
 
             const repeaterWrapper = fieldWrapper.querySelector('.tp-repeater-wrapper');
-            const idBase    = fieldWrapper.dataset.idBase;
-            const instance  = fieldWrapper.dataset.instance;
+            const idBase          = fieldWrapper.dataset.idBase;
 
             // Build one fresh item
             const newItem = document.createElement('div');
             newItem.className = 'tp-repeater-item';
             newItem.innerHTML = `
                 <input type="text"
-                       name="${idBase}[${instance}][]"
+                       name="${idBase}[]"
                        value=""
                        class="tp-repeater-text"
                        placeholder="192.168.1.1" />

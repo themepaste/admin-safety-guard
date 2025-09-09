@@ -46,13 +46,8 @@ class FormProcessor {
                     break;
                 case 'single-repeater':
                     $raw = isset( $_POST[ $field_name ] ) ? (array) $_POST[ $field_name ] : [];
-
-                    // Sanitize and keep at least one
-                    $sanitized_vals = array_map( 'sanitize_text_field', $raw );
-                    $sanitized_vals = array_filter( $sanitized_vals, fn($v) => trim($v) !== '' );
-
-                    // Ensure at least one item
-                    $sanitized[ $key ] = !empty( $sanitized_vals ) ? array_values($sanitized_vals) : [''];
+                    // $vals = array_values(array_filter(array_map('sanitize_text_field', $raw), 'strlen'));
+                    $sanitized[$key] = $raw ?: [''];
                     break;
                 case 'number':
                     // choose one of int/float and validate
