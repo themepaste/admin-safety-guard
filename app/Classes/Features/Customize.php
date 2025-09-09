@@ -74,7 +74,7 @@ class Customize implements FeatureInterface {
             if ( ! empty( $logo ) ) {
                 echo '<style>
                     #login h1 a { 
-                        background-image: url(' . esc_url( $logo ) . ') !important;
+                        background-image: url(' . esc_url( $logo[0] ) . ') !important;
                         background-size: ' . esc_attr( $logo_width ) . 'px ' . esc_attr( $logo_height ) . 'px !important;
                         width: ' . esc_attr( $logo_width ) . 'px !important;
                         height: ' . esc_attr( $logo_height ) . 'px !important;
