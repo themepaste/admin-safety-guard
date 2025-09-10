@@ -46,23 +46,36 @@ class LimitLoginAttempts implements FeatureInterface {
      */
 
     public function register_hooks() {
-        $settings       = $this->get_settings();
-
+        $settings               = $this->get_settings();
+        
         if( $this->is_enabled( $settings ) ) {
-            
             $this->action( 'admin_init', [$this, 'check_wp_cron_status'] );
-            $this->action( 'wp_login_failed', [$this, 'tpsa_track_failed_login_24hr']);
-            $this->action( 'login_init', [ $this, 'hide_login_form_with_ip_address_status' ] );
-            $this->action( 'login_init', [$this, 'maybe_block_login_form'] );
-            $this->action( 'template_redirect', [$this, 'maybe_block_custom_login'] );
 
-            $this->filter('authenticate', function( $user ) {
-                if ( $this->is_ip_locked_out() ) {
-                    return new \WP_Error( 'access_denied', '🚫 You are temporarily blocked due to too many failed login attempts.' );
-                }
-                return $user;
-            }, 0);
+            if ( ! $this->is_white_list_ip( $settings ) ) {
+                $this->action( 'wp_login_failed', [$this, 'tpsa_track_failed_login_24hr']);
+                $this->action( 'login_init', [ $this, 'hide_login_form_with_ip_address_status' ] );
+                $this->action( 'login_init', [$this, 'maybe_block_login_form'] );
+                $this->action( 'template_redirect', [$this, 'maybe_block_custom_login'] );
+
+                $this->filter('authenticate', function( $user ) {
+                    if ( $this->is_ip_locked_out() ) {
+                        return new \WP_Error( 'access_denied', '🚫 You are temporarily blocked due to too many failed login attempts.' );
+                    }
+                    return $user;
+                }, 0);
+            }
+
         }
+    }
+
+    public function is_white_list_ip( $settings ) {
+
+        $current_ip_address     = $this->get_ip_address();
+        $whitelist_ips          = isset( $settings['whitelist-ip'] ) ? $settings['whitelist-ip'] : [];
+        if( empty( $whitelist_ips ) ) {
+            return;
+        }
+        return in_array( $current_ip_address, $whitelist_ips );
     }
 
     public function maybe_block_custom_login() {
