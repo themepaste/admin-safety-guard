@@ -257,6 +257,8 @@ class TwoFactorAuth implements FeatureInterface {
         </html>
         ';
 
+        $message = apply_filters( 'tpsa_otp_email_message', $message, $otp );
+
         // Set content-type header for HTML email
         $headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
