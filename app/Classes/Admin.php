@@ -104,8 +104,9 @@ class Admin {
                 'limit_login'   => $this->is_enabled( $this->get_settings() ),
                 'admin_url'     => admin_url(),
                 'assets_url'    => TPSA_ASSETS_URL,
-                'previewUrl' => $login_url . $glue . 'cdp_preview=1',
-                'sameOrigin' => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
+                'previewUrl'    => $login_url . $glue . 'cdp_preview=1',
+                'social_login'  => array_keys( (array) get_option( 'social_login_crendentials' ) ),
+                'sameOrigin'    => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
             ];
 
             if( $current_setting_screen === 'customize' ) {

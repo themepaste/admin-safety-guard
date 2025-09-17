@@ -207,6 +207,24 @@ class LimitLoginAttempts implements FeatureInterface {
                     );
 
                     if ( ! $already_blocked ) {
+                        
+                        $admin_email = get_option( 'admin_email' );
+                        $subject = 'A user has been blocked for 24 hours due to multiple failed login attempts.';
+                        $body = "
+                        Hi Admin,<br><br>
+                        A user has been <b>blocked for 24 hours</b> due to repeated login failures.<br><br>
+                        <b>Details:</b><br>
+                        - IP Address: {$ip}<br>
+                        - User Agent: {$user_agent}<br>
+                        - Login Time: {$now}<br><br>
+                        Please review the logs for further action if necessary.<br><br>
+                        Thanks,<br>
+                        Secure Admin Plugin
+                        ";
+                        $headers = array('Content-Type: text/html; charset=UTF-8');
+
+                        wp_mail( $admin_email, $subject, $body, $headers );
+
                         $wpdb->insert(
                             $blocked_table,
                             [
