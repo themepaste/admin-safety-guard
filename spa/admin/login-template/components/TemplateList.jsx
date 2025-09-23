@@ -539,7 +539,14 @@ const CustomTemplateBuilder = () => {
                     </label>
 
                     {settings.bg_type === 'color' && (
-                        <div style={{ marginTop: 8 }}>
+                        <div
+                            style={{
+                                marginTop: 20,
+                                display: 'flex',
+                                gap: 8,
+                                alignItems: 'center',
+                            }}
+                        >
                             <div>Background Color</div>
                             <input
                                 type="color"
@@ -552,8 +559,10 @@ const CustomTemplateBuilder = () => {
                     )}
 
                     {settings.bg_type === 'image' && (
-                        <div style={{ marginTop: 8 }}>
-                            <div>Background Image URL</div>
+                        <div style={{ marginTop: 20 }}>
+                            <div style={{ marginBottom: 4 }}>
+                                Background Image URL
+                            </div>
                             <div style={{ display: 'flex', gap: 8 }}>
                                 <input
                                     type="text"
@@ -604,8 +613,8 @@ const CustomTemplateBuilder = () => {
                     )}
 
                     {settings.bg_type === 'gradient' && (
-                        <div style={{ marginTop: 8 }}>
-                            <div>Gradient CSS</div>
+                        <div style={{ marginTop: 20 }}>
+                            <div style={{ marginBottom: 4 }}>Gradient CSS</div>
                             <input
                                 type="text"
                                 value={settings.bg_gradient}
@@ -640,10 +649,16 @@ const CustomTemplateBuilder = () => {
                         style={{
                             display: 'grid',
                             gridTemplateColumns: '1fr 1fr',
-                            gap: 8,
+                            gap: 12,
                         }}
                     >
-                        <label>
+                        <label
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 8,
+                            }}
+                        >
                             Form BG
                             <input
                                 type="color"
@@ -654,7 +669,12 @@ const CustomTemplateBuilder = () => {
                             />
                         </label>
                         <label>
-                            Opacity (0–1)
+                            <label
+                                htmlFor=""
+                                style={{ display: 'block', marginBottom: 4 }}
+                            >
+                                Opacity (0–1)
+                            </label>
                             <input
                                 type="number"
                                 min="0"
@@ -670,7 +690,12 @@ const CustomTemplateBuilder = () => {
                             />
                         </label>
                         <label>
-                            Width (px)
+                            <label
+                                style={{ display: 'block', marginBottom: 4 }}
+                                htmlFor=""
+                            >
+                                Width (px)
+                            </label>
                             <input
                                 type="number"
                                 value={settings.form_width}
@@ -683,7 +708,12 @@ const CustomTemplateBuilder = () => {
                             />
                         </label>
                         <label>
-                            Radius (px)
+                            <label
+                                htmlFor=""
+                                style={{ display: 'block', marginBottom: 4 }}
+                            >
+                                Radius (px)
+                            </label>
                             <input
                                 type="number"
                                 value={settings.radius}
@@ -696,8 +726,13 @@ const CustomTemplateBuilder = () => {
                             />
                         </label>
                     </div>
-                    <div style={{ marginTop: 8 }}>
-                        Shadow (CSS)
+                    <div style={{ marginTop: 12 }}>
+                        <label
+                            htmlFor=""
+                            style={{ display: 'block', marginBottom: 4 }}
+                        >
+                            Shadow (CSS)
+                        </label>
                         <input
                             type="text"
                             value={settings.shadow}
@@ -766,8 +801,13 @@ const CustomTemplateBuilder = () => {
                             />
                         </label>
                     </div>
-                    <div style={{ marginTop: 8 }}>
-                        Font stack
+                    <div style={{ marginTop: 12 }}>
+                        <label
+                            style={{ display: 'block', marginBottom: 4 }}
+                            htmlFor=""
+                        >
+                            Font stack
+                        </label>
                         <input
                             type="text"
                             value={settings.font_family}
