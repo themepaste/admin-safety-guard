@@ -93,6 +93,18 @@
     font-size: 16px;
     font-weight: 700;
 }
+.color-fields-wrapper {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.custom-template-builder .field .color-field {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
 .custom-template-builder .field,
 .custom-template-builder fieldset {
     margin: 12px 0 14px;
@@ -137,8 +149,7 @@
     height: 36px;
     padding: 2px;
     border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: #fff;
+    border: none;
 }
 
 /* Inline radio/checkbox */

@@ -711,14 +711,8 @@ const CustomTemplateBuilder = () => {
 
                 <fieldset className="field">
                     <legend>Colors & Typography</legend>
-                    <div
-                        style={{
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 1fr',
-                            gap: 8,
-                        }}
-                    >
-                        <label>
+                    <div className="color-fields-wrapper">
+                        <label className="color-field">
                             Primary
                             <input
                                 type="color"
@@ -731,7 +725,7 @@ const CustomTemplateBuilder = () => {
                                 }
                             />
                         </label>
-                        <label>
+                        <label className="color-field">
                             Accent
                             <input
                                 type="color"
@@ -741,7 +735,7 @@ const CustomTemplateBuilder = () => {
                                 }
                             />
                         </label>
-                        <label>
+                        <label className="color-field">
                             Link
                             <input
                                 type="color"
@@ -751,7 +745,7 @@ const CustomTemplateBuilder = () => {
                                 }
                             />
                         </label>
-                        <label>
+                        <label className="color-field">
                             Button BG
                             <input
                                 type="color"
@@ -761,7 +755,7 @@ const CustomTemplateBuilder = () => {
                                 }
                             />
                         </label>
-                        <label>
+                        <label className="color-field">
                             Button Text
                             <input
                                 type="color"
