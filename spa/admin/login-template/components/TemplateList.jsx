@@ -225,7 +225,7 @@ const TemplateList = () => {
 
     return (
         <>
-            <h3 style={{ marginTop: 0 }}>Ready made templates</h3>
+            <h3 className="section-title">Ready made templates</h3>
             <div className="template-list">
                 {templateList.map((template) => (
                     <div className="single-template" key={template.id}>
@@ -474,7 +474,7 @@ const CustomTemplateBuilder = () => {
         >
             {/* Controls */}
             <div>
-                <h3 style={{ marginTop: 0 }}>Custom Builder</h3>
+                <h3 className="section-title">Custom Builder</h3>
 
                 <label className="field">
                     <div>Template Name</div>
@@ -845,7 +845,7 @@ const TemplateStudio = () => {
 
     return (
         <div className="template-studio">
-            <div className="tabs" style={{ marginBottom: 12 }}>
+            <div className="tabs">
                 <button
                     type="button"
                     className={`tpsa-button-primary ${
