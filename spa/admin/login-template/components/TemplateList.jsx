@@ -476,18 +476,18 @@ const CustomTemplateBuilder = () => {
             <div>
                 <h3 className="section-title">Custom Builder</h3>
 
-                <label className="field">
-                    <div>Template Name</div>
+                <fieldset className="field">
+                    <legend>Template Name</legend>
                     <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Custom"
                     />
-                </label>
+                </fieldset>
 
-                <label className="field">
-                    <div>Layout</div>
+                <fieldset className="field">
+                    <legend>Layout</legend>
                     <select
                         value={settings.layout}
                         onChange={(e) => handleChange('layout', e.target.value)}
@@ -497,7 +497,7 @@ const CustomTemplateBuilder = () => {
                         <option value="split-right">Split Right</option>
                         <option value="full-bleed">Full Bleed</option>
                     </select>
-                </label>
+                </fieldset>
 
                 <fieldset className="field">
                     <legend>Background</legend>
