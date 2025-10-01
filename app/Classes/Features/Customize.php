@@ -46,11 +46,10 @@ class Customize implements FeatureInterface {
      */
 
     public function register_hooks() {
-        $this->action( 'login_enqueue_scripts', [$this, 'customize_login_form']);
-        $this->action( 'register_form', [$this, 'customize_registration_form']);
+        $this->action( 'login_enqueue_scripts', [$this, 'customize_login_form'] );
+        $this->action( 'register_form', [$this, 'customize_registration_form'] );
     }
 
-    
     /**
      * Customize login form logo
      *
@@ -63,7 +62,7 @@ class Customize implements FeatureInterface {
      */
     public function customize_login_form() {
         $settings = $this->get_settings();
-        if( $this->is_enabled( $settings ) ) {
+        if ( $this->is_enabled( $settings ) ) {
             // Retrieve the settings
             $logo = isset( $settings['logo'] ) ? $settings['logo'] : '';
             $logo_url = isset( $settings['logo-url'] ) ? $settings['logo-url'] : '';
@@ -71,42 +70,9 @@ class Customize implements FeatureInterface {
             $logo_height = isset( $settings['logo-height'] ) ? $settings['logo-height'] : '';
 
             // Inject the custom logo into the login page
-            if ( ! empty( $logo ) ) {
+            if ( !empty( $logo ) ) {
                 echo '<style>
-                    #login h1 a { 
-                        background-image: url(' . esc_url( $logo[0] ) . ') !important;
-                        background-size: ' . esc_attr( $logo_width ) . 'px ' . esc_attr( $logo_height ) . 'px !important;
-                        width: ' . esc_attr( $logo_width ) . 'px !important;
-                        height: ' . esc_attr( $logo_height ) . 'px !important;
-                    }
-                </style>';
-            }
-
-            // Optionally, change the logo URL if provided
-            if ( ! empty( $logo_url ) ) {
-                add_filter( 'login_headerurl', function() use ( $logo_url ) {
-                    return esc_url( $logo_url );
-                });
-            }
-        }
-    }
-
-    /**
-     * Customize registration form logo
-     */
-    public function customize_registration_form() {
-        $settings = $this->get_settings();
-        if( $this->is_enabled( $settings ) ) {
-            // Retrieve the settings
-            $logo = isset( $settings['logo'] ) ? $settings['logo'] : '';
-            $logo_url = isset( $settings['logo-url'] ) ? $settings['logo-url'] : '';
-            $logo_width = isset( $settings['logo-width'] ) ? $settings['logo-width'] : '';
-            $logo_height = isset( $settings['logo-height'] ) ? $settings['logo-height'] : '';
-
-            // Inject the custom logo into the registration page
-            if ( ! empty( $logo ) ) {
-                echo '<style>
-                    .register h1 a { 
+                    #login h1 a {
                         background-image: url(' . esc_url( $logo ) . ') !important;
                         background-size: ' . esc_attr( $logo_width ) . 'px ' . esc_attr( $logo_height ) . 'px !important;
                         width: ' . esc_attr( $logo_width ) . 'px !important;
@@ -116,14 +82,46 @@ class Customize implements FeatureInterface {
             }
 
             // Optionally, change the logo URL if provided
-            if ( ! empty( $logo_url ) ) {
-                add_filter( 'login_headerurl', function() use ( $logo_url ) {
+            if ( !empty( $logo_url ) ) {
+                add_filter( 'login_headerurl', function () use ( $logo_url ) {
                     return esc_url( $logo_url );
-                });
+                } );
             }
         }
     }
 
+    /**
+     * Customize registration form logo
+     */
+    public function customize_registration_form() {
+        $settings = $this->get_settings();
+        if ( $this->is_enabled( $settings ) ) {
+            // Retrieve the settings
+            $logo = isset( $settings['logo'] ) ? $settings['logo'] : '';
+            $logo_url = isset( $settings['logo-url'] ) ? $settings['logo-url'] : '';
+            $logo_width = isset( $settings['logo-width'] ) ? $settings['logo-width'] : '';
+            $logo_height = isset( $settings['logo-height'] ) ? $settings['logo-height'] : '';
+
+            // Inject the custom logo into the registration page
+            if ( !empty( $logo ) ) {
+                echo '<style>
+                    .register h1 a {
+                        background-image: url(' . esc_url( $logo ) . ') !important;
+                        background-size: ' . esc_attr( $logo_width ) . 'px ' . esc_attr( $logo_height ) . 'px !important;
+                        width: ' . esc_attr( $logo_width ) . 'px !important;
+                        height: ' . esc_attr( $logo_height ) . 'px !important;
+                    }
+                </style>';
+            }
+
+            // Optionally, change the logo URL if provided
+            if ( !empty( $logo_url ) ) {
+                add_filter( 'login_headerurl', function () use ( $logo_url ) {
+                    return esc_url( $logo_url );
+                } );
+            }
+        }
+    }
 
     /**
      * Get plugin settings.
