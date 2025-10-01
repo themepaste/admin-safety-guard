@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace ThemePaste\SecureAdmin\Classes;
 
 defined( 'ABSPATH' ) || exit;
 
-use ThemePaste\SecureAdmin\Traits\Hook;
 use ThemePaste\SecureAdmin\Traits\Asset;
+use ThemePaste\SecureAdmin\Traits\Hook;
 
 class Admin {
 
@@ -24,19 +24,19 @@ class Admin {
      * @return void
      */
     public function __construct() {
-        $this->action( 'plugins_loaded', function() {
+        $this->action( 'plugins_loaded', function () {
             new Wizard();
             new Notice();
             ( new Settings() )->init();
         } );
-        $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles'] );
-        $this->action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts'] );
+        $this->action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_styles'] );
+        $this->action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_scripts'] );
 
-        add_action('login_init', function () {
-            if ( isset($_GET['cdp_preview']) ) {
-                add_filter('wp_headers', function($h){ $h['Cache-Control'] = 'no-store, must-revalidate'; return $h; });
+        add_action( 'login_init', function () {
+            if ( isset( $_GET['cdp_preview'] ) ) {
+                add_filter( 'wp_headers', function ( $h ) {$h['Cache-Control'] = 'no-store, must-revalidate';return $h;} );
             }
-        });
+        } );
 
     }
 
@@ -48,7 +48,7 @@ class Admin {
      * @return void
      */
     public function admin_enqueue_styles( $screen ) {
-		if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen ) {
+        if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen ) {
             $this->enqueue_style(
                 'tpsa-settings',
                 TPSA_ASSETS_URL . '/admin/css/settings.css'
@@ -58,7 +58,7 @@ class Admin {
                 TPSA_ASSETS_URL . '/admin/css/fields.css'
             );
         }
-	}
+    }
 
     public function admin_enqueue_scripts( $screen ) {
         $current_setting_screen = Settings::get_current_screen();
@@ -69,47 +69,46 @@ class Admin {
             $this->enqueue_script(
                 'tpsa-admin',
                 TPSA_ASSETS_URL . '/admin/js/admin.js',
-                [ 'jquery' ]
+                ['jquery']
             );
-            if( $current_setting_screen === 'login-logs-activity' ) {
+            if ( $current_setting_screen === 'login-logs-activity' ) {
                 $this->enqueue_script(
                     'tpsa-login-log-activity',
                     TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js'
                 );
-            }
-            elseif( $current_setting_screen === 'analytics' ) {
+            } elseif ( $current_setting_screen === 'analytics' ) {
                 $this->enqueue_script(
                     'tpsa-analytics',
                     TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js'
                 );
             }
 
-            elseif( $current_setting_screen === 'customize' ) {
-                $this->enqueue_script(
-                    'tpsa-customize',
-                    TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js'
-                );
-            }
+            // elseif( $current_setting_screen === 'customize' ) {
+            //     $this->enqueue_script(
+            //         'tpsa-customize',
+            //         TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js'
+            //     );
+            // }
 
             $login_url = wp_login_url();
-            $glue      = strpos($login_url, '?') !== false ? '&' : '?';
+            $glue = strpos( $login_url, '?' ) !== false ? '&' : '?';
 
             $localize = [
-                'nonce'         => wp_create_nonce( 'tpsa-nonce' ),
-                'site_url'      => site_url(),
-                'ajax_url'      => admin_url( 'admin-ajax.php' ),
-                'screen_slug'   => Settings::$SETTING_PAGE_ID,
-                'setting_slug'  => $current_setting_screen,
-                'rest_url'      => esc_url_raw( rest_url() ),
-                'limit_login'   => $this->is_enabled( $this->get_settings() ),
-                'admin_url'     => admin_url(),
-                'assets_url'    => TPSA_ASSETS_URL,
-                'previewUrl'    => $login_url . $glue . 'cdp_preview=1',
-                'social_login'  => array_keys( (array) get_option( 'social_login_crendentials' ) ),
-                'sameOrigin'    => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
+                'nonce'        => wp_create_nonce( 'tpsa-nonce' ),
+                'site_url'     => site_url(),
+                'ajax_url'     => admin_url( 'admin-ajax.php' ),
+                'screen_slug'  => Settings::$SETTING_PAGE_ID,
+                'setting_slug' => $current_setting_screen,
+                'rest_url'     => esc_url_raw( rest_url() ),
+                'limit_login'  => $this->is_enabled( $this->get_settings() ),
+                'admin_url'    => admin_url(),
+                'assets_url'   => TPSA_ASSETS_URL,
+                'previewUrl'   => $login_url . $glue . 'cdp_preview=1',
+                'social_login' => array_keys( (array) get_option( 'social_login_crendentials' ) ),
+                'sameOrigin'   => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
             ];
 
-            if( $current_setting_screen === 'customize' ) {
+            if ( $current_setting_screen === 'customize' ) {
                 $localize['login_templates'] = login_page_templates();
             }
 

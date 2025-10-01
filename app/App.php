@@ -39,11 +39,11 @@ final class App {
      * @return object The class instance.
      */
     public static function get( $class ) {
-        if ( ! isset( self::$instances[ $class ] ) ) {
-            self::$instances[ $class ] = new $class();
+        if ( !isset( self::$instances[$class] ) ) {
+            self::$instances[$class] = new $class();
         }
 
-        return self::$instances[ $class ];
+        return self::$instances[$class];
     }
 
     /**
@@ -69,7 +69,7 @@ final class App {
         }
 
         // Register frontend-specific hooks and classes.
-        if ( ! is_admin() ) {
+        if ( !is_admin() ) {
             // self::get( Classes\Front::class );
         }
 
