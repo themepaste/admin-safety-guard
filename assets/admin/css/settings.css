@@ -196,3 +196,13 @@
     visibility: visible;
     opacity: 1;
 }
+
+.tp-site-url-input {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.tp-field .tp-field-input .tp-site-url-input input[type="text"] {
+    width: 50%;
+}

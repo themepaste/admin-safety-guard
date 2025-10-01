@@ -2,45 +2,44 @@
 
 namespace ThemePaste\SecureAdmin\Classes\Features;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
-class LoginLogout implements FeatureInterface
-{
+class LoginLogout implements FeatureInterface {
     use Hook;
 
-    private $features_id        = 'custom-login-url';
-    private $custom_login_slug  = ''; 
-    private $redirect_slug      = ''; 
-    private $logout_url         = ''; 
+    private $features_id = 'custom-login-url';
+    private $custom_login_slug = '';
+    private $redirect_slug = '';
+    private $logout_url = '';
 
     public function register_hooks() {
-        $settings       = $this->get_settings();
+        $settings = $this->get_settings();
 
         // Get the custom login slug from settings, fallback to empty string
         $this->custom_login_slug = !empty( $settings['login-url'] ) ? trim( $settings['login-url'], '/' ) : '';
         $this->redirect_slug = !empty( $settings['redirect-url'] ) ? trim( $settings['redirect-url'], '/' ) : '';
         $this->logout_url = !empty( $settings['logout-url'] ) ? trim( $settings['logout-url'], '/' ) : '';
 
-        if( $this->is_enabled( $settings ) && !empty( $this->custom_login_slug ) ) {
+        if ( $this->is_enabled( $settings ) && !empty( $this->custom_login_slug ) ) {
             $this->action( 'init', [$this, 'rewrite_url'] );
             $this->action( 'init', [$this, 'show_404'] );
             $this->action( 'init', [$this, 'redirect_wp_admin'] );
             $this->action( 'template_redirect', [$this, 'force_custom_login_url'] );
-    
+
             $this->filter( 'site_url', [$this, 'override_site_url'], 10, 4 );
         }
 
-        if( $this->is_enabled( $settings ) && !empty( $this->logout_url ) ) {
+        if ( $this->is_enabled( $settings ) && !empty( $this->logout_url ) ) {
             $this->filter( 'logout_redirect', [$this, 'logout_redirect'], 10, 3 );
         }
 
-        $this->action( 'updated_option', function( $option_name, $old_value, $new_value ) {
+        $this->action( 'updated_option', function ( $option_name, $old_value, $new_value ) {
             if ( $option_name === 'tpsa_custom-login-url_settings' ) {
                 $keys_to_check = ['login-url', 'redirect-url', 'logout-url'];
-                
+
                 foreach ( $keys_to_check as $key ) {
                     if ( isset( $old_value[$key] ) && isset( $new_value[$key] ) && $old_value[$key] !== $new_value[$key] ) {
                         flush_rewrite_rules();
@@ -49,7 +48,6 @@ class LoginLogout implements FeatureInterface
                 }
             }
         }, 10, 3 );
-
 
         $this->filter( 'tpsa_custom-login-url_login-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
         $this->filter( 'tpsa_custom-login-url_logout-url', [$this, 'modify_the_custom_login_logout_url_field'], 10, 2 );
@@ -83,14 +81,13 @@ class LoginLogout implements FeatureInterface
         }
     }
 
-
     /**
      * Show 404 if /wp-login.php is accessed
      */
     public function show_404() {
         // Only proceed if custom slug is set
         if (
-            !empty($this->custom_login_slug) &&
+            !empty( $this->custom_login_slug ) &&
             strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false &&
             strpos( $_SERVER['REQUEST_URI'], '/' . $this->custom_login_slug ) === false
         ) {
@@ -110,9 +107,6 @@ class LoginLogout implements FeatureInterface
             exit;
         }
     }
-
-
-
 
     /**
      * Rewrite /habib-login → wp-login.php with all query args
@@ -134,20 +128,20 @@ class LoginLogout implements FeatureInterface
             global $user_login, $error;
 
             // Set them to empty string if not set
-            if (!isset($user_login)) {
+            if ( !isset( $user_login ) ) {
                 $user_login = '';
             }
 
-            if (!isset($error)) {
+            if ( !isset( $error ) ) {
                 $error = '';
             }
-            
+
             require ABSPATH . 'wp-login.php';
             exit;
         }
     }
 
-    public function logout_redirect($redirect_to, $requested_redirect_to, $user) {
+    public function logout_redirect( $redirect_to, $requested_redirect_to, $user ) {
         // Check if logout URL is set in settings
         $settings = $this->get_settings();
         if ( !empty( $settings['logout-url'] ) ) {
@@ -157,25 +151,23 @@ class LoginLogout implements FeatureInterface
         return $redirect_to; // Fallback to default redirect
     }
 
-    private function get_settings()
-    {
-        $option_name = get_tpsa_settings_option_name($this->features_id);
-        return get_option($option_name, []);
+    private function get_settings() {
+        $option_name = get_tpsa_settings_option_name( $this->features_id );
+        return get_option( $option_name, [] );
     }
 
-    private function is_enabled($settings)
-    {
-        return isset($settings['enable']) && $settings['enable'] == 1;
+    private function is_enabled( $settings ) {
+        return isset( $settings['enable'] ) && $settings['enable'] == 1;
     }
 
     /**
      * Add site URL in login/logout input
      */
-    public function modify_the_custom_login_logout_url_field( $template, $args ){
+    public function modify_the_custom_login_logout_url_field( $template, $args ) {
         $site_url = get_site_url();
         $template = str_replace(
             '<input type="text" id="%2$s" name="%2$s" value="%3$s">',
-            '<span>' . $site_url . '/</span><input type="text" id="%2$s" name="%2$s" value="%3$s">',
+            '<div class="tp-site-url-input"><span>' . $site_url . '/</span><input type="text" id="%2$s" name="%2$s" value="%3$s"></div>',
             $template
         );
         return $template;
