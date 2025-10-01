@@ -247,7 +247,7 @@
 .active {
     background-color: #fff;
     color: #814bfe;
-    /* border: 1px solid #ccc; */
+    border: 1px solid #ccc;
 }
 
 .section-title {

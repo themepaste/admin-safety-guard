@@ -13,14 +13,17 @@
     font-weight: 500;
     background-color: #f1eef9;
 }
+
 .tpsm-guide-me-button a {
     text-decoration: none;
     color: #814bfe;
 }
+
 .tpsm-guide-me-button a:focus {
     box-shadow: none;
     outline: none;
 }
+
 .tpsa-topbar-info-area a {
     display: inline-block;
     padding: 10px 25px;
@@ -31,20 +34,24 @@
     font-weight: 500;
     font-size: 14px;
 }
+
 .tpsa-titles h1 {
     font-size: 24px;
     font-weight: 500;
     padding: 0;
 }
+
 .tpsa-icons img {
     width: 48px;
     height: 48px;
     margin-right: 10px;
 }
+
 .tpsa-logo-title-area {
     display: flex;
     align-items: center;
 }
+
 .tpsa-plugin-topbar-wrapper {
     background-color: #fff;
     padding: 20px 20px;
@@ -53,15 +60,18 @@
     justify-content: space-between;
     border-bottom: 1px solid #e5e5e5;
 }
+
 .tp-secure-admin_container {
     background-color: #fff;
     display: flex;
 }
+
 .tpsa-siderbar-wrapper {
     padding: 20px 10px;
     width: 200px;
     background-color: #f6f9f9;
 }
+
 .tpsa-siderbar-wrapper ul li a,
 .tpsa-siderbar-wrapper ul li a:active,
 .tpsa-siderbar-wrapper ul li a:focus,
@@ -78,10 +88,13 @@
     font-size: 15px;
     box-shadow: none;
 }
+
 .tpsa-siderbar-wrapper ul li a.active {
     color: #814bfe;
     background-color: #ece6f9;
+    border: none;
 }
+
 .tpsa-main-wrapper {
     padding: 50px;
     padding-bottom: 100px;
@@ -89,6 +102,7 @@
     width: calc(100% - 200px);
     position: relative;
 }
+
 .tpsa-setting-wrapper h2 {
     margin: 0;
     font-size: 18px;
@@ -101,6 +115,7 @@
     align-items: center;
     justify-content: space-between;
 }
+
 .tpsa-setting-row {
     margin-bottom: 35px;
 }
@@ -108,6 +123,7 @@
 .tpsa-setting-wrapper .tpsa-save-button {
     margin-top: 50px;
 }
+
 .tpsa-setting-wrapper .tpsa-save-button button {
     padding: 12px 30px;
     cursor: pointer;
@@ -117,6 +133,7 @@
     border: none;
     font-weight: 500;
 }
+
 .tpsa-rating-message {
     font-size: 12px;
     font-weight: 300;
@@ -126,6 +143,7 @@
     right: 20px;
     color: #814bfe;
 }
+
 .tpsa-rating-message .tpsa-stars {
     color: #ffb900;
     font-size: 14px;
