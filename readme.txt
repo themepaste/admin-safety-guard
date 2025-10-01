@@ -4,7 +4,7 @@ Tags: Admin Safety Guard, Limit login Attempts, 2FA, reCaptcha, WP Security
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
  
@@ -126,6 +126,14 @@ This feature conditionally hides the admin bar for specific user roles or chosen
 4. After installation, click `Activate` to enable the plugin on your site.
 
 == Changelog ==
+
+= 1.0.5 =
+[new] Added extendable action and filter hooks
+[new] Ready to integrate Pro version
+[new] Conditionally loaded all assets
+[new] Added default values for logo URL, width and height
+[fix] Fixed logo issue from customizer
+[fix] Fixed various issues
 
 = 1.0.4 =
 [new] Auto permalink flush added, based on custom login logout url 
