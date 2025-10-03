@@ -81,14 +81,12 @@ class Admin {
                     'tpsa-analytics',
                     TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js'
                 );
+            } elseif ( $current_setting_screen === 'customize' ) {
+                $this->enqueue_script(
+                    'tpsa-customize',
+                    TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js'
+                );
             }
-
-            // elseif( $current_setting_screen === 'customize' ) {
-            //     $this->enqueue_script(
-            //         'tpsa-customize',
-            //         TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js'
-            //     );
-            // }
 
             $login_url = wp_login_url();
             $glue = strpos( $login_url, '?' ) !== false ? '&' : '?';
