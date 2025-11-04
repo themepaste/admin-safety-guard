@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,41 +16,9 @@ Secure your WordPress login with Admin Safety Guard: limit login attempts, 2FA, 
 
 Whether you need to block suspicious IPs, enforce two-factor authentication, or ship a branded login for clients, **Admin Safety Guard** has you covered.
 
-### 🌟 Intro — Admin Safety Guard Pro
+### 🌟 Admin Safety Guard Pro
 
 **[Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro)** takes your security and customization to the next level. It strengthens defenses against unauthorized access, brute-force attacks, and data risks while giving you deeper control over how users log in and interact with your admin area. The Pro version also adds flexible design tools and smart automations — a complete solution for both **security** and **convenience**.
-
-#### 💎 Premium Feature List
-- Passwordless Login  
-- 2FA via Mobile App (TOTP)  
-- CSRF Protection  
-- Database Table Prefix Check  
-- Whitelist IP Addresses  
-- Hide Admin Bar (Conditional)  
-- WP Directory File Permissions Check  
-- Social Login (Google, Facebook, etc.)  
-- Disallow Unauthorized REST Requests (Conditional)  
-- Password Strength Tool  
-- Provide Login Template (ready-made)  
-- Customize Design Pro (advanced styling)  
-- Email Notification (Customizable)  
-
-#### 🔐 Pro Feature Details
-**🔑 Passwordless Login:** Secure email-based login with one-time magic links—no password required.  
-**📱 2FA via Mobile App:** Add app-based Two-Factor Authentication (Google Authenticator / Authy).  
-**🧩 CSRF Protection:** Prevent Cross-Site Request Forgery attacks with token verification.  
-**🗃️ Database Table Prefix Check:** Detects and helps change the insecure `wp_` prefix.  
-**🌐 Whitelist IP Addresses:** Restrict admin access to trusted IPs only.  
-**🧑‍💻 Hide Admin Bar (Conditional):** Show or hide admin bar for specific roles or users.  
-**🗂️ WP Directory File Permissions Check:** Scans and verifies file and directory permissions.  
-**🌍 Social Login:** Allow users to log in with Google, Facebook, or Twitter accounts.  
-**🚫 Disallow Unauthorized REST Requests:** Restrict REST API access conditionally.  
-**💪 Password Strength Tool:** Enforce strong password rules for better protection.  
-**🎨 Provide Login Template:** Instantly apply stylish, ready-to-use login templates.  
-**🧰 Customize Design Pro:** Fully customize admin and login design with a simple UI.  
-**📧 Email Notification:** Receive and customize security alerts directly to your inbox.
-
-> Explore Pro Features: [Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro)
 
 ---
 
@@ -64,19 +32,6 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 🧩 **Plugin/Theme Authors:** Add layered protection in demo or test environments.  
 📈 **Online Businesses:** Secure customer data with 2FA, CAPTCHA, and password protection.  
 🎓 **Educators & Bloggers:** Maintain a professional look while increasing security.
-
-### 🔗 Useful Links
-
-✅ [Documentation](https://themepaste.com/product-doc/hide-admin-bar-pro/?doc_id=389)  
-✅ [Support](https://themepaste.com/contact)  
-✅ [Website](https://themepaste.com)  
-✅ [Pro Version](https://themepaste.com/product/admin-safety-guard-pro)  
-✅ [Facebook](https://www.facebook.com/themepaste)  
-✅ [Pinterest](https://uk.pinterest.com/themepaste/)  
-✅ [LinkedIn](https://www.linkedin.com/company/themepaste)  
-✅ [Instagram](https://www.instagram.com/themepasteuk)
-
----
 
 == Features ==
 
@@ -97,6 +52,23 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 
 ---
 
+#### 💎 Premium Feature List
+- Passwordless Login  
+- 2FA via Mobile App (TOTP)  
+- CSRF Protection  
+- Database Table Prefix Check  
+- Whitelist IP Addresses  
+- Hide Admin Bar
+- WP Directory File Permissions Check  
+- Social Login (Google, Facebook, etc.)  
+- Disallow Unauthorized REST Requests
+- Password Strength Tool  
+- Provide Login Template (ready-made)  
+- Customize Design Pro (advanced styling)  
+- Email Notification
+
+---
+
 == Feature Details ==
 
 **👤 Hide Admin Bar (With Conditions):** Hide the admin bar selectively for specific users or roles.  
@@ -112,6 +84,25 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 **⚙️ Disable XML-RPC:** Disable vulnerable XML-RPC endpoints to stop exploits.  
 **🖼️ Custom Logo on Login Form:** Replace WordPress logo with your brand.  
 **🏷️ Custom Branding:** Apply your own design across login and admin pages.  
+
+---
+
+#### 🔐 Pro Feature Details
+**🔑 Passwordless Login:** Secure email-based login with one-time magic links—no password required.  
+**📱 2FA via Mobile App:** Add app-based Two-Factor Authentication (Google Authenticator / Authy).  
+**🧩 CSRF Protection:** Prevent Cross-Site Request Forgery attacks with token verification.  
+**🗃️ Database Table Prefix Check:** Detects and helps change the insecure `wp_` prefix.  
+**🌐 Whitelist IP Addresses:** Restrict admin access to trusted IPs only.  
+**🧑‍💻 Hide Admin Bar (Conditional):** Show or hide admin bar for specific roles or users.  
+**🗂️ WP Directory File Permissions Check:** Scans and verifies file and directory permissions.  
+**🌍 Social Login:** Allow users to log in with Google, Facebook, or Twitter accounts.  
+**🚫 Disallow Unauthorized REST Requests:** Restrict REST API access conditionally.  
+**💪 Password Strength Tool:** Enforce strong password rules for better protection.  
+**🎨 Provide Login Template:** Instantly apply stylish, ready-to-use login templates.  
+**🧰 Customize Design Pro:** Fully customize admin and login design with a simple UI.  
+**📧 Email Notification:** Receive and customize security alerts directly to your inbox.
+
+> Explore Pro Features: [Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro)
 
 ---
 
@@ -160,7 +151,7 @@ A: [Support](https://themepaste.com/contact)
 
 == Changelog ==
 
-= 1.0.6, 1.0.6 =
+= 1.0.6, 1.0.8 =
 [new] Release the pro version
 [new] Compotable with pro version
 
