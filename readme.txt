@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -147,6 +147,10 @@ Admin Safety Guard is lightweight and conditionally loads assets only where need
 Open a ticket via **Support**: https://themepaste.com/contact
 
 == Changelog ==
+
+= 1.0.6 =
+* [new] Release the pro version 
+* [new] Compotable with pro version  
 
 = 1.0.5 =
 * [new] Added extendable action and filter hooks  
