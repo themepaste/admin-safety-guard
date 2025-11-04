@@ -33,8 +33,6 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 📈 **Online Businesses:** Secure customer data with 2FA, CAPTCHA, and password protection.  
 🎓 **Educators & Bloggers:** Maintain a professional look while increasing security.
 
-== Features ==
-
 ### ✅ Free Features at a Glance
 - Hide Admin Bar (with conditions)  
 - Dashboard Overview (in progress)  
@@ -69,7 +67,7 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 
 ---
 
-== Feature Details ==
+== Free Feature Details ==
 
 **👤 Hide Admin Bar (With Conditions):** Hide the admin bar selectively for specific users or roles.  
 **📊 Dashboard Overview:** Visualize user activity and security stats in one glance.  
