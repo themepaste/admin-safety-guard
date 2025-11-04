@@ -68,7 +68,7 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 ### 🔗 Useful Links
 
 ✅ [Documentation](https://themepaste.com/product-doc/hide-admin-bar-pro/?doc_id=389)  
-✅ [Support](https://themepaste.com/contact-us)  
+✅ [Support](https://themepaste.com/contact)  
 ✅ [Website](https://themepaste.com)  
 ✅ [Pro Version](https://themepaste.com/product/admin-safety-guard-pro)  
 ✅ [Facebook](https://www.facebook.com/themepaste)  
@@ -154,7 +154,7 @@ A: Optional. You can enable or enforce it per role or user.
 A: No. It loads assets conditionally and is performance-optimized.
 
 **Q: Where can I get help?**  
-A: [Support](https://themepaste.com/contact-us)
+A: [Support](https://themepaste.com/contact)
 
 ---
 
@@ -207,7 +207,7 @@ Hooks, assets, and Pro-ready support added. Update for smoother performance and 
 
 == Support ==
 
-For any issues, questions, or feature requests, please reach out via [Support](https://themepaste.com/contact-us).
+For any issues, questions, or feature requests, please reach out via [Support](https://themepaste.com/contact).
 
 ---
 
