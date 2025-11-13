@@ -78,7 +78,7 @@ class Install {
      */
     public function send_deactivation_email() {
 
-        if ( $this->is_database_up_to_date() ) {
+        if ( !$this->is_database_up_to_date() ) {
             return;
         }
 
@@ -109,21 +109,164 @@ class Install {
             $plugin_name
         );
 
-        $message = "Hi,\n\n";
-        $message .= "$plugin_name has just been installed and activated on your site:\n";
-        $message .= "$site_name ($site_url)\n\n";
+        // Build HTML email body
+        $message = '
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>' . esc_html( $plugin_name ) . ' Activated</title>
+    <style>
+        /* Basic mobile-friendly styles – some clients ignore <style>,
+           so key layout is still inline */
+        @media only screen and (max-width: 600px) {
+            .tp-container {
+                padding: 16px !important;
+            }
+            .tp-card {
+                padding: 20px !important;
+            }
+            .tp-title {
+                font-size: 20px !important;
+            }
+            .tp-text {
+                font-size: 14px !important;
+            }
+            .tp-button {
+                font-size: 14px !important;
+                padding: 10px 18px !important;
+            }
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0; background:#f4f5fb; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
 
-        $message .= "If you feel that this plugin does not work properly, breaks your site,\n";
-        $message .= "or you simply want to deactivate it, you have a backup option.\n\n";
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f4f5fb; padding:24px 0;">
+    <tr>
+        <td align="center">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="tp-container" style="max-width:600px; padding:0 24px;">
+                <tr>
+                    <td align="center" style="padding-bottom:16px;">
+                        <div style="font-size:12px; color:#9ca3af; text-transform:uppercase; letter-spacing:0.08em;">
+                            WordPress Security Notification
+                        </div>
+                    </td>
+                </tr>
 
-        $message .= "👉 One-click safe deactivate link (you must be logged in as an admin):\n";
-        $message .= $deactivate_url . "\n\n";
+                <tr>
+                    <td>
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="tp-card" style="background:#ffffff; border-radius:16px; padding:28px 32px; box-shadow:0 10px 25px rgba(15,23,42,0.08);">
+                            <tr>
+                                <td align="left" style="padding-bottom:18px;">
+                                    <div class="tp-title" style="font-size:22px; font-weight:700; color:#111827;">
+                                        ' . esc_html( $plugin_name ) . ' is now active on your site.
+                                    </div>
+                                    <div class="tp-text" style="margin-top:6px; font-size:14px; color:#6b7280;">
+                                        ' . esc_html( $site_name ) . ' (' . esc_html( $site_url ) . ')
+                                    </div>
+                                </td>
+                            </tr>
 
-        $message .= "Alternatively, you can deactivate it manually:\n";
-        $message .= "Dashboard → Plugins → Installed Plugins → \"$plugin_name\" → Deactivate\n\n";
+                            <tr>
+                                <td style="padding-bottom:16px;">
+                                    <div class="tp-text" style="font-size:14px; line-height:1.7; color:#4b5563;">
+                                        Hi,
+                                        <br><br>
+                                        <strong>' . esc_html( $plugin_name ) . '</strong> has just been installed and activated on your website.
+                                        We&apos;re here to help keep your site more secure and stable.
+                                    </div>
+                                </td>
+                            </tr>
 
-        $message .= "Best regards,\n";
-        $message .= "$plugin_name\n";
+                            <tr>
+                                <td style="padding-bottom:20px;">
+                                    <div class="tp-text" style="font-size:14px; line-height:1.7; color:#4b5563;">
+                                        If you ever feel that this plugin does not work properly, causes layout issues, or you simply want to turn it off, you have a safe fallback:
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Primary Button -->
+                            <tr>
+                                <td align="center" style="padding-bottom:20px;">
+                                    <a href="' . esc_url( $deactivate_url ) . '" class="tp-button"
+                                       style="
+       display:inline-block;
+       padding:12px 24px;
+       border-radius:999px;
+       background: linear-gradient(90deg, #814bfe, #9c5bff);
+       color:#ffffff;
+       font-size:15px;
+       font-weight:600;
+       text-decoration:none;
+       box-shadow:0 8px 18px rgba(129, 75, 254, 0.35);
+   ">
+                                        Safe Deactivate Plugin
+                                    </a>
+                                </td>
+                            </tr>
+
+                            <!-- Fallback link -->
+                            <tr>
+                                <td style="padding-bottom:24px;">
+                                    <div class="tp-text" style="font-size:12px; line-height:1.6; color:#9ca3af; text-align:center;">
+                                        If the button doesn&apos;t work, copy &amp; paste this link into your browser (you must be logged in as an admin):
+                                        <br>
+                                        <a href="' . esc_url( $deactivate_url ) . '" style="color:#6366f1; text-decoration:underline; word-break:break-all;">
+                                            ' . esc_html( $deactivate_url ) . '
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Manual steps -->
+                            <tr>
+                                <td style="padding-bottom:16px;">
+                                    <div class="tp-text" style="font-size:14px; line-height:1.7; color:#4b5563;">
+                                        <strong>Manual deactivate (alternative):</strong><br>
+                                        Dashboard → <strong>Plugins</strong> → <strong>Installed Plugins</strong> → "<strong>' . esc_html( $plugin_name ) . '</strong>" → <strong>Deactivate</strong>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Info box -->
+                            <tr>
+                                <td>
+                                    <div style="border-radius:12px; background:#f9fafb; border:1px solid #e5e7eb; padding:12px 14px; font-size:12px; color:#6b7280; line-height:1.6;">
+                                        💡 <strong>Tip:</strong> For maximum safety, always keep a recent backup of your files and database before making major changes to security settings or installing new plugins.
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="center" style="padding-top:12px;">
+                        <div style="font-size:11px; color:#9ca3af;">
+                            Sent from ' . esc_html( $plugin_name ) . ' • ' . esc_html( $site_name ) . '
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
+';
+
+        $headers = array();
+        $from_name = $plugin_name;
+        $from_email = 'no-reply@' . wp_parse_url( home_url(), PHP_URL_HOST );
+        $headers[] = 'From: ' . $from_name . ' <' . $from_email . '>';
+        $headers[] = 'Content-Type: text/html; charset=UTF-8';
+
+        wp_mail( $admin_email, $subject, $message, $headers );
 
     }
 
