@@ -4,9 +4,9 @@ namespace ThemePaste\SecureAdmin\Classes;
 
 defined( 'ABSPATH' ) || exit;
 
-use ThemePaste\SecureAdmin\Traits\Hook;
-use ThemePaste\SecureAdmin\Traits\Asset;
 use ThemePaste\SecureAdmin\Helpers\Utility;
+use ThemePaste\SecureAdmin\Traits\Asset;
+use ThemePaste\SecureAdmin\Traits\Hook;
 
 /**
  * Class Settings
@@ -17,108 +17,122 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
  */
 class Settings {
 
-	use Hook;
-	use Asset;
+    use Hook;
+    use Asset;
 
-	/**
-	 * Settings Page Slug.
-	 *
-	 * @var string
-	 */
-	public static $SETTING_PAGE_ID = 'tp-admin-safety-guard';
+    /**
+     * Settings Page Slug.
+     *
+     * @var string
+     */
+    public static $SETTING_PAGE_ID = 'tp-admin-safety-guard';
 
-	/**
-	 * Admin settings page URL.
-	 *
-	 * @var string
-	 */
-	public $setting_page_url = '';
+    /**
+     * Admin settings page URL.
+     *
+     * @var string
+     */
+    public $setting_page_url = '';
 
-	/**
-	 * Constructor.
-	 */
-	public function init() {
-		$this->setting_page_url = add_query_arg(
-			[
-				'page' => self::$SETTING_PAGE_ID,
-			],
-			admin_url( 'admin.php' )
-		);
+    /**
+     * Constructor.
+     */
+    public function init() {
+        $this->setting_page_url = add_query_arg(
+            [
+                'page' => self::$SETTING_PAGE_ID,
+            ],
+            admin_url( 'admin.php' )
+        );
 
-		$this->action( 'admin_menu', [ $this, 'register_settings_page' ] );
-		$this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, [ $this, 'add_settings_link' ] );
+        $this->action( 'admin_menu', [$this, 'register_settings_page'] );
+        $this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, [$this, 'add_settings_link'] );
 
-		//Process and save settings
-		$this->action( 'admin_post_tpsa_process_form', [ FormProcessor::class, 'process_form' ] );
-		$this->action( 'admin_init', [ $this, 'redirect_to_default_tab' ] );
-	}
+        //Process and save settings
+        $this->action( 'admin_post_tpsa_process_form', [FormProcessor::class, 'process_form'] );
+        $this->action( 'admin_init', [$this, 'redirect_to_default_tab'] );
+    }
 
-	/**
-	 * Registers the settings page in the admin menu.
-	 *
-	 * @return void
-	 */
-	public function register_settings_page() {
-		add_menu_page(
-			esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
-			esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
-			'manage_options',
-			self::$SETTING_PAGE_ID,
-			[ $this, 'render_settings_page' ],
-			'dashicons-lock',
-			56
-		);
-	}
+    /**
+     * Registers the settings page in the admin menu.
+     *
+     * @return void
+     */
+    public function register_settings_page() {
+        add_menu_page(
+            esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
+            esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
+            'manage_options',
+            self::$SETTING_PAGE_ID,
+            [$this, 'render_settings_page'],
+            'dashicons-lock',
+            56
+        );
 
-	/**
-	 * Renders the settings page layout.
-	 *
-	 * @return void
-	 */
-	public function render_settings_page() {
+        add_submenu_page(
+            self::$SETTING_PAGE_ID, // parent slug
+            __( 'Support', 'tp-secure-plugin' ), // page title
+            __( 'Support', 'tp-secure-plugin' ), // menu title
+            'manage_options', // capability
+            'asg-support', // submenu slug
+            [$this, 'render_asg_support_page']// callback function
+        );
+
+    }
+
+    /**
+     * Renders the settings page layout.
+     *
+     * @return void
+     */
+    public function render_settings_page() {
         printf( '%s', Utility::get_template( 'settings/layout.php' ) );
-	}
+    }
 
-	public function redirect_to_default_tab() {
-		if (
-			is_admin() &&
-			current_user_can( 'manage_options' ) &&
-			isset( $_GET['page'] ) &&
-			$_GET['page'] === self::$SETTING_PAGE_ID &&
-			! isset( $_GET['tpsa-setting'] )
-		) {
-			$redirect_url = add_query_arg(
-				[
-					'page' => self::$SETTING_PAGE_ID,
-					'tpsa-setting' => 'analytics',
-				],
-				admin_url( 'admin.php' )
-			);
-			wp_safe_redirect( $redirect_url );
-			exit;
-		}
-	}
+    public function render_asg_support_page() {
+        printf( '%s', Utility::get_template( 'settings/support.php' ) );
+    }
 
-	/**
-	 * Adds a "Settings" link to the plugin actions.
-	 *
-	 * @param array $links Existing plugin action links.
-	 *
-	 * @return array Modified plugin action links.
-	 */
-	public function add_settings_link( $links ) {
-		$settings_link = sprintf(
-			'<a href="%1$s">%2$s</a>',
-			esc_url( $this->setting_page_url ),
-			esc_html__( 'Settings', 'tp-secure-plugin' )
-		);
+    public function redirect_to_default_tab() {
+        if (
+            is_admin() &&
+            current_user_can( 'manage_options' ) &&
+            isset( $_GET['page'] ) &&
+            $_GET['page'] === self::$SETTING_PAGE_ID &&
+            !isset( $_GET['tpsa-setting'] )
+        ) {
+            $redirect_url = add_query_arg(
+                [
+                    'page'         => self::$SETTING_PAGE_ID,
+                    'tpsa-setting' => 'analytics',
+                ],
+                admin_url( 'admin.php' )
+            );
+            wp_safe_redirect( $redirect_url );
+            exit;
+        }
+    }
 
-		array_unshift( $links, $settings_link );
+    /**
+     * Adds a "Settings" link to the plugin actions.
+     *
+     * @param array $links Existing plugin action links.
+     *
+     * @return array Modified plugin action links.
+     */
+    public function add_settings_link( $links ) {
+        $settings_link = sprintf(
+            '<a href="%1$s">%2$s</a>',
+            esc_url( $this->setting_page_url ),
+            esc_html__( 'Settings', 'tp-secure-plugin' )
+        );
 
-		return $links;
-	}
+        array_unshift( $links, $settings_link );
 
-	public static function get_current_screen(  ) {
-		return $_GET['tpsa-setting'] ?? null;
-	}
+        return $links;
+    }
+
+    public static function get_current_screen() {
+        return $_GET['tpsa-setting'] ?? null;
+    }
 }
