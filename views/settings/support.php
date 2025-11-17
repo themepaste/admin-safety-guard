@@ -28,7 +28,7 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
                     </p>
 
                     <p>
-                        <label><?php esc_html_e( 'Full Details', 'tp-secure-plugin' ); ?></label><br>
+                        <label><?php esc_html_e( 'Your Message', 'tp-secure-plugin' ); ?></label><br>
                         <textarea name="tpsa_support_message" rows="6" style="width:100%;" required></textarea>
                     </p>
 
