@@ -48,7 +48,7 @@ class Admin {
      * @return void
      */
     public function admin_enqueue_styles( $screen ) {
-        if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen ) {
+        if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen || 'admin-safety-guard_page_asg-support' === $screen ) {
             $this->enqueue_style(
                 'tpsa-settings',
                 TPSA_ASSETS_URL . '/admin/css/settings.css'
