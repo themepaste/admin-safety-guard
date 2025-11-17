@@ -2,19 +2,6 @@
 
 defined( 'ABSPATH' ) || exit;
 use ThemePaste\SecureAdmin\Helpers\Utility;
-
-$settings_option = tpsa_settings_option();
-$settings_fields = tpsa_settings_fields();
-$current_screen = Utility::get_screen( 'tpsa-setting' ) ?? null;
-
-$args = array(
-    'settings_option' => $settings_option,
-    'settings_fields' => $settings_fields,
-    'current_screen'  => $current_screen,
-    'prefix'          => get_tpsa_prefix(),
-    'option_name'     => get_tpsa_settings_option_name( $current_screen ),
-    'page_label'      => !is_null( $current_screen ) ? $settings_option[$current_screen]['label'] : '',
-);
 ?>
 
 <div class="wrap">
