@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,8 +149,7 @@ A: [Support](https://themepaste.com/contact)
 
 == Changelog ==
 
-= 1.1.1 =
-= 1.0.6 =
+= 1.1.2 =
 * [fix] - 2FA login cookie session issue when OTP verification completed.
 * [Improved] - `wp_set_auth_cookie()` now uses correct $remember flag for persistent login.
 * [Improved] - OTP authentication flow now respects the user's "Remember me" choice.
