@@ -11,10 +11,24 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 $support_notice = '';
 $support_notice_class = 'updated';
 
-if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_support_name'], $_POST['tpsa_support_email'], $_POST['tpsa_support_message'] ) ) {
+if (
+    'POST' === $_SERVER['REQUEST_METHOD']
+    && isset(
+        $_POST['tpsa_support_name'],
+        $_POST['tpsa_support_email'],
+        $_POST['tpsa_support_message'],
+        $_POST['tpsa_support_phone']
+    )
+) {
 
     // Verify nonce
-    if ( !isset( $_POST['tpsa_support_form_nonce'] ) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['tpsa_support_form_nonce'] ) ), 'tpsa_support_form_nonce' ) ) {
+    if (
+        !isset( $_POST['tpsa_support_form_nonce'] )
+        || !wp_verify_nonce(
+            sanitize_text_field( wp_unslash( $_POST['tpsa_support_form_nonce'] ) ),
+            'tpsa_support_form_nonce'
+        )
+    ) {
         $support_notice = __( 'Security check failed. Please try again.', 'tp-secure-plugin' );
         $support_notice_class = 'error';
     } else {
@@ -23,8 +37,9 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_support_name']
         $name = isset( $_POST['tpsa_support_name'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsa_support_name'] ) ) : '';
         $email = isset( $_POST['tpsa_support_email'] ) ? sanitize_email( wp_unslash( $_POST['tpsa_support_email'] ) ) : '';
         $message = isset( $_POST['tpsa_support_message'] ) ? wp_kses_post( wp_unslash( $_POST['tpsa_support_message'] ) ) : '';
+        $phone = isset( $_POST['tpsa_support_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsa_support_phone'] ) ) : '';
 
-        if ( empty( $name ) || empty( $email ) || empty( $message ) ) {
+        if ( empty( $name ) || empty( $email ) || empty( $message ) || empty( $phone ) ) {
             $support_notice = __( 'Please fill all required fields.', 'tp-secure-plugin' );
             $support_notice_class = 'error';
         } elseif ( !is_email( $email ) ) {
@@ -51,6 +66,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_support_name']
                     'body'    => [
                         'name'        => $name,
                         'email'       => $email,
+                        'phone'       => $phone,
                         'message'     => $message,
                         // Hardcoded plugin name as requested
                         'plugin_name' => 'Admin Safety Guard',
@@ -78,6 +94,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_support_name']
                     $_POST['tpsa_support_name'] = '';
                     $_POST['tpsa_support_email'] = '';
                     $_POST['tpsa_support_message'] = '';
+                    $_POST['tpsa_support_phone'] = '';
                 } else {
                     $error_msg = '';
                     if ( is_array( $data ) && isset( $data['message'] ) ) {
@@ -121,8 +138,10 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_support_name']
 
                     <div class="tp-field">
                         <div class="tp-field-label">
-                            <label><?php esc_html_e( 'Your Name', 'tp-secure-plugin' ); ?> <span
-                                    style="color:red;">*</span> </label>
+                            <label>
+                                <?php esc_html_e( 'Your Name', 'tp-secure-plugin' ); ?>
+                                <span style="color:red;">*</span>
+                            </label>
                         </div>
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
@@ -136,8 +155,10 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_support_name']
 
                     <div class="tp-field">
                         <div class="tp-field-label">
-                            <label><?php esc_html_e( 'Your Email', 'tp-secure-plugin' ); ?> <span
-                                    style="color:red;">*</span> </label>
+                            <label>
+                                <?php esc_html_e( 'Your Email', 'tp-secure-plugin' ); ?>
+                                <span style="color:red;">*</span>
+                            </label>
                         </div>
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
@@ -149,10 +170,30 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_support_name']
                         </div>
                     </div>
 
+                    <!-- New Phone Number Field -->
                     <div class="tp-field">
                         <div class="tp-field-label">
-                            <label><?php esc_html_e( 'Your Message', 'tp-secure-plugin' ); ?> <span
-                                    style="color:red;">*</span> </label>
+                            <label>
+                                <?php esc_html_e( 'Phone Number (with country code)', 'tp-secure-plugin' ); ?>
+                                <span style="color:red;">*</span>
+                            </label>
+                        </div>
+                        <div class="tp-field-input">
+                            <div class="tp-switch-wrapper">
+                                <input type="text" name="tpsa_support_phone"
+                                    value="<?php echo isset( $_POST['tpsa_support_phone'] ) ? esc_attr( wp_unslash( $_POST['tpsa_support_phone'] ) ) : ''; ?>"
+                                    placeholder="+8801XXXXXXXXX" required>
+                            </div>
+                            <p class="tp-field-desc"></p>
+                        </div>
+                    </div>
+
+                    <div class="tp-field">
+                        <div class="tp-field-label">
+                            <label>
+                                <?php esc_html_e( 'Your Message', 'tp-secure-plugin' ); ?>
+                                <span style="color:red;">*</span>
+                            </label>
                         </div>
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
@@ -169,8 +210,9 @@ echo isset( $_POST['tpsa_support_message'] ) ? esc_textarea( wp_unslash( $_POST[
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
                                 <div class="tpsa-save-button">
-                                    <button
-                                        type="submit"><?php esc_html_e( 'Send Support Request', 'tp-secure-plugin' ); ?></button>
+                                    <button type="submit">
+                                        <?php esc_html_e( 'Send Support Request', 'tp-secure-plugin' ); ?>
+                                    </button>
                                 </div>
                             </div>
                         </div>
