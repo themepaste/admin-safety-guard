@@ -45,8 +45,13 @@ class TwoFactorAuth implements FeatureInterface {
         $settings = $this->get_settings();
 
         if ( $this->is_enabled( $settings, 'otp-email' ) ) {
-            $this->action( 'login_form', [$this, 'check_otp_submission'] );
+            // Process OTP submission as early as possible (before HTML output).
+            $this->action( 'login_init', [$this, 'check_otp_submission'] );
+
+            // Render OTP UI on the login form.
             $this->action( 'login_form', [$this, 'render_otp_input'] );
+
+            // Intercept username/password login to send OTP first.
             $this->filter( 'authenticate', [$this, 'intercept_login_with_otp'], 30, 3 );
         }
     }
@@ -124,20 +129,25 @@ label[for="user_pass"],
     background: #165a96;
 }
 </style>
+
 <div id="tpsa_otp_wrap">
-    <label for="tpsa_otp_field"><?php echo esc_html__( 'One Time Password', 'tp-secure-plugin' ); ?></label>
+    <label for="tpsa_otp_field">
+        <?php echo esc_html__( 'One Time Password', 'tp-secure-plugin' ); ?>
+    </label>
     <input type="hidden" name="tpsa_user_id" value="<?php echo esc_attr( $user_id ); ?>">
     <input type="hidden" name="tpsa_otp_verify" value="1">
     <input type="text" name="tpsa_otp" id="tpsa_otp_field" class="input"
         placeholder="<?php echo esc_attr__( 'Enter OTP', 'tp-secure-plugin' ); ?>" required autocomplete="off">
     <?php $this->sent_email_message( $user ); ?>
 </div>
-<button type="submit" id="tpsa_verify_btn"><?php echo esc_html__( 'Verify OTP', 'tp-secure-plugin' ); ?></button>
+<button type="submit" id="tpsa_verify_btn">
+    <?php echo esc_html__( 'Verify OTP', 'tp-secure-plugin' ); ?>
+</button>
 <?php
 }
 
     /**
-     * Check OTP submission on login form.
+     * Check OTP submission on login (runs on login_init).
      *
      * @return void
      */
@@ -155,24 +165,65 @@ label[for="user_pass"],
 
         $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
         $stored_otp = isset( $stored_data['otp'] ) ? $stored_data['otp'] : '';
+
+        if ( $otp_input !== $stored_otp ) {
+            // Display error message above the form.
+            add_action(
+                'login_message',
+                function () {
+                    echo '<div style="color:red; margin-bottom:10px;">' .
+                    esc_html__( 'Invalid OTP. Please try again.', 'tp-secure-plugin' ) .
+                        '</div>';
+                }
+            );
+            return;
+        }
+
+        // OTP is correct – now perform a proper WordPress login using wp_signon().
+        $username = isset( $stored_data['username'] ) ? $stored_data['username'] : '';
+        $password = isset( $stored_data['password'] ) ? $stored_data['password'] : '';
         $remember = !empty( $stored_data['remember'] );
 
-        if ( $otp_input === $stored_otp ) {
-            // Clean up OTP data.
-            delete_user_meta( $user_id, '_tpsa_otp_code' );
+        // Clean up OTP data.
+        delete_user_meta( $user_id, '_tpsa_otp_code' );
 
-            // Log user in with correct persistence.
-            wp_set_auth_cookie( $user_id, $remember );
-            wp_set_current_user( $user_id );
-
-            wp_redirect( admin_url() );
-            exit;
-        } else {
-            // Display error message above the form.
-            add_action( 'login_message', function () {
-                echo '<div style="color:red; margin-bottom:10px;">' . esc_html__( 'Invalid OTP. Please try again.', 'tp-secure-plugin' ) . '</div>';
-            } );
+        if ( empty( $username ) || empty( $password ) ) {
+            add_action(
+                'login_message',
+                function () {
+                    echo '<div style="color:red; margin-bottom:10px;">' .
+                    esc_html__( 'Login data missing. Please try logging in again.', 'tp-secure-plugin' ) .
+                        '</div>';
+                }
+            );
+            return;
         }
+
+        $creds = [
+            'user_login'    => $username,
+            'user_password' => $password,
+            'remember'      => $remember,
+        ];
+
+        // Let WordPress handle auth, cookies, tokens, Remember Me, etc.
+        $secure_cookie = is_ssl();
+        $user = wp_signon( $creds, $secure_cookie );
+
+        if ( is_wp_error( $user ) ) {
+            add_action(
+                'login_message',
+                function () {
+                    echo '<div style="color:red; margin-bottom:10px;">' .
+                    esc_html__( 'Login failed after OTP verification. Please try again.', 'tp-secure-plugin' ) .
+                        '</div>';
+                }
+            );
+            return;
+        }
+
+        // Successful login, redirect to admin.
+        wp_safe_redirect( admin_url() );
+        exit;
     }
 
     /**
