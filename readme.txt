@@ -156,13 +156,6 @@ A: [Support](https://themepaste.com/contact)
 * Tested across multiple environments and browsers to confirm expected cookie expiration behavior.
 * Minor improvements and stability adjustments.
 
-= 1.1.3 =
-* [fix] - Resolved persistent login cookie issue after OTP verification in certain environments.
-* [fix] - OTP validation now runs earlier (`login_init`) to prevent headers already sent & session cookie fallback.
-* [Improved] - Login is now completed through `wp_signon()` to let WordPress handle full cookie generation reliably.
-* [Improved] - Tested across multiple environments and browsers for consistent persistent cookie behavior.
-
-
 = 1.1.2 =
 * [fix] - 2FA login cookie session issue when OTP verification completed.
 * [Improved] - `wp_set_auth_cookie()` now uses correct $remember flag for persistent login.
