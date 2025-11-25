@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -148,6 +148,20 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.1.3 =
+* Fixed an issue where OTP-verified logins could result in session cookies instead of persistent cookies.
+* Refactored OTP verification to run earlier in the login flow via `login_init`.
+* Updated the authentication process to use `wp_signon()` so WordPress handles Remember Me cookies correctly.
+* Tested across multiple environments and browsers to confirm expected cookie expiration behavior.
+* Minor improvements and stability adjustments.
+
+= 1.1.3 =
+* [fix] - Resolved persistent login cookie issue after OTP verification in certain environments.
+* [fix] - OTP validation now runs earlier (`login_init`) to prevent headers already sent & session cookie fallback.
+* [Improved] - Login is now completed through `wp_signon()` to let WordPress handle full cookie generation reliably.
+* [Improved] - Tested across multiple environments and browsers for consistent persistent cookie behavior.
+
 
 = 1.1.2 =
 * [fix] - 2FA login cookie session issue when OTP verification completed.
