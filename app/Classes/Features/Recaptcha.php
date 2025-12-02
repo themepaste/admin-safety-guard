@@ -5,8 +5,8 @@ namespace ThemePaste\SecureAdmin\Classes\Features;
 defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
-use ThemePaste\SecureAdmin\Traits\Hook;
 use ThemePaste\SecureAdmin\Traits\Asset;
+use ThemePaste\SecureAdmin\Traits\Hook;
 use WP_Error;
 
 /**
@@ -19,76 +19,107 @@ use WP_Error;
  */
 class Recaptcha implements FeatureInterface {
 
-	use Hook;
-	use Asset;
+    use Hook;
+    use Asset;
 
-	/**
-	 * Feature ID for settings and admin slug.
-	 *
-	 * @var string
-	 */
-	private $features_id = 'recaptcha';
+    /**
+     * Feature ID for settings and admin slug.
+     *
+     * @var string
+     */
+    private $features_id = 'recaptcha';
 
-	/**
-	 * Plugin settings.
-	 *
-	 * @var array
-	 */
-	private $settings = [];
+    /**
+     * Plugin settings.
+     *
+     * @var array
+     */
+    private $settings = [];
 
-	/**
-	 * Registers WordPress hooks.
-	 */
-	public function register_hooks() {
-		$this->action( 'init', [ $this, 'recaptcha_security' ] );
-	}
+    /**
+     * Registers WordPress hooks.
+     */
+    public function register_hooks() {
+        $this->action( 'init', [$this, 'recaptcha_security'] );
+    }
 
-	/**
-	 * Boot feature if enabled and keys are provided.
-	 */
-	public function recaptcha_security() {
-		$this->settings = $this->get_settings();
+    /**
+     * Boot feature if enabled and keys are provided.
+     */
+    public function recaptcha_security() {
+        $this->settings = $this->get_settings();
 
-		if ( ! $this->is_enabled( $this->settings ) ) {
-			return;
-		}
-
-		//If its email verification page than return
-		if ( isset( $_GET['tpsa_verify_email_otp'] ) ) {
+        if ( !$this->is_enabled( $this->settings ) ) {
             return;
         }
 
-		if ( empty( $this->settings['site-key'] ) || empty( $this->settings['secret-key'] ) ) {
-			add_action( 'login_form', [ $this, 'show_recaptcha_error' ] );
-			add_action( 'register_form', [ $this, 'show_recaptcha_error' ] );
-			return;
-		}
+        // If it's email verification page then return.
+        if ( isset( $_GET['tpsa_verify_email_otp'] ) ) {
+            return;
+        }
 
-		$this->action( 'login_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		$this->action( 'login_form', [ $this, 'show_recaptcha' ] );
-		$this->action( 'register_form', [ $this, 'show_recaptcha' ] );
+        if ( empty( $this->settings['site-key'] ) || empty( $this->settings['secret-key'] ) ) {
+            add_action( 'login_form', [$this, 'show_recaptcha_error'] );
+            add_action( 'register_form', [$this, 'show_recaptcha_error'] );
+            return;
+        }
 
-		$this->filter( 'authenticate', [ $this, 'verify_recaptcha_on_login' ], 21, 3 );
-		$this->filter( 'registration_errors', [ $this, 'verify_recaptcha_on_register' ], 10, 1 );
-	}
+        /**
+         * Default WordPress login & registration
+         */
+        $this->action( 'login_enqueue_scripts', [$this, 'enqueue_scripts'] );
+        $this->action( 'login_form', [$this, 'show_recaptcha'] );
+        $this->action( 'register_form', [$this, 'show_recaptcha'] );
 
-	/**
-	 * Enqueue Google reCAPTCHA script.
-	 */
-	public function enqueue_scripts() {
-		$site_key = isset( $this->settings['site-key'] ) ? esc_attr( $this->settings['site-key'] ) : '';
-		$version  = isset( $this->settings['version'] ) ? $this->settings['version'] : 'v2';
+        $this->filter( 'authenticate', [$this, 'verify_recaptcha_on_login'], 21, 3 );
+        $this->filter( 'registration_errors', [$this, 'verify_recaptcha_on_register'], 10, 1 );
 
-		if ( 'v3' === $version ) {
-			wp_enqueue_script(
-				'google-recaptcha-v3',
-				'https://www.google.com/recaptcha/api.js?render=' . rawurlencode( $site_key ),
-				[],
-				null,
-				true
-			);
+        /**
+         * WooCommerce login & registration
+         */
+        if ( class_exists( 'WooCommerce' ) ) {
+            // Enqueue scripts on frontend as well (for My Account / Woo forms).
+            $this->action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts'] );
 
-			$inline_script = "
+            // Output reCAPTCHA box in Woo login & register forms.
+            $this->action( 'woocommerce_login_form', [$this, 'show_recaptcha'] );
+            $this->action( 'woocommerce_register_form', [$this, 'show_recaptcha'] );
+
+            // Validate on Woo login.
+            $this->filter(
+                'woocommerce_process_login_errors',
+                [$this, 'wc_verify_recaptcha_on_login'],
+                10,
+                3
+            );
+
+            // Validate on Woo registration.
+            $this->filter(
+                'woocommerce_process_registration_errors',
+                [$this, 'wc_verify_recaptcha_on_register'],
+                10,
+                4
+            );
+        }
+    }
+
+    /**
+     * Enqueue Google reCAPTCHA script.
+     */
+    public function enqueue_scripts() {
+        $site_key = isset( $this->settings['site-key'] ) ? esc_attr( $this->settings['site-key'] ) : '';
+        $version = isset( $this->settings['version'] ) ? $this->settings['version'] : 'v2';
+
+        if ( 'v3' === $version ) {
+            wp_enqueue_script(
+                'google-recaptcha-v3',
+                'https://www.google.com/recaptcha/api.js?render=' . rawurlencode( $site_key ),
+                [],
+                null,
+                true
+            );
+
+            $inline_script = "
 				document.addEventListener('DOMContentLoaded', function () {
 					if (typeof grecaptcha !== 'undefined') {
 						grecaptcha.ready(function () {
@@ -97,9 +128,13 @@ class Recaptcha implements FeatureInterface {
 								input.type = 'hidden';
 								input.name = 'g-recaptcha-response';
 								input.value = token;
-								var form = document.querySelector('form');
-								if (form) {
-									form.appendChild(input);
+								var forms = document.querySelectorAll('form');
+								if (forms.length) {
+									forms.forEach(function(form) {
+										if (!form.querySelector('input[name=\"g-recaptcha-response\"]')) {
+											form.appendChild(input.cloneNode(true));
+										}
+									});
 								}
 							});
 						});
@@ -107,158 +142,217 @@ class Recaptcha implements FeatureInterface {
 				});
 			";
 
-			wp_add_inline_script( 'google-recaptcha-v3', $inline_script );
+            wp_add_inline_script( 'google-recaptcha-v3', $inline_script );
 
-		} else {
-			wp_enqueue_script(
-				'google-recaptcha-v2',
-				'https://www.google.com/recaptcha/api.js',
-				[],
-				null,
-				true
-			);
+        } else {
+            wp_enqueue_script(
+                'google-recaptcha-v2',
+                'https://www.google.com/recaptcha/api.js',
+                [],
+                null,
+                true
+            );
 
-			$this->enqueue_style(
-				'google-recaptcha-v2',
-				TPSA_ASSETS_URL . '/login/css/recaptcha.css'
-			);
-		}
-	}
+            $this->enqueue_style(
+                'google-recaptcha-v2',
+                TPSA_ASSETS_URL . '/login/css/recaptcha.css'
+            );
+        }
+    }
 
-	/**
-	 * Display reCAPTCHA box in form.
-	 */
-	public function show_recaptcha() {
-		$version = $this->settings['version'] ?? 'v2';
-		if ( 'v2' === $version ) {
-			$site_key = esc_attr( $this->settings['site-key'] );
-			$theme    = esc_attr( $this->settings['theme'] ?? 'light' );
+    /**
+     * Display reCAPTCHA box in form.
+     */
+    public function show_recaptcha() {
+        $version = $this->settings['version'] ?? 'v2';
 
-			echo '<div class="g-recaptcha" data-sitekey="' . $site_key . '" data-theme="' . $theme . '"></div>';
-		}
-	}
+        if ( 'v2' === $version ) {
+            $site_key = esc_attr( $this->settings['site-key'] );
+            $theme = esc_attr( $this->settings['theme'] ?? 'light' );
 
-	/**
-	 * Show error if keys are missing.
-	 */
-	public function show_recaptcha_error() {
-		echo '<div style="color: red; margin: 10px 0;">';
-		esc_html_e( 'reCAPTCHA keys are not configured properly. Please contact the site administrator.', 'tp-secure-plugin' );
-		echo '</div>';
-	}
+            echo '<div class="g-recaptcha" data-sitekey="' . $site_key . '" data-theme="' . $theme . '"></div>';
+        }
+    }
 
-	/**
-	 * Verify reCAPTCHA on login.
-	 *
-	 * @param WP_User|WP_Error $user
-	 * @param string           $username
-	 * @param string           $password
-	 * @return WP_User|WP_Error
-	 */
-	public function verify_recaptcha_on_login( $user, $username, $password ) {
-		if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
-			return $user;
-		}
+    /**
+     * Show error if keys are missing.
+     */
+    public function show_recaptcha_error() {
+        echo '<div style="color: red; margin: 10px 0;">';
+        esc_html_e( 'reCAPTCHA keys are not configured properly. Please contact the site administrator.', 'tp-secure-plugin' );
+        echo '</div>';
+    }
 
-		if ( empty( $_POST['g-recaptcha-response'] ) ) {
-			return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA verification missing.', 'tp-secure-plugin' ) );
-		}
+    /**
+     * Verify reCAPTCHA on WP login.
+     *
+     * @param \WP_User|\WP_Error $user
+     * @param string             $username
+     * @param string             $password
+     * @return \WP_User|\WP_Error
+     */
+    public function verify_recaptcha_on_login( $user, $username, $password ) {
+        if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+            return $user;
+        }
 
-		$response = $this->verify_recaptcha( sanitize_text_field( $_POST['g-recaptcha-response'] ) );
+        if ( empty( $_POST['g-recaptcha-response'] ) ) {
+            return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA verification missing.', 'tp-secure-plugin' ) );
+        }
 
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
+        $response = $this->verify_recaptcha( sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) );
 
-		return $user;
-	}
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
 
-	/**
-	 * Verify reCAPTCHA on registration.
-	 *
-	 * @param WP_Error $errors
-	 * @return WP_Error
-	 */
-	public function verify_recaptcha_on_register( $errors ) {
-		if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
-			return $errors;
-		}
+        return $user;
+    }
 
-		$token  = $_POST['g-recaptcha-response'] ?? '';
-		$result = $this->verify_recaptcha( sanitize_text_field( $token ) );
+    /**
+     * Verify reCAPTCHA on WP registration.
+     *
+     * @param \WP_Error $errors
+     * @return \WP_Error
+     */
+    public function verify_recaptcha_on_register( $errors ) {
+        if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+            return $errors;
+        }
 
-		if ( is_wp_error( $result ) ) {
-			$errors->add( 'recaptcha_error', esc_html( $result->get_error_message() ) );
-		}
+        $token = isset( $_POST['g-recaptcha-response'] )
+        ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) )
+        : '';
 
-		return $errors;
-	}
+        $result = $this->verify_recaptcha( $token );
 
-	/**
-	 * reCAPTCHA token verification.
-	 *
-	 * @param string $token
-	 * @return true|WP_Error
-	 */
-	private function verify_recaptcha( $token ) {
-		$secret_key = sanitize_text_field( $this->settings['secret-key'] );
-		$version    = $this->settings['version'] ?? 'v2';
+        if ( is_wp_error( $result ) ) {
+            $errors->add( 'recaptcha_error', esc_html( $result->get_error_message() ) );
+        }
 
-		if ( empty( $token ) ) {
-			return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA token is missing.', 'tp-secure-plugin' ) );
-		}
+        return $errors;
+    }
 
-		$response = wp_remote_post(
-			'https://www.google.com/recaptcha/api/siteverify',
-			[
-				'body' => [
-					'secret'   => $secret_key,
-					'response' => $token,
-					'remoteip' => sanitize_text_field( $_SERVER['REMOTE_ADDR'] ?? '' ),
-				],
-			]
-		);
+    /**
+     * WooCommerce: Verify reCAPTCHA on login.
+     *
+     * @param \WP_Error $errors
+     * @param string    $username
+     * @param string    $password
+     *
+     * @return \WP_Error
+     */
+    public function wc_verify_recaptcha_on_login( $errors, $username, $password ) {
+        if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+            return $errors;
+        }
 
-		if ( is_wp_error( $response ) ) {
-			return new WP_Error( 'recaptcha_failed', __( 'Could not contact reCAPTCHA server.', 'tp-secure-plugin' ) );
-		}
+        $token = isset( $_POST['g-recaptcha-response'] )
+        ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) )
+        : '';
 
-		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+        $result = $this->verify_recaptcha( $token );
 
-		if ( empty( $body['success'] ) ) {
-			return new WP_Error( 'recaptcha_invalid', __( 'reCAPTCHA verification failed.', 'tp-secure-plugin' ) );
-		}
+        if ( is_wp_error( $result ) ) {
+            $errors->add( 'recaptcha_error', esc_html( $result->get_error_message() ) );
+        }
 
-		if ( 'v3' === $version ) {
-			if ( empty( $body['score'] ) || $body['score'] < 0.5 ) {
-				return new WP_Error( 'recaptcha_low_score', __( 'reCAPTCHA score too low. Try again.', 'tp-secure-plugin' ) );
-			}
+        return $errors;
+    }
 
-			if ( empty( $body['action'] ) || 'login_register' !== $body['action'] ) {
-				return new WP_Error( 'recaptcha_action_mismatch', __( 'reCAPTCHA action mismatch.', 'tp-secure-plugin' ) );
-			}
-		}
+    /**
+     * WooCommerce: Verify reCAPTCHA on registration.
+     *
+     * @param \WP_Error $errors
+     * @param string    $username
+     * @param string    $password
+     * @param string    $email
+     *
+     * @return \WP_Error
+     */
+    public function wc_verify_recaptcha_on_register( $errors, $username, $password, $email ) {
+        if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+            return $errors;
+        }
 
-		return true;
-	}
+        $token = isset( $_POST['g-recaptcha-response'] )
+        ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) )
+        : '';
 
-	/**
-	 * Get plugin settings.
-	 *
-	 * @return array
-	 */
-	private function get_settings() {
-		$option_name = get_tpsa_settings_option_name( $this->features_id );
-		return get_option( $option_name, [] );
-	}
+        $result = $this->verify_recaptcha( $token );
 
-	/**
-	 * Check if the feature is enabled.
-	 *
-	 * @param array $settings
-	 * @return bool
-	 */
-	private function is_enabled( $settings ) {
-		return ! empty( $settings['enable'] ) && (int) $settings['enable'] === 1;
-	}
+        if ( is_wp_error( $result ) ) {
+            $errors->add( 'recaptcha_error', esc_html( $result->get_error_message() ) );
+        }
+
+        return $errors;
+    }
+
+    /**
+     * reCAPTCHA token verification.
+     *
+     * @param string $token
+     * @return true|\WP_Error
+     */
+    private function verify_recaptcha( $token ) {
+        $secret_key = sanitize_text_field( $this->settings['secret-key'] );
+        $version = $this->settings['version'] ?? 'v2';
+
+        if ( empty( $token ) ) {
+            return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA token is missing.', 'tp-secure-plugin' ) );
+        }
+
+        $response = wp_remote_post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            [
+                'body' => [
+                    'secret'   => $secret_key,
+                    'response' => $token,
+                    'remoteip' => sanitize_text_field( $_SERVER['REMOTE_ADDR'] ?? '' ),
+                ],
+            ]
+        );
+
+        if ( is_wp_error( $response ) ) {
+            return new WP_Error( 'recaptcha_failed', __( 'Could not contact reCAPTCHA server.', 'tp-secure-plugin' ) );
+        }
+
+        $body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+        if ( empty( $body['success'] ) ) {
+            return new WP_Error( 'recaptcha_invalid', __( 'reCAPTCHA verification failed.', 'tp-secure-plugin' ) );
+        }
+
+        if ( 'v3' === $version ) {
+            if ( empty( $body['score'] ) || $body['score'] < 0.5 ) {
+                return new WP_Error( 'recaptcha_low_score', __( 'reCAPTCHA score too low. Try again.', 'tp-secure-plugin' ) );
+            }
+
+            if ( empty( $body['action'] ) || 'login_register' !== $body['action'] ) {
+                return new WP_Error( 'recaptcha_action_mismatch', __( 'reCAPTCHA action mismatch.', 'tp-secure-plugin' ) );
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get plugin settings.
+     *
+     * @return array
+     */
+    private function get_settings() {
+        $option_name = get_tpsa_settings_option_name( $this->features_id );
+        return get_option( $option_name, [] );
+    }
+
+    /**
+     * Check if the feature is enabled.
+     *
+     * @param array $settings
+     * @return bool
+     */
+    private function is_enabled( $settings ) {
+        return !empty( $settings['enable'] ) && (int) $settings['enable'] === 1;
+    }
 }
