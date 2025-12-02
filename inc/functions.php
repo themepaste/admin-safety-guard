@@ -538,14 +538,16 @@ if ( !function_exists( 'tp_asg_pro_current_prefix' ) ) {
  * @param int $len Optional length of the prefix. Default is 5.
  * @return string A random DB table prefix string (e.g. 'abcde_').
  */
-function tp_asg_pro_random_prefix( int $len = 5 ) {
-    $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    $s = '';
-    $s .= chr( ord( 'a' ) + random_int( 0, 25 ) );
-    for ( $i = 1; $i < $len; $i++ ) {
-        $s .= $chars[random_int( 0, strlen( $chars ) - 1 )];
+if ( function_exists( 'tp_asg_pro_random_prefix' ) ) {
+    function tp_asg_pro_random_prefix( int $len = 5 ) {
+        $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $s = '';
+        $s .= chr( ord( 'a' ) + random_int( 0, 25 ) );
+        for ( $i = 1; $i < $len; $i++ ) {
+            $s .= $chars[random_int( 0, strlen( $chars ) - 1 )];
+        }
+        return $s . '_';
     }
-    return $s . '_';
 }
 
 if ( !function_exists( 'tp_asg_pro_is_prefix_good' ) ) {
