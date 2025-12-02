@@ -524,3 +524,150 @@ if ( !function_exists( 'login_page_templates' ) ) {
     }
 
 }
+
+if ( !function_exists( 'tp_asg_pro_current_prefix' ) ) {
+    function tp_asg_pro_current_prefix() {
+        global $wpdb;
+        return $wpdb->prefix;
+    }
+}
+
+/**
+ * Generate a random DB table prefix string.
+ *
+ * @param int $len Optional length of the prefix. Default is 5.
+ * @return string A random DB table prefix string (e.g. 'abcde_').
+ */
+function tp_asg_pro_random_prefix( int $len = 5 ) {
+    $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    $s = '';
+    $s .= chr( ord( 'a' ) + random_int( 0, 25 ) );
+    for ( $i = 1; $i < $len; $i++ ) {
+        $s .= $chars[random_int( 0, strlen( $chars ) - 1 )];
+    }
+    return $s . '_';
+}
+
+if ( !function_exists( 'tp_asg_pro_is_prefix_good' ) ) {
+    function tp_asg_pro_is_prefix_good( $prefix ) {
+
+        // 0) Must end with "_"
+        if ( substr( $prefix, -1 ) !== '_' ) {
+            return false;
+        }
+
+        $clean = rtrim( $prefix, '_' );
+
+        // 1) Basic charset & shape
+        if ( $clean === '' ) {
+            return false;
+        }
+        // Only lowercase letters, digits, underscore (allow uppercase but normalize for checks)
+        if ( !preg_match( '/^[a-zA-Z0-9_]+$/', $clean ) ) {
+            return false;
+        }
+        // Start with a letter (avoid numeric start for readability)
+        if ( !preg_match( '/^[a-zA-Z]/', $clean ) ) {
+            return false;
+        }
+        // No internal double underscores
+        if ( strpos( $clean, '__' ) !== false ) {
+            return false;
+        }
+
+        // Normalize to lowercase for word checks
+        $lc = strtolower( $clean );
+
+        // 2) Length guard (excluding trailing underscore)
+        $len = strlen( $clean );
+        if ( $len < 3 || $len > 20 ) { // reasonable bounds; MySQL table name limit is 64 but keep prefixes compact
+            return false;
+        }
+
+        // 3) Require letters + numbers
+        if ( !preg_match( '/[a-z]/i', $clean ) || !preg_match( '/[0-9]/', $clean ) ) {
+            return false;
+        }
+
+        // 4) Block common/guessable words and environments
+        $bad_words = [
+            'wp', 'wordpress', 'blog', 'site', 'cms', 'press', 'db', 'data', 'table',
+            'admin', 'root', 'superadmin', 'secure', 'security', 'guard', 'shield', 'lock', 'safe', 'safety',
+            'school', 'college', 'university', 'edu',
+            'user', 'member', 'login', 'auth',
+            'test', 'demo', 'sample', 'example', 'sandbox', 'staging', 'stage', 'dev', 'devel', 'prod', 'production',
+            'alpha', 'beta', 'backup', 'bkp', 'tmp', 'temp', 'cache', 'public', 'private',
+            'qwerty', 'abc', 'abcd', 'abcde', 'abcd1234', 'test123', 'admin123',
+        ];
+
+        foreach ( $bad_words as $w ) {
+            if ( $lc === $w || str_contains( $lc, $w ) ) {
+                return false;
+            }
+        }
+
+        // 5) Block SQL keywords (simple set)
+        $sql_keywords = [
+            'select', 'insert', 'update', 'delete', 'drop', 'create', 'alter', 'grant', 'revoke',
+            'union', 'where', 'from', 'join', 'table', 'into', 'values', 'set', 'index', 'view',
+        ];
+        foreach ( $sql_keywords as $kw ) {
+            if ( $lc === $kw || str_contains( $lc, $kw ) ) {
+                return false;
+            }
+        }
+
+        // 6) Obvious sequences / repeats
+        // 6a) Same char repeated (aaa…)
+        if ( preg_match( '/^([a-z0-9])\1{3,}$/i', $clean ) ) {
+            return false;
+        }
+
+        // 6b) Strict ascending/descending sequences of length >= 5 (abcde, 12345, edcba)
+        $is_monotonic = function ( $s ) {
+            $n = strlen( $s );
+            if ( $n < 5 ) {
+                return false;
+            }
+
+            $asc = true;
+            $desc = true;
+            for ( $i = 1; $i < $n; $i++ ) {
+                $d = ord( $s[$i] ) - ord( $s[$i - 1] );
+                if ( $d !== 1 ) {$asc = false;}
+                if ( $d !== -1 ) {$desc = false;}
+                if ( !$asc && !$desc ) {
+                    return false;
+                }
+
+            }
+            return $asc || $desc;
+        };
+        if ( $is_monotonic( preg_replace( '/[^a-z0-9]/i', '', $lc ) ) ) {
+            return false;
+        }
+
+        // 6c) Common keyboard runs
+        $keyboard_runs = ['qwerty', 'asdf', 'zxcv', '12345', '98765'];
+        foreach ( $keyboard_runs as $run ) {
+            if ( str_contains( $lc, $run ) ) {
+                return false;
+            }
+        }
+
+        // 7) Entropy-ish check: require variety
+        $letters = array_unique( str_split( preg_replace( '/[^a-z]/', '', $lc ) ) );
+        $digits = array_unique( str_split( preg_replace( '/[^0-9]/', '', $lc ) ) );
+        $unique = array_unique( str_split( $lc ) );
+        if ( ( count( $letters ) < 2 || count( $digits ) < 2 ) && count( $unique ) < 5 ) {
+            return false;
+        }
+
+        // 8) Specific legacy defaults
+        if ( $lc === 'wp' || $lc === 'wp1' || $lc === 'wp2' || $lc === 'wp3' ) {
+            return false;
+        }
+
+        return true;
+    }
+}
