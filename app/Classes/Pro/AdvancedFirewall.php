@@ -34,6 +34,26 @@ class AdvancedFirewall implements FeatureInterface {
         $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
     }
 
+    public function extend_pro_settings( $settings ) {
+
+        $new_item_key = $this->feature_id;
+        $new_item = [
+            'label'  => __( 'Web Application Firewall', 'tp-secure-plugin' ),
+            'class'  => '',
+            'is_pro' => true,
+        ];
+
+        // Desired position
+        $position = 2;
+
+        // Insert at the specific position
+        $settings = array_slice( $settings, 0, $position, true )
+         + [$new_item_key => $new_item]
+         + array_slice( $settings, $position, null, true );
+
+        return $settings;
+    }
+
     /**
      * Extend plugin settings fields array with Advanced Firewall feature.
      *
@@ -150,22 +170,4 @@ class AdvancedFirewall implements FeatureInterface {
         return $fields;
     }
 
-    public function extend_pro_settings( $settings ) {
-
-        $new_item_key = $this->feature_id;
-        $new_item = [
-            'label' => __( 'Web Application Firewall', 'tp-secure-plugin' ),
-            'class' => '',
-        ];
-
-        // Desired position
-        $position = 2;
-
-        // Insert at the specific position
-        $settings = array_slice( $settings, 0, $position, true )
-         + [$new_item_key => $new_item]
-         + array_slice( $settings, $position, null, true );
-
-        return $settings;
-    }
 }

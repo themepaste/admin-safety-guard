@@ -1,3 +1,14 @@
+<?php defined( 'ABSPATH' ) || exit;
+
+$license_url = add_query_arg(
+    array(
+        'page' => 'tp-admin-safety-guard-pro',
+    ),
+    admin_url( 'admin.php' )
+);
+
+?>
+
 <div class="tpsa-pro-popup-overlay" id="tpsaProPopup">
     <div class="tpsa-pro-popup-box">
         <div class="tpsa-pro-popup-header">
@@ -14,17 +25,18 @@
             </div>
 
             <div class="tpsa-pro-buttons">
-                <a href="https://themepaste.com/" target="_blank" class="tpsa-pro-btn purchase-btn">
+                <a href="https://themepaste.com/product/admin-safety-guard-pro#pricePlanSection" target="_blank"
+                    class="tpsa-pro-btn purchase-btn">
                     Purchase Pro
                 </a>
 
-                <a href="#" id="openLicenseBox" class="tpsa-pro-btn license-btn">
+                <a href="<?php echo esc_url( $license_url ); ?>" id="openLicenseBox" class="tpsa-pro-btn license-btn">
                     Activate License
                 </a>
             </div>
 
             <div class="tpsa-pro-small-link">
-                <a href="#" id="alreadyPurchased">Already Purchased?</a>
+                <a href="<?php echo esc_url( $license_url ); ?>" id="alreadyPurchased">Already Purchased?</a>
             </div>
         </div>
     </div>
