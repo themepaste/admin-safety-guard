@@ -37,6 +37,9 @@ class FeatureManager {
             Features\PasswordProtection::class,
             Features\PrivacyHardening::class,
             Features\Customize::class,
+
+            // Pro
+            Pro\AdvancedFirewall::class,
         ];
 
         foreach ( $features as $feature ) {
