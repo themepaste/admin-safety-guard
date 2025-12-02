@@ -16,7 +16,7 @@ $is_pro = $settings_option[$screen_slug]['is_pro'] ?? false;
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' ' . 'Settings' ); // page_label;                       ?>
+        <h2><?php echo esc_html( $page_label . ' ' . 'Settings' ); // page_label;                         ?>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">

@@ -41,6 +41,7 @@ class FeatureManager {
             // Pro
             Pro\AdvancedFirewall::class,
             Pro\AdvancedMalwareScanner::class,
+            Pro\TablePrefixCheck::class,
         ];
 
         foreach ( $features as $feature ) {
