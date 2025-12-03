@@ -538,7 +538,7 @@ if ( !function_exists( 'tp_asg_pro_current_prefix' ) ) {
  * @param int $len Optional length of the prefix. Default is 5.
  * @return string A random DB table prefix string (e.g. 'abcde_').
  */
-if ( function_exists( 'tp_asg_pro_random_prefix' ) ) {
+if ( !function_exists( 'tp_asg_pro_random_prefix' ) ) {
     function tp_asg_pro_random_prefix( int $len = 5 ) {
         $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
         $s = '';

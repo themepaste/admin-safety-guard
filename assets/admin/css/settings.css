@@ -286,6 +286,11 @@
     cursor: pointer;
 }
 
+.tpsa-pro-btn:hover {
+    opacity: 0.9;
+    color: #fff;
+}
+
 .purchase-btn {
     background: #814bfe;
 }
