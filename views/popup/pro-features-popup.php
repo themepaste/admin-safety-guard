@@ -13,7 +13,6 @@ $license_url = add_query_arg(
     <div class="tpsa-pro-popup-box">
         <div class="tpsa-pro-popup-header">
             <h2>Premium Feature</h2>
-            <button class="tpsa-pro-close">&times;</button>
         </div>
 
         <div class="tpsa-pro-popup-body">
