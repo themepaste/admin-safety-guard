@@ -3,9 +3,9 @@
 defined( 'ABSPATH' ) || exit;
 use ThemePaste\SecureAdmin\Helpers\Utility;
 
-$settings_option    = tpsa_settings_option();
-$settings_fields    = tpsa_settings_fields();
-$current_screen     = Utility::get_screen( 'tpsa-setting' ) ?? null;
+$settings_option = tpsa_settings_option();
+$settings_fields = tpsa_settings_fields();
+$current_screen = Utility::get_screen( 'tpsa-setting' ) ?? null;
 
 $args = array(
     'settings_option' => $settings_option,

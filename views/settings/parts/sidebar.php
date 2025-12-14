@@ -25,7 +25,8 @@ foreach ( $settings_option as $key => $value ) {
         esc_attr( $active_class ),
         $setting_url,
         esc_html( $value['label'] ),
-        $value['is_pro'] ? 'pro' : '',
+        // $value['is_pro'] ? 'pro' : '',
+        ''
     );
 }
 ?>
