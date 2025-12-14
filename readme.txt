@@ -14,6 +14,8 @@ Secure your WordPress login with Admin Safety Guard: limit login attempts, 2FA, 
 
 **Admin Safety Guard** is a complete WordPress security helper focused on securing the login flow and hardening the admin area — without sacrificing usability or performance. It ships with a clean UI, smart defaults, and guardrails against the most common attacks (brute force, credential stuffing, bot logins, and XML-RPC abuse). You also get granular control over the login experience (custom URL, redirects, branding, and more).
 
+[youtube https://www.youtube.com/watch?v=KFNUmTHtODE]
+
 Whether you need to block suspicious IPs, enforce two-factor authentication, or ship a branded login for clients, **Admin Safety Guard** has you covered.
 
 ### 🌟 Admin Safety Guard Pro
