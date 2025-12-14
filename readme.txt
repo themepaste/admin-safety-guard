@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -150,6 +150,13 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.1.4 =
+* [new] - [New] All Pro features are now available in the free version.
+* [New] - Added a Purchase / Upgrade button to allow users to unlock premium support and future enhancements.
+* [Improved] - Updated plugin UI and feature visibility for better clarity between free and premium offerings.
+* [Improved] - Minor UX and performance optimisations.
+* [Fixed] - Small stability issues and internal clean-ups.
 
 = 1.1.3 =
 * Fixed an issue where OTP-verified logins could result in session cookies instead of persistent cookies.
