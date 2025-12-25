@@ -314,6 +314,9 @@ class Recaptcha implements FeatureInterface {
         );
 
         if ( is_wp_error( $response ) ) {
+            error_log( '[TPSA reCAPTCHA] wp_remote_post error: ' . $response->get_error_message() );
+            error_log( '[TPSA reCAPTCHA] error code: ' . $response->get_error_code() );
+
             return new WP_Error( 'recaptcha_failed', __( 'Could not contact reCAPTCHA server.', 'tp-secure-plugin' ) );
         }
 
