@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -150,6 +150,12 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.1.5 =
+* [Maintenance] - Release preparation and version alignment.
+* [Maintenance] - Internal consistency checks.
+* [Maintenance] - No code or feature changes in this version.
+
 
 = 1.1.4 =
 * [new] - [New] All Pro features are now available in the free version.
