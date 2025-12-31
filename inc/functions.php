@@ -476,7 +476,7 @@ if ( !function_exists( 'tpsm_saved_remote_data' ) ) {
         $email_address = $current_user->user_email;
         $site_url = get_site_url();
 
-        $response = wp_remote_post( 'https://themepaste.com/wp-json/v2/collect-email/admin-safety-guard', [
+        wp_remote_post( 'https://themepaste.com/wp-json/v2/collect-email/admin-safety-guard', [
             'headers' => [
                 'X-Auth-Token' => 'c7fc312817194d30c79da538204eaec3',
                 'Content-Type' => 'application/json',
