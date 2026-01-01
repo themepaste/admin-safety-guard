@@ -4,22 +4,24 @@ import './assets/style.css';
 import LoginAttempsReports from './components/LoginAttempsReports';
 import OverviewFeatures from './components/OverviewFeatures';
 import CustomizerBanner from './components/CustomizerBanner';
+import LoginActivity from './components/LoginActivity';
 
 function Main() {
-    return (
-        <>
-            {/* <div className="tpsa-analytics-wrapper">
+  return (
+    <>
+      {/* <div className="tpsa-analytics-wrapper">
                 <h1>Get insights into your site's safety</h1>
             </div> */}
-            <LoginAttempsReports />
-            <OverviewFeatures />
-            <CustomizerBanner />
-        </>
-    );
+      <LoginAttempsReports />
+      {/* <OverviewFeatures />
+      <CustomizerBanner /> */}
+      <LoginActivity />
+    </>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById('tpsa-analytics-wrapper')).render(
-    <Main />
+  <Main />
 );
 
 export default Main;
