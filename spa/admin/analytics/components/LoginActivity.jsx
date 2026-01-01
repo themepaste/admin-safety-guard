@@ -111,7 +111,8 @@ const styles = {
     borderRadius: 14,
     padding: 16,
     boxShadow: '0 6px 18px rgba(17, 24, 39, 0.06)',
-    maxWidth: 820,
+    width: '100%',
+    marginBottom: 30,
   },
   header: {
     display: 'flex',

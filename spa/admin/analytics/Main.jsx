@@ -5,6 +5,7 @@ import LoginAttempsReports from './components/LoginAttempsReports';
 import OverviewFeatures from './components/OverviewFeatures';
 import CustomizerBanner from './components/CustomizerBanner';
 import LoginActivity from './components/LoginActivity';
+import FeatureStatusDonut from './components/FeatureStatusDonut';
 
 function Main() {
   return (
@@ -15,7 +16,9 @@ function Main() {
       <LoginAttempsReports />
       {/* <OverviewFeatures />
       <CustomizerBanner /> */}
+
       <LoginActivity />
+      <FeatureStatusDonut />
     </>
   );
 }
