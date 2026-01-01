@@ -13,12 +13,11 @@ function Main() {
       {/* <div className="tpsa-analytics-wrapper">
                 <h1>Get insights into your site's safety</h1>
             </div> */}
-      <LoginAttempsReports />
-      {/* <OverviewFeatures />
-      <CustomizerBanner /> */}
-
+      {/* <LoginAttempsReports /> */}
       <LoginActivity />
       <FeatureStatusDonut />
+      <OverviewFeatures />
+      <CustomizerBanner />
     </>
   );
 }

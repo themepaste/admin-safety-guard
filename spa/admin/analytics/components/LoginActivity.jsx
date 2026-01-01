@@ -92,10 +92,10 @@ export default function LoginActivity() {
   );
 
   return (
-    <div className="card">
-      <div className="card-header">
+    <div className="fs-card">
+      <div className="fs-header">
         <div>
-          <div className="card-title">Login Activity (24h)</div>
+          <div className="fs-title">Login Activity (24h)</div>
         </div>
       </div>
 
