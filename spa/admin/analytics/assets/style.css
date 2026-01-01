@@ -293,13 +293,20 @@
 
 
 /* Dashboard design for chart */
+.tpsa-activity-wrapper {
+    display: flex;
+    /* align-items: flex-start; */
+    gap: 20px;
+}
+
 .fs-card {
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 14px;
     padding: 16px;
     box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
-    max-width: 100%;
+    /* max-width: 45%; */
+    width: 100%;
     margin-bottom: 20px;
 }
 

@@ -14,8 +14,10 @@ function Main() {
                 <h1>Get insights into your site's safety</h1>
             </div> */}
       {/* <LoginAttempsReports /> */}
-      <LoginActivity />
-      <FeatureStatusDonut />
+      <div className="tpsa-activity-wrapper">
+        <LoginActivity />
+        <FeatureStatusDonut />
+      </div>
       <OverviewFeatures />
       <CustomizerBanner />
     </>
