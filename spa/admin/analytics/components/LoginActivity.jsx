@@ -92,10 +92,10 @@ export default function LoginActivity() {
   );
 
   return (
-    <div style={styles.card}>
-      <div style={styles.header}>
+    <div className="card">
+      <div className="card-header">
         <div>
-          <div style={styles.title}>Login Activity (24h)</div>
+          <div className="card-title">Login Activity (24h)</div>
         </div>
       </div>
 
@@ -103,23 +103,3 @@ export default function LoginActivity() {
     </div>
   );
 }
-
-const styles = {
-  card: {
-    background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: 14,
-    padding: 16,
-    boxShadow: '0 6px 18px rgba(17, 24, 39, 0.06)',
-    width: '100%',
-    marginBottom: 30,
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  title: { fontSize: 16, fontWeight: 700, color: '#111827' },
-  sub: { fontSize: 12, color: '#6b7280', marginTop: 3 },
-};

@@ -15,6 +15,7 @@
     font-size: 48px;
     margin: 0;
 }
+
 /* Main container for the plugin overview and other elements */
 .plugin-overview {
     margin: 30px auto;
@@ -34,6 +35,7 @@
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
 .feature-section:last-child {
     margin-bottom: 0;
 }
@@ -90,11 +92,10 @@
 
 .tpsa-login-attempts-analytics-item {
     width: 30%;
-    background: linear-gradient(
-        145deg,
-        #e1c5ff,
-        #c3a7f3
-    ); /* Soft gradient background */
+    background: linear-gradient(145deg,
+            #e1c5ff,
+            #c3a7f3);
+    /* Soft gradient background */
     border-radius: 10px;
     padding: 20px;
     color: white;
@@ -128,11 +129,10 @@
 
 /* Color scheme adjustments for each analytics item */
 .tpsa-login-attempts-analytics-item:first-child {
-    background: linear-gradient(
-        145deg,
-        #c8f4c3,
-        #a8e1a3
-    ); /* Soft green gradient */
+    background: linear-gradient(145deg,
+            #c8f4c3,
+            #a8e1a3);
+    /* Soft green gradient */
 }
 
 .tpsa-login-attempts-analytics-item:first-child h2 {
@@ -140,11 +140,10 @@
 }
 
 .tpsa-login-attempts-analytics-item:nth-child(2) {
-    background: linear-gradient(
-        145deg,
-        #ffecb3,
-        #ffdf80
-    ); /* Soft yellow gradient */
+    background: linear-gradient(145deg,
+            #ffecb3,
+            #ffdf80);
+    /* Soft yellow gradient */
 }
 
 .tpsa-login-attempts-analytics-item:nth-child(2) h2 {
@@ -152,11 +151,10 @@
 }
 
 .tpsa-login-attempts-analytics-item:last-child {
-    background: linear-gradient(
-        145deg,
-        #ffb3d9,
-        #ff80b3
-    ); /* Soft pink gradient */
+    background: linear-gradient(145deg,
+            #ffb3d9,
+            #ff80b3);
+    /* Soft pink gradient */
 }
 
 .tpsa-login-attempts-analytics-item:last-child h2 {
@@ -186,14 +184,14 @@
 /**adfbdadfbdfbdafbadfbadf**/
 /* Main container with custom gradient background */
 .section-container {
-    background: linear-gradient(
-        225deg,
-        hsla(356, 68%, 91%, 0.7) 0%,
-        hsla(297, 99%, 66%, 0.7) 0%,
-        hsla(242, 100%, 65%, 0.7) 100%
-    ); /* Your gradient */
+    background: linear-gradient(225deg,
+            hsla(356, 68%, 91%, 0.7) 0%,
+            hsla(297, 99%, 66%, 0.7) 0%,
+            hsla(242, 100%, 65%, 0.7) 100%);
+    /* Your gradient */
     border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    /* Soft shadow for depth */
     margin: 30px 0;
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
@@ -263,6 +261,7 @@
         flex-wrap: wrap;
         gap: 30px;
     }
+
     .feature-section {
         max-width: 45%;
         margin-bottom: 15px;
@@ -281,10 +280,38 @@
     0% {
         color: #ccc;
     }
+
     50% {
         color: #888;
     }
+
     100% {
         color: #ccc;
     }
+}
+
+
+
+/* Dashboard design for chart */
+.card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
+    max-width: 100%;
+    margin-bottom: 30px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
 }
