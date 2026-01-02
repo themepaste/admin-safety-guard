@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -150,6 +150,18 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.1.6 =
+* [New] - Introduced a dynamic Security Score system based on overall site protection status.
+* [New] - Added Login Activity Rate Limiting (maximum 6 login attempts within 24 hours).
+* [New] - Implemented Login & Activity Status React-based graphs for better visual insights.
+* [Update] - Improved dashboard UI/UX for clearer security data presentation.
+* [Update] - Enhanced activity monitoring layout and responsiveness.
+* [Fix] - Resolved minor issues in login activity tracking.
+* [Fix] - Fixed UI alignment and styling inconsistencies in the admin dashboard.
+* [Maintenance] - Internal code optimization and performance improvements.
+* [Maintenance] - Security hardening and internal consistency checks.
+
 
 = 1.1.5 =
 * [Maintenance] - Release preparation and version alignment.
