@@ -686,3 +686,49 @@ function tp_svg_twitter() {
 function tp_svg_linkedin() {
     return '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="#0A66C2" d="M20.451 20.451h-3.554v-5.569c0-1.329-.024-3.04-1.852-3.04-1.853 0-2.135 1.447-2.135 2.943v5.666H9.356V9h3.414v1.561h.049c.476-.9 1.638-1.852 3.369-1.852 3.603 0 4.269 2.372 4.269 5.455v6.287zM5.337 7.433c-1.143 0-2.067-.927-2.067-2.07 0-1.144.924-2.07 2.067-2.07 1.145 0 2.07.926 2.07 2.07 0 1.143-.925 2.07-2.07 2.07zM7.114 20.451H3.558V9h3.556v11.451z"/></svg>';
 }
+
+function tpsa_get_features_summary() {
+
+    $settings_fields = tpsa_settings_fields();
+    $features = tpsa_settings_option();
+
+    $total = 0;
+    $active = 0;
+    $inactive = 0;
+
+    foreach ( $features as $feature_slug => $feature_data ) {
+
+        $total++;
+
+        // If no fields exist → always active
+        if ( empty( $settings_fields[$feature_slug]['fields'] ) ) {
+            $active++;
+            continue;
+        }
+
+        $fields = $settings_fields[$feature_slug]['fields'];
+
+        // If feature has an enable switch
+        if ( isset( $fields['enable'] ) ) {
+
+            $option_name = get_tpsa_settings_option_name( $feature_slug );
+            $saved_opts = get_option( $option_name, [] );
+
+            if ( !empty( $saved_opts['enable'] ) ) {
+                $active++;
+            } else {
+                $inactive++;
+            }
+
+        } else {
+            // No enable toggle → always active
+            $active++;
+        }
+    }
+
+    return (object) [
+        'total'    => $total,
+        'active'   => $active,
+        'inactive' => $inactive,
+    ];
+}

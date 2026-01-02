@@ -92,18 +92,19 @@ class Admin {
             $glue = strpos( $login_url, '?' ) !== false ? '&' : '?';
 
             $localize = [
-                'nonce'        => wp_create_nonce( 'tpsa-nonce' ),
-                'site_url'     => site_url(),
-                'ajax_url'     => admin_url( 'admin-ajax.php' ),
-                'screen_slug'  => Settings::$SETTING_PAGE_ID,
-                'setting_slug' => $current_setting_screen,
-                'rest_url'     => esc_url_raw( rest_url() ),
-                'limit_login'  => $this->is_enabled( $this->get_settings() ),
-                'admin_url'    => admin_url(),
-                'assets_url'   => TPSA_ASSETS_URL,
-                'previewUrl'   => $login_url . $glue . 'cdp_preview=1',
-                'social_login' => array_keys( (array) get_option( 'social_login_crendentials' ) ),
-                'sameOrigin'   => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
+                'nonce'          => wp_create_nonce( 'tpsa-nonce' ),
+                'site_url'       => site_url(),
+                'ajax_url'       => admin_url( 'admin-ajax.php' ),
+                'screen_slug'    => Settings::$SETTING_PAGE_ID,
+                'setting_slug'   => $current_setting_screen,
+                'rest_url'       => esc_url_raw( rest_url() ),
+                'limit_login'    => $this->is_enabled( $this->get_settings() ),
+                'admin_url'      => admin_url(),
+                'assets_url'     => TPSA_ASSETS_URL,
+                'previewUrl'     => $login_url . $glue . 'cdp_preview=1',
+                'social_login'   => array_keys( (array) get_option( 'social_login_crendentials' ) ),
+                'sameOrigin'     => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
+                'feature_status' => tpsa_get_features_summary(),
             ];
 
             if ( $current_setting_screen === 'customize' ) {

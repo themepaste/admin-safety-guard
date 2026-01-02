@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react';
 import Chart from 'react-apexcharts';
 
 export default function FeatureStatusDonut() {
-  const [activeCount] = useState(12);
-  const [inactiveCount] = useState(3);
+  const [activeCount] = useState(tpsaAdmin.feature_status.active);
+  const [inactiveCount] = useState(tpsaAdmin.feature_status.inactive);
 
   const total = activeCount + inactiveCount;
 
@@ -96,9 +96,6 @@ export default function FeatureStatusDonut() {
             }
           >
             {centerMode === 'total' ? 'Show Active %' : 'Show Total'}
-          </button>
-          <button className="fs-btn" onClick={() => setFocusIndex(null)}>
-            Reset
           </button>
         </div>
       </div>
