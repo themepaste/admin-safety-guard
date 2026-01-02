@@ -34,9 +34,5 @@ foreach ( $settings_option as $key => $value ) {
 }
 ?>
     </ul>
-
     <?php echo Utility::get_template( 'settings/parts/sidebar/security-score.php', $args ); ?>
-
-
-
 </div>

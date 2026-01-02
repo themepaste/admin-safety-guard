@@ -388,7 +388,6 @@
 
 .asg-ss_progress-fill {
     height: 100%;
-    width: 56%;
     background: linear-gradient(90deg, #9333ea, #ec4899);
     border-radius: 9999px;
 }
