@@ -1,4 +1,7 @@
-<?php defined( 'ABSPATH' ) || exit; // Exit if accessed directly ?>
+<?php defined( 'ABSPATH' ) || exit; // Exit if accessed directly
+
+use ThemePaste\SecureAdmin\Helpers\Utility;
+?>
 
 <!-- Sidebar wrapper for the Shipping Manager settings -->
 <div class="tpsa-siderbar-wrapper">
@@ -31,4 +34,9 @@ foreach ( $settings_option as $key => $value ) {
 }
 ?>
     </ul>
+
+    <?php echo Utility::get_template( 'settings/parts/sidebar/security-score.php', $args ); ?>
+
+
+
 </div>

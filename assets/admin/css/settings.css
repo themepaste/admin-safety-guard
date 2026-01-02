@@ -311,3 +311,93 @@
     color: #814bfe;
     font-weight: 500;
 }
+
+
+/* start Security Score */
+.asg-ss_wrapper {
+    margin-top: 20px;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Gradient Border */
+.asg-ss_gradient-border {
+    position: relative;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(135deg,
+            #a855f7,
+            #ec4899,
+            #f97316);
+}
+
+/* Card */
+.asg-ss_card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+/* Header */
+.asg-ss_card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.asg-ss_shield-icon {
+    width: 20px;
+    height: 20px;
+    color: #9333ea;
+}
+
+.asg-ss_card-title {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 14px;
+}
+
+/* Score */
+.asg-ss_score {
+    display: block;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.asg-ss_score-value {
+    font-size: 36px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #9333ea, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.asg-ss_score-total {
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+/* Progress Bar */
+.asg-ss_progress-bar {
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.asg-ss_progress-fill {
+    height: 100%;
+    width: 56%;
+    background: linear-gradient(90deg, #9333ea, #ec4899);
+    border-radius: 9999px;
+}
+
+/* Status Text */
+.asg-ss_status-text {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* end security score */
