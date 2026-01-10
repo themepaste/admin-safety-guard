@@ -28,14 +28,19 @@ $license_url = add_query_arg(
                     class="tpsa-pro-btn purchase-btn">
                     Purchase Pro
                 </a>
-
+                <?php
+if ( tp_is_pro_active() ) {
+    ?>
                 <a href="<?php echo esc_url( $license_url ); ?>" id="openLicenseBox" class="tpsa-pro-btn license-btn">
                     Activate License
                 </a>
-            </div>
+                <?php
+} else {
+    ?>
 
-            <div class="tpsa-pro-small-link">
-                <a href="<?php echo esc_url( $license_url ); ?>" id="alreadyPurchased">Already Purchased?</a>
+                <?php
+}
+?>
             </div>
         </div>
     </div>

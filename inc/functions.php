@@ -780,3 +780,32 @@ if ( !function_exists( 'tpsa_get_security_label' ) ):
     }
 }
 endif;
+
+if ( !function_exists( 'tp_is_pro_active' ) ) {
+
+/**
+ * Checks if the Admin Safety Guard Pro plugin is active.
+ *
+ * @return bool True if the plugin is active, false otherwise.
+ */
+    function tp_is_pro_active() {
+
+        $plugin_path = 'admin-safety-guard-pro/admin-safety-guard-pro.php';
+
+        if ( !function_exists( 'is_plugin_active' ) ) {
+            include_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        // Normal activation
+        if ( is_plugin_active( $plugin_path ) ) {
+            return true;
+        }
+
+        // Network activation (multisite)
+        if ( is_multisite() && is_plugin_active_for_network( $plugin_path ) ) {
+            return true;
+        }
+
+        return false;
+    }
+}
