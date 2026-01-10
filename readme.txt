@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -150,6 +150,11 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.1.7 =
+* [Fix] Active license URL now shows correctly based on the Pro plugin status.
+* [Fix] Fixed the documentation link on the plugin page.
+
 
 = 1.1.6 =
 * [New] - Introduced a dynamic Security Score system based on overall site protection status.
