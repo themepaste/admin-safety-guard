@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/style.css';
-import LoginAttempsReports from './components/LoginAttempsReports';
 import OverviewFeatures from './components/OverviewFeatures';
 import CustomizerBanner from './components/CustomizerBanner';
 import LoginActivity from './components/LoginActivity';
 import FeatureStatusDonut from './components/FeatureStatusDonut';
+import StatsCards from './components/StatsCards';
 
 function Main() {
   return (
     <>
+      <StatsCards />
       <div className="tpsa-activity-wrapper">
         <LoginActivity />
         <FeatureStatusDonut />
