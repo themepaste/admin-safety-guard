@@ -10,10 +10,6 @@ import FeatureStatusDonut from './components/FeatureStatusDonut';
 function Main() {
   return (
     <>
-      {/* <div className="tpsa-analytics-wrapper">
-                <h1>Get insights into your site's safety</h1>
-            </div> */}
-      {/* <LoginAttempsReports /> */}
       <div className="tpsa-activity-wrapper">
         <LoginActivity />
         <FeatureStatusDonut />
