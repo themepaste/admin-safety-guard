@@ -6,6 +6,7 @@ import CustomizerBanner from './components/CustomizerBanner';
 import LoginActivity from './components/LoginActivity';
 import FeatureStatusDonut from './components/FeatureStatusDonut';
 import StatsCards from './components/StatsCards';
+import FeatureGrid from './components/FeatureGrid';
 
 function Main() {
   return (
@@ -15,6 +16,7 @@ function Main() {
         <LoginActivity />
         <FeatureStatusDonut />
       </div>
+      <FeatureGrid />
       <OverviewFeatures />
       <CustomizerBanner />
     </>
