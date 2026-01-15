@@ -31,7 +31,7 @@ class AdvancedFirewall implements FeatureInterface {
         $this->filter( 'tpsa_settings_fields', [$this, 'extend_pro_fields'] );
 
         // Settings label
-        $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
+        // $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
     }
 
     public function extend_pro_settings( $settings ) {

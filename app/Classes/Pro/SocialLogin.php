@@ -20,7 +20,7 @@ class SocialLogin implements FeatureInterface {
     private $feature_id = 'social-login';
 
     public function register_hooks() {
-        $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
+        // $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
         $this->filter( 'tpsa_settings_fields', [$this, 'extend_pro_fields'] );
     }
 
