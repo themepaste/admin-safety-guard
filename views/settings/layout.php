@@ -5,9 +5,6 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 
 $settings_option = tpsa_settings_option();
 
-echo '<pre>';
-print_r( $settings_option );
-
 $settings_fields = tpsa_settings_fields();
 $current_screen = Utility::get_screen( 'tpsa-setting' ) ?? null;
 
@@ -20,6 +17,8 @@ $args = array(
     'page_label'      => !is_null( $current_screen ) ? $settings_option[$current_screen]['label'] : '',
 );
 ?>
+
+
 
 <div class="wrap">
     <!-- Empty h1 for showing the notice -->
