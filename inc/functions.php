@@ -20,40 +20,24 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                     'label' => __( 'Safety Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'limit-login-attempts' => array(
-                    'label' => __( 'Limit Login Attempts', 'tp-secure-plugin' ),
+                'security-core'        => array(
+                    'label' => __( 'Security Core', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'login-logs-activity'  => array(
-                    'label' => __( 'Login Logs & Activity', 'tp-secure-plugin' ),
+                'firewall-malware'     => array(
+                    'label' => __( 'Firewall & Malware', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'custom-login-url'     => array(
-                    'label' => __( 'Custom Login/Logout', 'tp-secure-plugin' ),
-                    'class' => '',
-                ),
-                'recaptcha'            => array(
-                    'label' => __( 'Google reCAPTCHA', 'tp-secure-plugin' ),
-                    'class' => '',
-                ),
-                'two-factor-auth'      => array(
-                    'label' => __( 'Two Factor Auth', 'tp-secure-plugin' ),
-                    'class' => '',
-                ),
-                'password-protection'  => array(
-                    'label' => __( 'Password Protection', 'tp-secure-plugin' ),
+                'monitoring-analytics' => array(
+                    'label' => __( 'Monitoring & Analytics', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
                 'privacy-hardening'    => array(
-                    'label' => __( 'Privacy Hardening', 'tp-secure-plugin' ),
+                    'label' => __( 'Privacy & Hardening', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
-                'admin-bar'            => array(
-                    'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
-                    'class' => '',
-                ),
-                'customize'            => array(
-                    'label' => __( 'Customizer', 'tp-secure-plugin' ),
+                'customization'        => array(
+                    'label' => __( 'Customization & Access', 'tp-secure-plugin' ),
                     'class' => '',
                 ),
             )
