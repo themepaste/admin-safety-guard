@@ -1,0 +1,380 @@
+import React, { useMemo, useState } from 'react';
+import {
+  Lock,
+  Shield,
+  ShieldAlert,
+  Scan,
+  Activity,
+  TrendingUp,
+  Check,
+  X,
+  ChevronRight,
+} from 'lucide-react';
+
+const defaultFeatures = [
+  {
+    id: 'limit-login',
+    category: 'security-core',
+    name: 'Limit Login Attempts',
+    description: 'Prevent brute force attacks',
+    status: 'active',
+    icon: Lock,
+    stats: { value: '156', label: 'Attacks Blocked' },
+  },
+  {
+    id: '2fa',
+    category: 'security-core',
+    name: 'Two-Factor Authentication',
+    description: 'Extra layer of security',
+    status: 'active',
+    icon: Shield,
+    stats: { value: '23', label: 'Users Enabled' },
+  },
+  {
+    id: 'password',
+    category: 'security-core',
+    name: 'Password Protection',
+    description: 'Enforce strong passwords',
+    status: 'active',
+    icon: Lock,
+    stats: { value: '12+', label: 'Min Characters' },
+  },
+  {
+    id: 'recaptcha',
+    category: 'security-core',
+    name: 'Google reCAPTCHA',
+    description: 'Bot protection',
+    status: 'active',
+    icon: Shield,
+    stats: { value: '89', label: 'Bots Blocked' },
+  },
+  {
+    id: 'waf',
+    category: 'firewall',
+    name: 'Web Application Firewall',
+    description: 'Real-time protection',
+    status: 'active',
+    icon: ShieldAlert,
+    stats: { value: '1.2K', label: 'Threats Blocked' },
+  },
+  {
+    id: 'malware',
+    category: 'firewall',
+    name: 'Malware Scanner',
+    description: 'Automated scanning',
+    status: 'active',
+    icon: Scan,
+    stats: { value: '1,423', label: 'Files Scanned' },
+  },
+  {
+    id: 'login-logs',
+    category: 'monitoring',
+    name: 'Login Logs & Activity',
+    description: 'Track all login attempts',
+    status: 'active',
+    icon: Activity,
+    stats: { value: '245', label: 'Today' },
+  },
+  {
+    id: 'analytics',
+    category: 'monitoring',
+    name: 'Safety Analytics',
+    description: 'Security insights',
+    status: 'active',
+    icon: TrendingUp,
+    stats: { value: '98%', label: 'Score' },
+  },
+];
+
+export default function FeatureGrid({
+  items = defaultFeatures,
+  category = 'all',
+  onConfigure,
+  onViewDetails,
+  className = '',
+}) {
+  const [selectedFeature, setSelectedFeature] = useState(null);
+
+  const filteredFeatures = useMemo(() => {
+    if (!items?.length) return [];
+    if (!category || category === 'all') return items;
+    return items.filter((f) => f.category === category);
+  }, [items, category]);
+
+  const uid = useMemo(() => `fg-${Math.random().toString(36).slice(2, 9)}`, []);
+
+  return (
+    <div className={`${uid} ${className}`}>
+      <div className="fg-grid">
+        {filteredFeatures.map((feature) => {
+          const FeatureIcon = feature.icon;
+          const isSelected = selectedFeature === feature.id;
+
+          return (
+            <button
+              key={feature.id}
+              type="button"
+              onClick={() => setSelectedFeature(isSelected ? null : feature.id)}
+              className={`fg-card ${isSelected ? 'is-selected' : ''}`}
+              aria-expanded={isSelected}
+            >
+              <div className="fg-cardInner">
+                <div className="fg-headerRow">
+                  <div
+                    className={`fg-iconWrap ${isSelected ? 'is-selected' : ''}`}
+                  >
+                    <FeatureIcon
+                      className={`fg-icon ${isSelected ? 'is-selected' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </div>
+
+                  <span
+                    className={`fg-status ${
+                      feature.status === 'active' ? 'is-active' : 'is-inactive'
+                    }`}
+                  >
+                    {feature.status === 'active' ? (
+                      <span className="fg-statusInner">
+                        <Check className="fg-statusIcon" aria-hidden="true" />
+                        Active
+                      </span>
+                    ) : (
+                      <span className="fg-statusInner">
+                        <X className="fg-statusIcon" aria-hidden="true" />
+                        Inactive
+                      </span>
+                    )}
+                  </span>
+                </div>
+
+                <h4 className="fg-title">{feature.name}</h4>
+                <p className="fg-desc">{feature.description}</p>
+
+                <div className="fg-footerRow">
+                  <div>
+                    <p className="fg-statValue">{feature.stats.value}</p>
+                    <p className="fg-statLabel">{feature.stats.label}</p>
+                  </div>
+
+                  <ChevronRight
+                    className={`fg-chevron ${isSelected ? 'is-selected' : ''}`}
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+
+              <div className={`fg-panel ${isSelected ? 'is-open' : ''}`}>
+                <div className="fg-panelInner">
+                  <button
+                    type="button"
+                    className="fg-primaryBtn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onConfigure?.(feature);
+                    }}
+                  >
+                    Configure Settings
+                  </button>
+
+                  <button
+                    type="button"
+                    className="fg-secondaryBtn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onViewDetails?.(feature);
+                    }}
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <style>{`
+        /* Scoped by root class: .${uid} */
+        .${uid} .fg-grid{
+          display:grid;
+          grid-template-columns:1fr;
+          gap:24px;
+          margin-top:32px;
+        }
+        @media (min-width:768px){
+          .${uid} .fg-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+        }
+        @media (min-width:1280px){
+          .${uid} .fg-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+        }
+
+        .${uid} .fg-card{
+          position:relative;
+          overflow:hidden;
+          border-radius:16px;
+          border:1px solid rgba(226,232,240,.75);
+          background:#fff;
+          text-align:left;
+          cursor:pointer;
+          padding:0;
+          transition:border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+          box-shadow:0 0 0 rgba(0,0,0,0);
+        }
+        .${uid} .fg-card:hover{
+          border-color:rgba(203,213,225,1);
+          box-shadow:0 12px 26px rgba(15,23,42,.08);
+        }
+        .${uid} .fg-card:focus-visible{
+          outline:none;
+          box-shadow:0 0 0 4px rgba(147,51,234,.18);
+          border-color:rgba(147,51,234,.35);
+        }
+        .${uid} .fg-card.is-selected{
+          border-color:rgba(196,181,253,.95);
+          box-shadow:0 18px 38px rgba(168,85,247,.18);
+        }
+
+        .${uid} .fg-cardInner{ padding:24px; }
+
+        .${uid} .fg-headerRow{
+          display:flex;
+          align-items:flex-start;
+          justify-content:space-between;
+          gap:12px;
+          margin-bottom:16px;
+        }
+
+        .${uid} .fg-iconWrap{
+          padding:12px;
+          border-radius:12px;
+          background:#f1f5f9;
+          transition:background 200ms ease;
+        }
+        .${uid} .fg-card:hover .fg-iconWrap{ background:#e2e8f0; }
+        .${uid} .fg-iconWrap.is-selected{
+          background:linear-gradient(135deg,#a855f7,#ec4899);
+        }
+
+        .${uid} .fg-icon{ width:20px; height:20px; color:#475569; }
+        .${uid} .fg-icon.is-selected{ color:#fff; }
+
+        .${uid} .fg-status{
+          display:inline-flex;
+          align-items:center;
+          border-radius:999px;
+          padding:6px 10px;
+          font-size:12px;
+          font-weight:700;
+          line-height:1;
+          user-select:none;
+        }
+        .${uid} .fg-statusInner{
+          display:inline-flex;
+          align-items:center;
+          gap:6px;
+        }
+        .${uid} .fg-statusIcon{ width:12px; height:12px; }
+
+        .${uid} .fg-status.is-active{ background:#dcfce7; color:#15803d; }
+        .${uid} .fg-status.is-inactive{ background:#f1f5f9; color:#475569; }
+
+        .${uid} .fg-title{
+          margin:0 0 4px 0;
+          font-size:16px;
+          font-weight:700;
+          color:#0f172a;
+        }
+        .${uid} .fg-desc{
+          margin:0 0 16px 0;
+          font-size:13px;
+          color:#64748b;
+        }
+
+        .${uid} .fg-footerRow{
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding-top:16px;
+          border-top:1px solid #f1f5f9;
+        }
+        .${uid} .fg-statValue{
+          margin:0;
+          font-size:26px;
+          font-weight:800;
+          color:#0f172a;
+          letter-spacing:-0.02em;
+        }
+        .${uid} .fg-statLabel{
+          margin:2px 0 0 0;
+          font-size:12px;
+          color:#64748b;
+        }
+
+        .${uid} .fg-chevron{
+          width:20px;
+          height:20px;
+          color:#94a3b8;
+          transition:transform 200ms ease, color 200ms ease;
+        }
+        .${uid} .fg-card:hover .fg-chevron{
+          transform:translateX(4px);
+          color:#64748b;
+        }
+        .${uid} .fg-chevron.is-selected{
+          transform:rotate(90deg);
+          color:#9333ea;
+        }
+
+        .${uid} .fg-panel{
+          border-top:1px solid #e2e8f0;
+          background:#f8fafc;
+          max-height:0;
+          overflow:hidden;
+          transition:max-height 260ms ease;
+        }
+        .${uid} .fg-panel.is-open{ max-height:200px; }
+
+        .${uid} .fg-panelInner{
+          padding:18px 24px 24px;
+          display:grid;
+          gap:10px;
+        }
+
+        .${uid} .fg-primaryBtn{
+          width:100%;
+          border:0;
+          border-radius:12px;
+          padding:12px 14px;
+          cursor:pointer;
+          color:#fff;
+          font-weight:700;
+          background:linear-gradient(90deg,#7c3aed,#ec4899);
+          transition:transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+        }
+        .${uid} .fg-primaryBtn:hover{
+          box-shadow:0 12px 26px rgba(124,58,237,.22);
+          transform:translateY(-1px) scale(1.01);
+          filter:brightness(1.02);
+        }
+        .${uid} .fg-primaryBtn:active{ transform:translateY(0) scale(1); }
+
+        .${uid} .fg-secondaryBtn{
+          width:100%;
+          border-radius:12px;
+          padding:12px 14px;
+          cursor:pointer;
+          background:#fff;
+          border:1px solid #e2e8f0;
+          color:#334155;
+          font-weight:700;
+          transition:background 160ms ease, border-color 160ms ease;
+        }
+        .${uid} .fg-secondaryBtn:hover{
+          background:#f8fafc;
+          border-color:#cbd5e1;
+        }
+      `}</style>
+    </div>
+  );
+}
