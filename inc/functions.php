@@ -18,26 +18,32 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
             array(
                 'analytics'            => array(
                     'label' => __( 'Safety Analytics', 'tp-secure-plugin' ),
+                    'icon'  => TPSA_ASSETS_URL . '/admin/icons/layout-dashboard.svg',
                     'class' => '',
                 ),
                 'security-core'        => array(
                     'label' => __( 'Security Core', 'tp-secure-plugin' ),
+                    'icon'  => TPSA_ASSETS_URL . '/admin/icons/lock.svg',
                     'class' => '',
                 ),
                 'firewall-malware'     => array(
                     'label' => __( 'Firewall & Malware', 'tp-secure-plugin' ),
+                    'icon'  => TPSA_ASSETS_URL . '/admin/icons/shield-alert.svg',
                     'class' => '',
                 ),
                 'monitoring-analytics' => array(
                     'label' => __( 'Monitoring & Analytics', 'tp-secure-plugin' ),
+                    'icon'  => TPSA_ASSETS_URL . '/admin/icons/activity.svg',
                     'class' => '',
                 ),
                 'privacy-hardening'    => array(
                     'label' => __( 'Privacy & Hardening', 'tp-secure-plugin' ),
+                    'icon'  => TPSA_ASSETS_URL . '/admin/icons/database.svg',
                     'class' => '',
                 ),
                 'customization'        => array(
                     'label' => __( 'Customization & Access', 'tp-secure-plugin' ),
+                    'icon'  => TPSA_ASSETS_URL . '/admin/icons/palette.svg',
                     'class' => '',
                 ),
             )
