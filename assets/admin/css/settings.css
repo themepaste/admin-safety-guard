@@ -91,6 +91,7 @@
     justify-content: flex-start;
     gap: 12px;
     background-color: #F1F5F9;
+    line-height: 1.6;
 }
 
 .tpsa-siderbar-wrapper ul li a.active {
