@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/style.css';
-import OverviewFeatures from './components/OverviewFeatures';
 import CustomizerBanner from './components/CustomizerBanner';
 import LoginActivity from './components/LoginActivity';
 import FeatureStatusDonut from './components/FeatureStatusDonut';
@@ -17,7 +16,6 @@ function Main() {
         <FeatureStatusDonut />
       </div>
       <FeatureGrid />
-      {/* <OverviewFeatures /> */}
       <CustomizerBanner />
     </>
   );
