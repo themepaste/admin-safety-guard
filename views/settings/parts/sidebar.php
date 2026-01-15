@@ -24,14 +24,13 @@ foreach ( $settings_option as $key => $value ) {
 
     // Output the menu item with proper escaping and conditional class
     printf(
-        '<li><img src="%5$s" alt="%6$s"/><a class="%1$s" href="%2$s">%3$s<sup style="color: green;"> %4$s</sup></a></li>',
+        '<li><a class="%1$s" href="%2$s"><span>%5$s</span>%3$s<sup style="color: green;"> %4$s</sup></a></li>',
         esc_attr( $active_class ),
         $setting_url,
         esc_html( $value['label'] ),
         // $value['is_pro'] ? 'pro' : '',
         '',
-        esc_url( $value['icon'] ),
-        esc_attr( $value['label'] )
+        $value['icon'],
     );
 }
 ?>

@@ -78,7 +78,7 @@
 .tpsa-siderbar-wrapper ul li a:focus-visible,
 .tpsa-siderbar-wrapper ul li a:visited {
     text-decoration: none;
-    display: block;
+    display: flex;
     font-weight: 500;
     border-radius: 3px;
     transition: 0.3s all ease;
@@ -87,12 +87,41 @@
     padding: 10px 10px;
     font-size: 15px;
     box-shadow: none;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    background-color: #F1F5F9;
 }
 
 .tpsa-siderbar-wrapper ul li a.active {
     color: #814bfe;
-    background-color: #ece6f9;
     border: none;
+}
+
+.tpsa-siderbar-wrapper ul li a span {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 300ms ease;
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+}
+
+.tpsa-siderbar-wrapper ul li a.active span {
+    color: white;
+    background-image: linear-gradient(to bottom right,
+            #3b82f6,
+            #06b6d4);
+}
+
+.tpsa-siderbar-wrapper ul li a span img {
+    width: 20px;
+    height: 20px;
 }
 
 .tpsa-main-wrapper {
