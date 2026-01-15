@@ -16,7 +16,6 @@ function Main() {
         <FeatureStatusDonut />
       </div>
       <FeatureGrid />
-      <CustomizerBanner />
     </>
   );
 }
