@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 function Main() {
   return (
     <>
-      <h1>privacy hardening</h1>
+      <h1>Firewall Malware</h1>
     </>
   );
 }

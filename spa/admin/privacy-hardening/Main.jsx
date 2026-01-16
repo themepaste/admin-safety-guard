@@ -4,13 +4,13 @@ import ReactDOM from 'react-dom/client';
 function Main() {
   return (
     <>
-      <h1>privacy hardening</h1>
+      <h1>Privacy Hardening</h1>
     </>
   );
 }
 
 ReactDOM.createRoot(
-  document.getElementById('tpsa-firewall-malware-wrapper')
+  document.getElementById('tpsa-privacy-hardening-wrapper')
 ).render(<Main />);
 
 export default Main;
