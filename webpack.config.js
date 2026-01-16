@@ -21,6 +21,14 @@ module.exports = (env, argv) => {
         __dirname,
         './spa/admin/firewall-malware/Main.jsx'
       ),
+      privacyHardening: path.resolve(
+        __dirname,
+        './spa/admin/privacy-hardening/Main.jsx'
+      ),
+      monitoringAnalytics: path.resolve(
+        __dirname,
+        './spa/admin/monitoring-analytics/Main.jsx'
+      ),
     },
     output: {
       filename: '[name].bundle.js',
