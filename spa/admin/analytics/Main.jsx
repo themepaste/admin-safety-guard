@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './assets/style.css';
-import CustomizerBanner from './components/CustomizerBanner';
 import LoginActivity from './components/LoginActivity';
 import FeatureStatusDonut from './components/FeatureStatusDonut';
 import StatsCards from './components/StatsCards';
