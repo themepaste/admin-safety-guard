@@ -17,6 +17,10 @@ module.exports = (env, argv) => {
         __dirname,
         './spa/admin/security-core/Main.jsx'
       ),
+      firewallMalware: path.resolve(
+        __dirname,
+        './spa/admin/firewall-malware/Main.jsx'
+      ),
     },
     output: {
       filename: '[name].bundle.js',

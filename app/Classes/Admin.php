@@ -86,6 +86,11 @@ class Admin {
                     'tpsa-security-core',
                     TPSA_ASSETS_URL . '/admin/build/securityCore.bundle.js'
                 );
+            } elseif ( $current_setting_screen === 'firewall-malware' ) {
+                $this->enqueue_script(
+                    'tpsa-security-core',
+                    TPSA_ASSETS_URL . '/admin/build/firewallMalware.bundle.js'
+                );
             } elseif ( $current_setting_screen === 'customize' ) {
                 $this->enqueue_script(
                     'tpsa-customize',
