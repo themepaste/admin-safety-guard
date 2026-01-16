@@ -103,6 +103,10 @@ export default function FeatureGrid({
 
   const uid = useMemo(() => `fg-${Math.random().toString(36).slice(2, 9)}`, []);
 
+  const toggle = (id) => {
+    setSelectedFeature((prev) => (prev === id ? null : id));
+  };
+
   return (
     <div className={`${uid} ${className}`}>
       <div className="fg-grid">
@@ -111,12 +115,19 @@ export default function FeatureGrid({
           const isSelected = selectedFeature === feature.id;
 
           return (
-            <button
+            <div
               key={feature.id}
-              type="button"
-              onClick={() => setSelectedFeature(isSelected ? null : feature.id)}
-              className={`fg-card ${isSelected ? 'is-selected' : ''}`}
+              role="button"
+              tabIndex={0}
               aria-expanded={isSelected}
+              className={`fg-card ${isSelected ? 'is-selected' : ''}`}
+              onClick={() => toggle(feature.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggle(feature.id);
+                }
+              }}
             >
               <div className="fg-cardInner">
                 <div className="fg-headerRow">
@@ -189,7 +200,7 @@ export default function FeatureGrid({
                   </button>
                 </div>
               </div>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -220,6 +231,7 @@ export default function FeatureGrid({
           padding:0;
           transition:border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
           box-shadow:0 0 0 rgba(0,0,0,0);
+          /* since it's now a div, remove default button stuff is irrelevant, but keep layout */
         }
         .${uid} .fg-card:hover{
           border-color:rgba(203,213,225,1);
