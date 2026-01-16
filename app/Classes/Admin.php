@@ -91,10 +91,15 @@ class Admin {
                     'tpsa-security-core',
                     TPSA_ASSETS_URL . '/admin/build/firewallMalware.bundle.js'
                 );
-            } elseif ( $current_setting_screen === 'firewall-malware' ) {
+            } elseif ( $current_setting_screen === 'privacy-hardening' ) {
                 $this->enqueue_script(
                     'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/firewallMalware.bundle.js'
+                    TPSA_ASSETS_URL . '/admin/build/privacyHardening.bundle.js'
+                );
+            } elseif ( $current_setting_screen === 'monitoring-analytics' ) {
+                $this->enqueue_script(
+                    'tpsa-security-core',
+                    TPSA_ASSETS_URL . '/admin/build/monitoringAnalytics.bundle.js'
                 );
             } elseif ( $current_setting_screen === 'customize' ) {
                 $this->enqueue_script(
