@@ -24,7 +24,7 @@ const defaultFeatures = [
     icon: Shield,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tpsa-setting=security-core',
+      'admin.php?page=tp-admin-safety-guard&tpsa-setting=two-factor-auth',
   },
   {
     id: 'password',
