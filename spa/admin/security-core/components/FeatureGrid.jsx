@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { Lock, Shield, Check, X, ChevronRight } from 'lucide-react';
+import { Lock, Shield, Check, X } from 'lucide-react';
+
+const admin_url = tpsaAdmin.admin_url;
 
 const defaultFeatures = [
   {
@@ -9,6 +11,9 @@ const defaultFeatures = [
     description: 'Prevent brute force attacks',
     status: 'active',
     icon: Lock,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tpsa-setting=limit-login-attempts',
   },
   {
     id: '2fa',
@@ -17,6 +22,9 @@ const defaultFeatures = [
     description: 'Extra layer of security',
     status: 'active',
     icon: Shield,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tpsa-setting=security-core',
   },
   {
     id: 'password',
@@ -25,6 +33,9 @@ const defaultFeatures = [
     description: 'Enforce strong passwords',
     status: 'active',
     icon: Lock,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tpsa-setting=security-core',
   },
   {
     id: 'recaptcha',
@@ -33,6 +44,9 @@ const defaultFeatures = [
     description: 'Bot protection',
     status: 'active',
     icon: Shield,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tpsa-setting=security-core',
   },
 ];
 
@@ -121,6 +135,7 @@ export default function FeatureGrid({
                     onClick={(e) => {
                       e.stopPropagation();
                       onConfigure?.(feature);
+                      window.location.href = feature.url;
                     }}
                   >
                     Configure Settings
@@ -132,6 +147,7 @@ export default function FeatureGrid({
                     onClick={(e) => {
                       e.stopPropagation();
                       onViewDetails?.(feature);
+                      window.location.href = feature.url;
                     }}
                   >
                     View Details
