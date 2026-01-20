@@ -11,12 +11,13 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 foreach ( $settings_option as $key => $value ) {
 
     // Determine if this is the currently active setting
-    $active_class = ( $current_screen === $key ) ? 'active' : '';
+    $active_class = ( $current_tab === $key ) ? 'active' : '';
 
     // Build the URL for each settings tab using add_query_arg
     $setting_url = esc_url( add_query_arg(
         array(
             'page'         => 'tp-admin-safety-guard',
+            'tab'          => $key,
             'tpsa-setting' => $key,
         ),
         admin_url( 'admin.php' )
