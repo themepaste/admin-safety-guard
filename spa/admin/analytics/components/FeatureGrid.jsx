@@ -61,6 +61,9 @@ const defaultFeatures = [
     description: 'Real-time protection',
     icon: ShieldAlert,
     stats: { value: '0', label: 'Threats Blocked' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=firewall-malware&tpsa-setting=web-application-firewall',
   },
   {
     id: 'advanced-malware-scanner',
@@ -69,6 +72,9 @@ const defaultFeatures = [
     description: 'Automated scanning',
     icon: Scan,
     stats: { value: '0', label: 'Files Scanned' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=firewall-malware&tpsa-setting=advanced-malware-scanner',
   },
   {
     id: 'login-logs-activity',
@@ -179,6 +185,7 @@ export default function FeatureGrid({
                     onClick={(e) => {
                       e.stopPropagation();
                       onConfigure?.(feature);
+                      window.location.href = feature.url;
                     }}
                   >
                     Configure Settings
