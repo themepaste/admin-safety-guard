@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
+const admin_url = tpsaAdmin.admin_url;
 const allActiveFeatures = tpsaAdmin.feature_status.all_active_features;
 
 const defaultFeatures = [
@@ -21,6 +22,9 @@ const defaultFeatures = [
     description: 'Security insights',
     icon: TrendingUp,
     stats: { value: '98%', label: 'Score' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=analytics&tpsa-setting=analytics',
   },
   {
     id: 'limit-login-attempts',
@@ -29,6 +33,9 @@ const defaultFeatures = [
     description: 'Prevent brute force attacks',
     icon: Lock,
     stats: { value: '0', label: 'Attacks Blocked' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=limit-login-attempts',
   },
   {
     id: 'two-factor-auth',
@@ -37,6 +44,9 @@ const defaultFeatures = [
     description: 'Extra layer of security',
     icon: Shield,
     stats: { value: '0', label: 'Users Enabled' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=two-factor-auth',
   },
   {
     id: 'password-protection',
@@ -45,6 +55,9 @@ const defaultFeatures = [
     description: 'Enforce strong passwords',
     icon: Lock,
     stats: { value: '6+', label: 'Min Characters' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=password-protection',
   },
   {
     id: 'recaptcha',
@@ -53,6 +66,9 @@ const defaultFeatures = [
     description: 'Bot protection',
     icon: Shield,
     stats: { value: '0', label: 'Bots Blocked' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=recaptcha',
   },
   {
     id: 'web-application-firewall',
@@ -83,6 +99,9 @@ const defaultFeatures = [
     description: 'Track all login attempts',
     icon: Activity,
     stats: { value: '1', label: 'Today' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=login-logs-activity&tpsa-setting=login-logs-activity#SuccessfulLogins',
   },
 ];
 
