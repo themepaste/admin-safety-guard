@@ -13,7 +13,7 @@ const defaultFeatures = [
     icon: Lock,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tpsa-setting=limit-login-attempts',
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=limit-login-attempts',
   },
   {
     id: '2fa',
@@ -24,7 +24,7 @@ const defaultFeatures = [
     icon: Shield,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tpsa-setting=two-factor-auth',
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=two-factor-auth',
   },
   {
     id: 'password',
@@ -35,7 +35,7 @@ const defaultFeatures = [
     icon: Lock,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tpsa-setting=security-core',
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=security-core',
   },
   {
     id: 'recaptcha',
@@ -46,7 +46,7 @@ const defaultFeatures = [
     icon: Shield,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tpsa-setting=security-core',
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=security-core',
   },
 ];
 
