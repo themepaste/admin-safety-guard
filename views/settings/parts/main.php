@@ -33,7 +33,6 @@ foreach ( $settings_option as $key => $value ) {
         {
             $template = Utility::get_template( 'settings/pages/' . $key . '.php', $args );
         }
-
         $pro_template = Utility::get_pro_template( 'settings/pages/' . $key . '.php', $args );
 
         // If a valid template is returned, output it
