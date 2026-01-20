@@ -2,10 +2,11 @@ import React, { useMemo, useState } from 'react';
 import { Lock, Shield, Check, X } from 'lucide-react';
 
 const admin_url = tpsaAdmin.admin_url;
+const allActiveFeatures = tpsaAdmin.feature_status.all_active_features;
 
 const defaultFeatures = [
   {
-    id: 'limit-login',
+    id: 'limit-login-attempts',
     category: 'security-core',
     name: 'Limit Login Attempts',
     description: 'Prevent brute force attacks',
@@ -16,7 +17,7 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=limit-login-attempts',
   },
   {
-    id: '2fa',
+    id: 'two-factor-auth',
     category: 'security-core',
     name: 'Two-Factor Authentication',
     description: 'Extra layer of security',
@@ -27,7 +28,7 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=two-factor-auth',
   },
   {
-    id: 'password',
+    id: 'password-protection',
     category: 'security-core',
     name: 'Password Protection',
     description: 'Enforce strong passwords',
@@ -106,10 +107,12 @@ export default function FeatureGrid({
 
                   <span
                     className={`fg-status ${
-                      feature.status === 'active' ? 'is-active' : 'is-inactive'
+                      allActiveFeatures.includes(feature.id)
+                        ? 'is-active'
+                        : 'is-inactive'
                     }`}
                   >
-                    {feature.status === 'active' ? (
+                    {allActiveFeatures.includes(feature.id) ? (
                       <span className="fg-statusInner">
                         <Check className="fg-statusIcon" aria-hidden="true" />
                         Active
