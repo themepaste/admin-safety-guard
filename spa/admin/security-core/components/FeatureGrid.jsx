@@ -35,7 +35,7 @@ const defaultFeatures = [
     icon: Lock,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=security-core',
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=password-protection',
   },
   {
     id: 'recaptcha',
@@ -46,7 +46,7 @@ const defaultFeatures = [
     icon: Shield,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=security-core',
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=recaptcha',
   },
 ];
 
