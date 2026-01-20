@@ -188,7 +188,7 @@ export default function FeatureGrid({
                     Configure Settings
                   </button>
 
-                  <button
+                  {/* <button
                     type="button"
                     className="fg-secondaryBtn"
                     onClick={(e) => {
@@ -197,7 +197,7 @@ export default function FeatureGrid({
                     }}
                   >
                     View Details
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
