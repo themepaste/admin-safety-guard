@@ -28,7 +28,7 @@ const defaultFeatures = [
     name: 'Limit Login Attempts',
     description: 'Prevent brute force attacks',
     icon: Lock,
-    stats: { value: '156', label: 'Attacks Blocked' },
+    stats: { value: '0', label: 'Attacks Blocked' },
   },
   {
     id: 'two-factor-auth',
@@ -36,7 +36,7 @@ const defaultFeatures = [
     name: 'Two-Factor Authentication',
     description: 'Extra layer of security',
     icon: Shield,
-    stats: { value: '23', label: 'Users Enabled' },
+    stats: { value: '0', label: 'Users Enabled' },
   },
   {
     id: 'password-protection',
@@ -44,7 +44,7 @@ const defaultFeatures = [
     name: 'Password Protection',
     description: 'Enforce strong passwords',
     icon: Lock,
-    stats: { value: '12+', label: 'Min Characters' },
+    stats: { value: '6+', label: 'Min Characters' },
   },
   {
     id: 'recaptcha',
@@ -52,7 +52,7 @@ const defaultFeatures = [
     name: 'Google reCAPTCHA',
     description: 'Bot protection',
     icon: Shield,
-    stats: { value: '89', label: 'Bots Blocked' },
+    stats: { value: '0', label: 'Bots Blocked' },
   },
   {
     id: 'web-application-firewall',
@@ -60,7 +60,7 @@ const defaultFeatures = [
     name: 'Web Application Firewall',
     description: 'Real-time protection',
     icon: ShieldAlert,
-    stats: { value: '1.2K', label: 'Threats Blocked' },
+    stats: { value: '0', label: 'Threats Blocked' },
   },
   {
     id: 'advanced-malware-scanner',
@@ -68,7 +68,7 @@ const defaultFeatures = [
     name: 'Malware Scanner',
     description: 'Automated scanning',
     icon: Scan,
-    stats: { value: '1,423', label: 'Files Scanned' },
+    stats: { value: '0', label: 'Files Scanned' },
   },
   {
     id: 'login-logs-activity',
@@ -76,7 +76,7 @@ const defaultFeatures = [
     name: 'Login Logs & Activity',
     description: 'Track all login attempts',
     icon: Activity,
-    stats: { value: '245', label: 'Today' },
+    stats: { value: '1', label: 'Today' },
   },
 ];
 
