@@ -15,6 +15,15 @@ foreach ( $settings_option as $key => $value ) {
     // Check if the current screen matches the key (active tab)
     if ( $current_screen === $key ) {
 
+    if( !empty( $value ) ) {
+        $args = [
+            'prefix'              => $prefix,
+            'key'                 => $key,
+            'field'               => $value,
+            'value'               => isset( $saved_settings[$key] ) ? $saved_settings[$key] : $value['default'],
+            'current_screen_slug' => $screen_slug,
+        ];
+
         // Attempt to retrieve the template for the active settings page
         $template = Utility::get_template( 'settings/pages/' . $key . '.php', $args );
         $pro_template = Utility::get_pro_template( 'settings/pages/' . $key . '.php', $args );
