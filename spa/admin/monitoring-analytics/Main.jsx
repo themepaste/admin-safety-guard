@@ -10,7 +10,7 @@ function Main() {
 }
 
 ReactDOM.createRoot(
-  document.getElementById('tpsa-monitoring-analytics-wrapper')
+  document.getElementById('tpsa-monitoring-analytics-wrapper'),
 ).render(<Main />);
 
 export default Main;

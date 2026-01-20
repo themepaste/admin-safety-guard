@@ -1,206 +1,184 @@
 import React, { useState, useEffect } from 'react';
 
 const BlockUsers = () => {
-    const [loginData, setLoginData] = useState([]);
-    const [totalEntries, setTotalEntries] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+  const [loginData, setLoginData] = useState([]);
+  const [totalEntries, setTotalEntries] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString.replace(' ', 'T'));
-        return date.toLocaleString('en-US', {
-            month: 'long', // July
-            day: 'numeric', // 3
-            year: 'numeric', // 2025
-            hour: 'numeric', // 11
-            minute: '2-digit', // 17
-            hour12: true, // am/pm
-        });
-    };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString.replace(' ', 'T'));
+    return date.toLocaleString('en-US', {
+      month: 'long', // July
+      day: 'numeric', // 3
+      year: 'numeric', // 2025
+      hour: 'numeric', // 11
+      minute: '2-digit', // 17
+      hour12: true, // am/pm
+    });
+  };
 
-    const fetchData = async () => {
-        setLoading(false);
-        setError(null);
-        try {
-            const params = new URLSearchParams({
-                page: currentPage,
-                limit: itemsPerPage,
-            });
+  const fetchData = async () => {
+    setLoading(false);
+    setError(null);
+    try {
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: itemsPerPage,
+      });
 
-            // Add search param only if searchTerm is not empty
-            if (searchTerm.trim() !== '') {
-                params.append('s', searchTerm.trim());
-            }
+      // Add search param only if searchTerm is not empty
+      if (searchTerm.trim() !== '') {
+        params.append('s', searchTerm.trim());
+      }
 
-            const response = await fetch(
-                `${
-                    tpsaAdmin.rest_url
-                }secure-admin/v1/block-users?${params.toString()}`,
-                {
-                    method: 'GET',
-                }
-            );
+      const response = await fetch(
+        `${tpsaAdmin.rest_url}secure-admin/v1/block-users?${params.toString()}`,
+        {
+          method: 'GET',
+        },
+      );
 
-            if (!response.ok) throw new Error('Failed to fetch data');
+      if (!response.ok) throw new Error('Failed to fetch data');
 
-            const json = await response.json();
+      const json = await response.json();
 
-            setLoginData(json.data || []);
-            setTotalEntries(json.total || 0);
-        } catch (err) {
-            setError(err.message || 'Unknown error');
-        } finally {
-            setLoading(false);
-        }
-    };
+      setLoginData(json.data || []);
+      setTotalEntries(json.total || 0);
+    } catch (err) {
+      setError(err.message || 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchData();
-    }, [currentPage, searchTerm, itemsPerPage]);
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, searchTerm, itemsPerPage]);
 
-    const totalPages = Math.ceil(totalEntries / itemsPerPage);
+  const totalPages = Math.ceil(totalEntries / itemsPerPage);
 
-    const handlePrevPage = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
 
-    const handleNextPage = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
 
-    const limit_login_attempts =
-        tpsaAdmin.admin_url +
-        '?page=tp-admin-safety-guard&tpsa-setting=limit-login-attempts';
+  const limit_login_attempts =
+    tpsaAdmin.admin_url +
+    '?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=limit-login-attempts';
 
-    return (
-        <div className="tpsa-login-log-activity">
-            {loading ? (
-                <div className="tpsa-preloader">
-                    Loading...{' '}
-                    <img
-                        src={tpsaAdmin.assets_url + '/admin/img/preloader.gif'}
-                        alt="abc"
-                    />{' '}
-                </div>
-            ) : error ? (
-                <p style={{ color: 'red' }}>Error: {error}</p>
-            ) : (
-                <>
-                    <h1>Blocked Users</h1>
-                    {tpsaAdmin.limit_login ? (
-                        <div>
-                            <div className="tpsa-login-log-activity-header">
-                                <div className="tpsa-login-log-activity-items-per-page">
-                                    <label>Items per page: </label>
-                                    <select
-                                        value={itemsPerPage}
-                                        onChange={(e) =>
-                                            setItemsPerPage(
-                                                Number(e.target.value)
-                                            )
-                                        }
-                                    >
-                                        <option value="1">1</option>
-                                        <option value="3">3</option>
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="20">20</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <div className="tpsa-login-log-activity-search">
-                                    <input
-                                        type="text"
-                                        placeholder="Search..."
-                                        value={searchTerm}
-                                        onChange={(e) => {
-                                            setSearchTerm(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                    />
-                                </div>
-                            </div>
-
-                            <>
-                                <table className="tpsa-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Date & Time</th>
-                                            <th>User Agent</th>
-                                            <th>IP Address</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {loginData.length > 0 ? (
-                                            loginData.map((login) => (
-                                                <tr key={login.id}>
-                                                    <td>
-                                                        {formatDate(
-                                                            login.login_time
-                                                        )}
-                                                    </td>
-                                                    <td>{login.user_agent}</td>
-                                                    <td>{login.ip_address}</td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="7">
-                                                    No results available in
-                                                    table
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-
-                                <div className="tpsa-login-log-activity-pagination">
-                                    <button
-                                        onClick={handlePrevPage}
-                                        disabled={currentPage === 1}
-                                    >
-                                        Previous
-                                    </button>
-                                    <span>
-                                        Page {currentPage} of {totalPages || 1}
-                                    </span>
-                                    <button
-                                        onClick={handleNextPage}
-                                        disabled={
-                                            currentPage === totalPages ||
-                                            totalEntries === 0
-                                        }
-                                    >
-                                        Next
-                                    </button>
-                                </div>
-                            </>
-                        </div>
-                    ) : (
-                        <div className="tpsa-warning-message">
-                            <p>
-                                To view this table data, you need to enable the
-                                Limit Login Attempts settings.{' '}
-                                <strong>
-                                    <a
-                                        className="tpsa-link"
-                                        href={limit_login_attempts}
-                                    >
-                                        Enable it now
-                                    </a>{' '}
-                                </strong>
-                            </p>
-                        </div>
-                    )}
-                </>
-            )}
+  return (
+    <div className="tpsa-login-log-activity">
+      {loading ? (
+        <div className="tpsa-preloader">
+          Loading...{' '}
+          <img
+            src={tpsaAdmin.assets_url + '/admin/img/preloader.gif'}
+            alt="abc"
+          />{' '}
         </div>
-    );
+      ) : error ? (
+        <p style={{ color: 'red' }}>Error: {error}</p>
+      ) : (
+        <>
+          <h1>Blocked Users</h1>
+          {tpsaAdmin.limit_login ? (
+            <div>
+              <div className="tpsa-login-log-activity-header">
+                <div className="tpsa-login-log-activity-items-per-page">
+                  <label>Items per page: </label>
+                  <select
+                    value={itemsPerPage}
+                    onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                  >
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </div>
+                <div className="tpsa-login-log-activity-search">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  />
+                </div>
+              </div>
+
+              <>
+                <table className="tpsa-table">
+                  <thead>
+                    <tr>
+                      <th>Date & Time</th>
+                      <th>User Agent</th>
+                      <th>IP Address</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loginData.length > 0 ? (
+                      loginData.map((login) => (
+                        <tr key={login.id}>
+                          <td>{formatDate(login.login_time)}</td>
+                          <td>{login.user_agent}</td>
+                          <td>{login.ip_address}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="7">No results available in table</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+
+                <div className="tpsa-login-log-activity-pagination">
+                  <button onClick={handlePrevPage} disabled={currentPage === 1}>
+                    Previous
+                  </button>
+                  <span>
+                    Page {currentPage} of {totalPages || 1}
+                  </span>
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages || totalEntries === 0}
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            </div>
+          ) : (
+            <div className="tpsa-warning-message">
+              <p>
+                To view this table data, you need to enable the Limit Login
+                Attempts settings.{' '}
+                <strong>
+                  <a className="tpsa-link" href={limit_login_attempts}>
+                    Enable it now
+                  </a>{' '}
+                </strong>
+              </p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
 export default BlockUsers;
