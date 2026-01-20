@@ -32,6 +32,12 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                         'two-factor-auth'      => array(
                             'label' => __( 'Two-Factor Authentication', 'tp-secure-plugin' ),
                         ),
+                        'password-protection'  => array(
+                            'label' => __( 'Password Protection', 'tp-secure-plugin' ),
+                        ),
+                        'recaptcha'            => array(
+                            'label' => __( 'reCAPTCHA', 'tp-secure-plugin' ),
+                        ),
                     ),
                 ),
                 'firewall-malware'    => array(
