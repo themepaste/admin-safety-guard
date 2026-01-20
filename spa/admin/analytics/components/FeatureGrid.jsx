@@ -15,6 +15,14 @@ const allActiveFeatures = tpsaAdmin.feature_status.all_active_features;
 
 const defaultFeatures = [
   {
+    id: 'analytics',
+    category: 'monitoring',
+    name: 'Safety Analytics',
+    description: 'Security insights',
+    icon: TrendingUp,
+    stats: { value: '98%', label: 'Score' },
+  },
+  {
     id: 'limit-login-attempts',
     category: 'security-core',
     name: 'Limit Login Attempts',
@@ -69,14 +77,6 @@ const defaultFeatures = [
     description: 'Track all login attempts',
     icon: Activity,
     stats: { value: '245', label: 'Today' },
-  },
-  {
-    id: 'analytics',
-    category: 'monitoring',
-    name: 'Safety Analytics',
-    description: 'Security insights',
-    icon: TrendingUp,
-    stats: { value: '98%', label: 'Score' },
   },
 ];
 
@@ -136,10 +136,12 @@ export default function FeatureGrid({
 
                   <span
                     className={`fg-status ${
-                      feature.status === 'active' ? 'is-active' : 'is-inactive'
+                      allActiveFeatures.includes(feature.id)
+                        ? 'is-active'
+                        : 'is-inactive'
                     }`}
                   >
-                    {feature.status === 'active' ? (
+                    {allActiveFeatures.includes(feature.id) ? (
                       <span className="fg-statusInner">
                         <Check className="fg-statusIcon" aria-hidden="true" />
                         Active
