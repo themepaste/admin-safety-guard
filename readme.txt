@@ -151,6 +151,17 @@ A: [Support](https://themepaste.com/contact)
 
 == Changelog ==
 
+= 1.1.8 =
+* [New] Introduced a fully redesigned, modern admin UI for a cleaner and more intuitive experience.
+* [New] Added colorful visual elements and icons across the plugin for better clarity and usability.
+* [Improved] Improved overall navigation to make all features easier and faster to access.
+* [Improved] Enhanced layout consistency and spacing for a more polished look.
+* [Improved] Optimized UI responsiveness across different screen sizes.
+* [Update] Updated iconography and color scheme to improve visual hierarchy and readability.
+* [Maintenance] Refactored UI-related code for better performance and maintainability.
+* [Maintenance] Minor internal improvements and stability enhancements.
+
+
 = 1.1.7 =
 * [Fix] Active license URL now shows correctly based on the Pro plugin status.
 * [Fix] Fixed the documentation link on the plugin page.
