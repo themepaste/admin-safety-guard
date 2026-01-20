@@ -743,6 +743,8 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
         $active = 0;
         $inactive = 0;
 
+        $all_active_features = [];
+
         foreach ( $all_features_list as $feature_slug ) {
 
             $total++;
@@ -757,6 +759,7 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
 
                     if ( !empty( $saved_opts['enable'] ) ) {
                         $active++;
+                        $all_active_features[] = $feature_slug;
                     } else {
                         $inactive++;
                     }
@@ -766,15 +769,17 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
             // If no fields exist → always active
             if ( empty( $settings_fields[$feature_slug]['fields'] ) ) {
                 $active++;
+                $all_active_features[] = $feature_slug;
                 continue;
             }
 
         }
 
         return (object) [
-            'total'    => $total,
-            'active'   => $active,
-            'inactive' => $inactive,
+            'total'               => $total,
+            'active'              => $active,
+            'inactive'            => $inactive,
+            'all_active_features' => $all_active_features,
         ];
     }
 endif;
