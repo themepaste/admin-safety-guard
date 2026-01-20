@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
