@@ -104,6 +104,7 @@ class Settings {
             $redirect_url = add_query_arg(
                 [
                     'page'         => self::$SETTING_PAGE_ID,
+                    'tab'          => 'analytics',
                     'tpsa-setting' => 'analytics',
                 ],
                 admin_url( 'admin.php' )
