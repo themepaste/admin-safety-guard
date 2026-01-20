@@ -125,6 +125,7 @@ class Admin {
                 'social_login'   => array_keys( (array) get_option( 'social_login_crendentials' ) ),
                 'sameOrigin'     => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
                 'feature_status' => tpsa_get_features_summary(),
+                'total_users'    => count_users()['total_users'],
             ];
 
             if ( $current_setting_screen === 'customize' ) {
