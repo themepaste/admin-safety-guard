@@ -7,11 +7,11 @@ $prefix = $args['prefix'];
 $screen_slug = $args['current_screen'];
 $settings_option = $args['settings_option'];
 $page_label = $args['page_label'];
-$current_tab = $args['current_tab'];
 $submit_button = $prefix . '-' . $screen_slug . '_submit';
 $option_name = $args['option_name'];
 $saved_settings = get_option( $option_name, [] );
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
+$current_tab = $args['current_tab'];
 $current_url = $args['current_url'];
 $current_tab_label = $args['current_tab_label'];
 ?>
