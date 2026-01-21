@@ -141,6 +141,11 @@
     justify-content: space-between;
 }
 
+.tpsa-setting-wrapper h2 span a {
+    text-decoration: none;
+    color: #814bfe;
+}
+
 .tpsa-setting-row {
     margin-bottom: 35px;
 }

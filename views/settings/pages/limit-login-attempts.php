@@ -24,8 +24,8 @@ $current_tab_label = $args['current_tab_label'];
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p>This feature guards your site from brute-force attacks by restricting failed login attempts and
-                        automatically locking out repeated offenders.</p>
+                    <p><?php esc_html_e( 'This feature guards your site from brute-force attacks by restricting failed login attempts and
+                        automatically locking out repeated offenders.', 'tp-secure-plugin' ); ?></p>
                 </div>
             </div>
         </h2>
