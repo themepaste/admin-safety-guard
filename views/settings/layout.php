@@ -8,15 +8,19 @@ $settings_option = tpsa_settings_option();
 $settings_fields = tpsa_settings_fields();
 $current_screen = Utility::get_screen( 'tpsa-setting' ) ?? null;
 $current_tab = Utility::get_screen( 'tab' ) ?? null;
+$current_tab_label = $settings_option[$current_tab]['label'] ?? '';
+$current_url = admin_url( 'admin.php?page=tp-admin-safety-guard&tab=' . $current_tab . '&tpsa-setting=' . $current_tab );
 
 $args = array(
-    'settings_option' => $settings_option,
-    'settings_fields' => $settings_fields,
-    'current_screen'  => $current_screen,
-    'current_tab'     => $current_tab,
-    'prefix'          => get_tpsa_prefix(),
-    'option_name'     => get_tpsa_settings_option_name( $current_screen ),
-    'page_label'      => !is_null( $current_screen ) ? $settings_option[$current_screen]['label'] : '',
+    'settings_option'   => $settings_option,
+    'settings_fields'   => $settings_fields,
+    'current_screen'    => $current_screen,
+    'current_tab'       => $current_tab,
+    'current_url'       => $current_url,
+    'prefix'            => get_tpsa_prefix(),
+    'option_name'       => get_tpsa_settings_option_name( $current_screen ),
+    'page_label'        => !is_null( $current_screen ) ? $settings_option[$current_screen]['label'] : '',
+    'current_tab_label' => $current_tab_label,
 );
 ?>
 
