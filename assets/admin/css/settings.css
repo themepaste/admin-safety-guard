@@ -146,6 +146,14 @@
     color: #814bfe;
 }
 
+.tpsa-setting-wrapper h2 span a:hover,
+.tpsa-setting-wrapper h2 span a:active,
+.tpsa-setting-wrapper h2 span a:focus {
+    text-decoration: underline;
+    outline: 0;
+    box-shadow: none;
+}
+
 .tpsa-setting-row {
     margin-bottom: 35px;
 }
