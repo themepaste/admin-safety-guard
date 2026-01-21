@@ -19,7 +19,7 @@ class AdvancedFirewall implements FeatureInterface {
      * @since 1.0.0
      * @var string
      */
-    private $feature_id = 'web-application-firewall';
+    private $feature_id = 'firewall-malware';
 
     /**
      * Register hooks.
@@ -31,7 +31,7 @@ class AdvancedFirewall implements FeatureInterface {
         $this->filter( 'tpsa_settings_fields', [$this, 'extend_pro_fields'] );
 
         // Settings label
-        // $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
+        $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
     }
 
     public function extend_pro_settings( $settings ) {
@@ -44,12 +44,12 @@ class AdvancedFirewall implements FeatureInterface {
         ];
 
         // Desired position
-        $position = 2;
+        // $position = 2;
 
         // Insert at the specific position
-        $settings = array_slice( $settings, 0, $position, true )
-         + [$new_item_key => $new_item]
-         + array_slice( $settings, $position, null, true );
+        // $settings = array_slice( $settings, 0, $position, true )
+        //  + [$new_item_key => $new_item]
+        //  + array_slice( $settings, $position, null, true );
 
         return $settings;
     }
