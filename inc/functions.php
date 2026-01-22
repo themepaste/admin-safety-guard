@@ -38,6 +38,9 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                         'recaptcha'            => array(
                             'label' => __( 'reCAPTCHA', 'tp-secure-plugin' ),
                         ),
+                        'admin-bar'            => array(
+                            'label' => __( 'Hide Admin Bar', 'tp-secure-plugin' ),
+                        ),
                     ),
                 ),
                 'firewall-malware'    => array(
