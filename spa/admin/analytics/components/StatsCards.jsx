@@ -138,7 +138,7 @@ export default function StatsCards() {
       id: 'threats',
       theme: 'purple',
       label: 'Threats Blocked',
-      value: '0',
+      value: failedLoginCount,
       trendText: '0%',
       trendTone: 'good',
       icon: 'shield',
