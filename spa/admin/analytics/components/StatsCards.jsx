@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * TPStatsCards (React + Plain CSS, fully scoped)
@@ -7,45 +7,7 @@ import React from 'react';
  * - CSS is scoped under ".tpStats" wrapper to avoid conflicts
  */
 
-const STATS = [
-  {
-    id: 'threats',
-    theme: 'purple',
-    label: 'Threats Blocked',
-    value: '0',
-    trendText: '0%',
-    trendTone: 'good',
-    icon: 'shield',
-  },
-  {
-    id: 'users',
-    theme: 'blue',
-    label: 'Active Users',
-    value: tpsaAdmin.total_users,
-    trendText: '+100%',
-    trendTone: 'good',
-    icon: 'users',
-  },
-  {
-    id: 'failed',
-    theme: 'orange',
-    label: 'Failed Logins',
-    value: '0',
-    trendText: '-0%',
-    trendTone: 'bad',
-    icon: 'alert',
-  },
-  {
-    id: 'uptime',
-    theme: 'green',
-    label: 'Uptime',
-    value: '99.9%',
-    trendText: 'Excellent',
-    trendTone: 'good',
-    icon: 'trend',
-    showCheck: true,
-  },
-];
+const restUrl = tpsaAdmin.rest_url + 'secure-admin/v1/failed-logins/count';
 
 function TPStatsIcon({ name, className }) {
   const common = {
@@ -158,6 +120,59 @@ function TPStatsIcon({ name, className }) {
 }
 
 export default function StatsCards() {
+  const [failedLoginCount, setFailedLoginCount] = useState(1);
+
+  useEffect(() => {
+    fetch(restUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        setFailedLoginCount(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
+  const STATS = [
+    {
+      id: 'threats',
+      theme: 'purple',
+      label: 'Threats Blocked',
+      value: '0',
+      trendText: '0%',
+      trendTone: 'good',
+      icon: 'shield',
+    },
+    {
+      id: 'users',
+      theme: 'blue',
+      label: 'Active Users',
+      value: tpsaAdmin.total_users,
+      trendText: '+100%',
+      trendTone: 'good',
+      icon: 'users',
+    },
+    {
+      id: 'failed',
+      theme: 'orange',
+      label: 'Failed Logins',
+      value: failedLoginCount,
+      trendText: '-0%',
+      trendTone: 'bad',
+      icon: 'alert',
+    },
+    {
+      id: 'uptime',
+      theme: 'green',
+      label: 'Uptime',
+      value: '99.9%',
+      trendText: 'Excellent',
+      trendTone: 'good',
+      icon: 'trend',
+      showCheck: true,
+    },
+  ];
+
   return (
     <section className="tpStats">
       <style>{tpStatsCss}</style>
