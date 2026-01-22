@@ -11,10 +11,10 @@ $submit_button = $prefix . '-' . $screen_slug . '_submit';
 $option_name = $args['option_name'];
 $saved_settings = get_option( $option_name, [] );
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
-$is_pro = $settings_option[$screen_slug]['is_pro'] ?? false;
 $current_tab = $args['current_tab'];
 $current_url = $args['current_url'];
 $current_tab_label = $args['current_tab_label'];
+$is_pro = $settings_option[$current_tab]['sub'][$screen_slug]['is_pro'] ?? false;
 ?>
 
 <div class="tpsa-setting-wrapper">
