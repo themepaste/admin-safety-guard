@@ -19,4 +19,18 @@ class ProFeaturesSettings implements FeatureInterface {
         $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
     }
 
+    public function extend_pro_settings( $settings ) {
+        $settings['firewall-malware']['sub'] = [
+            'advanced-malware-scanner' => array(
+                'label'  => __( 'Advanced Malware Scanner', 'tp-secure-plugin' ),
+                'is_pro' => true,
+            ),
+            'web-application-firewall' => array(
+                'label'  => __( 'Web Application Firewall', 'tp-secure-plugin' ),
+                'is_pro' => true,
+            ),
+        ];
+        return $settings;
+    }
+
 }
