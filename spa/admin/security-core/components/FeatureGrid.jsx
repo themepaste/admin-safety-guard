@@ -49,6 +49,17 @@ const defaultFeatures = [
       admin_url +
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=recaptcha',
   },
+  {
+    id: 'admin-bar',
+    category: 'security-core',
+    name: 'Hide Admin Bar',
+    description: 'Hide the admin bar from non-admins',
+    status: 'active',
+    icon: Shield,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=admin-bar',
+  },
 ];
 
 export default function FeatureGrid({
