@@ -4,7 +4,6 @@ namespace ThemePaste\SecureAdmin\Classes\APIs;
 
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_Error;
 
 class FailedLoginsController extends BaseController {
     /**
@@ -24,5 +23,14 @@ class FailedLoginsController extends BaseController {
      */
     public function get_data( WP_REST_Request $request ) {
         return $this->get_records( $request, $this->get_table_name() );
+    }
+
+    /**
+     * Returns the total number of failed login records in the database.
+     *
+     * @return int The total number of failed login records.
+     */
+    public function get_count() {
+        return $this->get_record_count( $this->get_table_name() );
     }
 }

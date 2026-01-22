@@ -2,9 +2,9 @@
 
 namespace ThemePaste\SecureAdmin\Classes\APIs;
 
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_Error;
 
 abstract class BaseController {
     /**
@@ -50,14 +50,14 @@ abstract class BaseController {
         global $wpdb;
 
         // Sanitize and validate parameters
-        $page   = absint( $request->get_param( 'page' ) );
-        $limit  = absint( $request->get_param( 'limit' ) );
+        $page = absint( $request->get_param( 'page' ) );
+        $limit = absint( $request->get_param( 'limit' ) );
         $search = sanitize_text_field( $request->get_param( 's' ) );
 
-        $page  = $page > 0 ? $page : 1;
+        $page = $page > 0 ? $page : 1;
         $limit = $limit > 0 ? $limit : 10;
 
-        $offset     = ( $page - 1 ) * $limit;
+        $offset = ( $page - 1 ) * $limit;
         $full_table_name = get_tpsa_db_table_name( $table_name );
 
         // Verify table exists
@@ -72,14 +72,14 @@ abstract class BaseController {
         }
 
         $where_sql = '';
-        if ( ! empty( $search ) ) {
+        if ( !empty( $search ) ) {
             $like_search = '%' . $wpdb->esc_like( $search ) . '%';
 
             // Search across all relevant columns (assuming common columns for login logs)
             $where_sql = $wpdb->prepare(
-                "WHERE username LIKE %s 
-                OR user_agent LIKE %s 
-                OR ip_address LIKE %s 
+                "WHERE username LIKE %s
+                OR user_agent LIKE %s
+                OR ip_address LIKE %s
                 OR login_time LIKE %s",
                 $like_search,
                 $like_search,
@@ -101,13 +101,37 @@ abstract class BaseController {
             ARRAY_A
         );
 
-        if ( empty( $results ) && ! empty( $search ) ) {
+        if ( empty( $results ) && !empty( $search ) ) {
             return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given search.', 'tp-secure-plugin' ) );
         } elseif ( empty( $results ) ) {
             return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given page.', 'tp-secure-plugin' ) );
         }
 
         return $this->build_response( $results, $total_items, $page, $limit );
+    }
+
+    /**
+     * Retrieves the total number of records in the specified table.
+     *
+     * If no table name is provided, the controller's default table name is used.
+     *
+     * @param string $table_name Optional. The name of the database table to query. Defaults to the controller's default table name.
+     * @return int The total number of records in the specified table.
+     */
+    protected function get_record_count( string $table_name = '' ): int {
+        global $wpdb;
+
+        // If no table passed, use controller default table
+        $table_name = $table_name !== '' ? $table_name : $this->get_table_name();
+
+        $full_table_name = get_tpsa_db_table_name( $table_name );
+
+        // Check table exists
+        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $full_table_name ) ) !== $full_table_name ) {
+            return 0;
+        }
+
+        return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$full_table_name}" );
     }
 
     /**
