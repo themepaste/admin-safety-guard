@@ -19,7 +19,7 @@ $args = array(
     'current_url'       => $current_url,
     'prefix'            => get_tpsa_prefix(),
     'option_name'       => get_tpsa_settings_option_name( $current_screen ),
-    'page_label'        => !is_null( $current_screen ) ? $settings_option[$current_screen]['label'] : '',
+    'page_label'        => !is_null( $current_screen ) && array_key_exists( $current_screen, $settings_option ) ? $settings_option[$current_screen]['label'] : '',
     'current_tab_label' => $current_tab_label,
 );
 ?>
