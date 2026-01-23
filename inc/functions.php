@@ -731,7 +731,6 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
     function tpsa_get_features_summary() {
 
         $settings_fields = tpsa_settings_fields();
-
         $all_features_list = tpsa_all_features();
 
         $total = 0;
@@ -743,7 +742,7 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
         foreach ( $all_features_list as $feature_slug ) {
 
             $total++;
-            if ( isset( $settings_fields[$feature_slug] ) ) {
+            if ( isset( $settings_fields[$feature_slug]['fields'] ) ) {
                 $fields = $settings_fields[$feature_slug]['fields'];
 
                 // If feature has an enable switch
