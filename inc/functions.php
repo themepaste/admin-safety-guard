@@ -86,7 +86,7 @@ if ( !function_exists( 'tpsa_settings_fields' ) ) {
             'tpsa_settings_fields',
             array(
                 'analytics'            => array(
-
+                    'fields' => array(),
                 ),
                 'admin-bar'            => array(
                     'fields' => array(
