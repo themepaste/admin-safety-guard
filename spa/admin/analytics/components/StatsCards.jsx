@@ -164,7 +164,7 @@ export default function StatsCards() {
     {
       id: 'uptime',
       theme: 'green',
-      label: 'Uptime',
+      label: 'Monitoring',
       value: '98%',
       trendText: 'Excellent',
       trendTone: 'good',
