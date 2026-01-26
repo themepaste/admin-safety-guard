@@ -152,14 +152,15 @@ A: [Support](https://themepaste.com/contact)
 == Changelog ==
 
 = 1.1.9 =
-* [New] Added pagination support across listings for improved performance and usability.
-* [New] All major pages are now dynamic.
+* [New] Added breadcrumb navigation for better page clarity and navigation.
+* [New] All major pages are now fully dynamic.
 * [Improved] Updated UI/UX with refined layouts, spacing, and design elements.
 * [Improved] Enhanced responsiveness and overall page behavior.
 * [Fix] Fixed multiple minor issues from previous versions.
 * [Fix] Resolved layout and alignment inconsistencies.
 * [Maintenance] Refactored code for better performance and maintainability.
 * [Maintenance] General stability improvements and internal optimizations.
+
 
 
 = 1.1.8 =
