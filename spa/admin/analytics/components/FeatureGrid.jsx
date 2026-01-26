@@ -91,6 +91,7 @@ const defaultFeatures = [
     url:
       admin_url +
       'admin.php?page=tp-admin-safety-guard&tab=firewall-malware&tpsa-setting=advanced-malware-scanner',
+    isPro: true,
   },
   {
     id: 'login-logs-activity',
