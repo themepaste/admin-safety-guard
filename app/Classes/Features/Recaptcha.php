@@ -170,7 +170,8 @@ class Recaptcha implements FeatureInterface {
             $site_key = esc_attr( $this->settings['site-key'] );
             $theme = esc_attr( $this->settings['theme'] ?? 'light' );
 
-            echo '<div class="g-recaptcha" data-sitekey="' . $site_key . '" data-theme="' . $theme . '"></div>';
+            echo '<div class="g-recaptcha" data-sitekey="' . esc_attr( $site_key ) . '" data-theme="' . esc_attr( $theme ) . '"></div>';
+
         }
     }
 

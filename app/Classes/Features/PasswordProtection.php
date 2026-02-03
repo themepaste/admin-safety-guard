@@ -133,25 +133,29 @@ class PasswordProtection implements FeatureInterface {
         ? '<div style="color:red;">' . esc_html( $GLOBALS['tpsa_password_error'] ) . '</div>'
         : '';
         ?>
-        <!DOCTYPE html>
-        <html <?php language_attributes(); ?>>
-        <head>
-            <meta charset="<?php bloginfo( 'charset' ); ?>">
-            <meta name="robots" content="noindex, nofollow">
-            <title><?php bloginfo( 'name' ); ?><?php esc_html_e( ' - Protected', 'admin-safety-guard' ); ?></title>
-            <?php wp_head(); ?>
-        </head>
-        <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f9f9f9;">
-            <form method="post" style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
-                <h2 style="margin-bottom:1rem;"><?php esc_html_e( 'Enter Password to Access', 'admin-safety-guard' ); ?></h2>
-                <?php echo $error; ?>
-                <input type="password" name="tpsa_site_password" style="padding:10px; width:100%; margin-bottom:1rem;" required>
-                <button type="submit" style="padding:10px 20px; background:#0073aa; color:#fff; border:none; cursor:pointer;"><?php esc_html_e( 'Submit', 'admin-safety-guard' ); ?></button>
-            </form>
-            <?php wp_footer(); ?>
-        </body>
-        </html>
-        <?php
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+
+<head>
+    <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <meta name="robots" content="noindex, nofollow">
+    <title><?php bloginfo( 'name' ); ?><?php esc_html_e( ' - Protected', 'admin-safety-guard' ); ?></title>
+    <?php wp_head(); ?>
+</head>
+
+<body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f9f9f9;">
+    <form method="post" style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+        <h2 style="margin-bottom:1rem;"><?php esc_html_e( 'Enter Password to Access', 'admin-safety-guard' ); ?></h2>
+        <?php echo esc_html( $error ); ?>
+        <input type="password" name="tpsa_site_password" style="padding:10px; width:100%; margin-bottom:1rem;" required>
+        <button type="submit"
+            style="padding:10px 20px; background:#0073aa; color:#fff; border:none; cursor:pointer;"><?php esc_html_e( 'Submit', 'admin-safety-guard' ); ?></button>
+    </form>
+    <?php wp_footer(); ?>
+</body>
+
+</html>
+<?php
 }
 
     /**
