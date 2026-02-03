@@ -102,7 +102,7 @@ if (
                     }
                     $support_notice = sprintf(
                         /* translators: %d: status code */
-                        __( 'Support request failed (HTTP %d).%s', 'admin-safety-guard' ),
+                        __( 'Support request failed (HTTP %1$d). %2$s', 'admin-safety-guard' ),
                         $code,
                         $error_msg
                     );
