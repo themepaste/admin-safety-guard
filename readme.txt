@@ -2,7 +2,7 @@
 Contributors: themepaste, habibnote
 Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, login security, brute force, ip block, xml-rpc, social login
 Requires at least: 5.8
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.0
 Stable tag: 1.1.9
 License: GPLv3 or later

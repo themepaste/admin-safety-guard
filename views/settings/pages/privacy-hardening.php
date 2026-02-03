@@ -15,7 +15,7 @@ $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;        ?>
+        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;          ?>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
@@ -42,7 +42,7 @@ if ( is_array( $current_settings_fields ) && !empty( $current_settings_fields ) 
             'current_screen_slug' => $screen_slug,
         ];
         $field_name = $field['type'];
-        echo Utility::get_template( 'settings/fields/' . $field_name . '.php', $args );
+        echo Utility::get_template( 'settings/fields/' . sanitize_key( $field_name ) . '.php', $args );
     }
 }
 ?>

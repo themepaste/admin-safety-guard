@@ -6,7 +6,7 @@ Description: Secure your WordPress login with Admin safety guard to ensure secur
 Version: 1.1.9
 Author: Themepaste Team
 Author URI: http://themepaste.com/
-License: GPL2 or Later
+License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: admin-safety-guard
  */
