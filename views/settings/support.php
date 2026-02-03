@@ -145,9 +145,18 @@ if (
                         </div>
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
+                                <?php
+$name_value = '';
+
+if ( isset( $_POST['tpsa_support_name'] ) ) {
+    $name_value = sanitize_text_field( wp_unslash( $_POST['tpsa_support_name'] ) );
+}
+?>
+
                                 <input type="text" name="tpsa_support_name"
-                                    value="<?php echo isset( $_POST['tpsa_support_name'] ) ? esc_attr( wp_unslash( $_POST['tpsa_support_name'] ) ) : ''; ?>"
-                                    placeholder="Enter your name" required>
+                                    value="<?php echo esc_attr( $name_value ); ?>" placeholder="Enter your name"
+                                    required>
+
                             </div>
                             <p class="tp-field-desc"></p>
                         </div>
@@ -162,9 +171,16 @@ if (
                         </div>
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
+                                <?php
+$email_value = '';
+
+if ( isset( $_POST['tpsa_support_email'] ) ) {
+    $email_value = sanitize_email( wp_unslash( $_POST['tpsa_support_email'] ) );
+}
+?>
                                 <input type="email" name="tpsa_support_email"
-                                    value="<?php echo isset( $_POST['tpsa_support_email'] ) ? esc_attr( wp_unslash( $_POST['tpsa_support_email'] ) ) : ''; ?>"
-                                    placeholder="Enter your Email" required>
+                                    value="<?php echo esc_attr( $email_value ); ?>" placeholder="Enter your Email"
+                                    required>
                             </div>
                             <p class="tp-field-desc"></p>
                         </div>
@@ -180,9 +196,18 @@ if (
                         </div>
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
+                                <?php
+$phone_value = '';
+
+if ( isset( $_POST['tpsa_support_phone'] ) ) {
+    $phone_value = sanitize_text_field( wp_unslash( $_POST['tpsa_support_phone'] ) );
+}
+?>
+
                                 <input type="text" name="tpsa_support_phone"
-                                    value="<?php echo isset( $_POST['tpsa_support_phone'] ) ? esc_attr( wp_unslash( $_POST['tpsa_support_phone'] ) ) : ''; ?>"
-                                    placeholder="+8801XXXXXXXXX" required>
+                                    value="<?php echo esc_attr( $phone_value ); ?>" placeholder="+8801XXXXXXXXX"
+                                    required>
+
                             </div>
                             <p class="tp-field-desc"></p>
                         </div>
@@ -197,8 +222,16 @@ if (
                         </div>
                         <div class="tp-field-input">
                             <div class="tp-switch-wrapper">
+                                <?php
+$message_value = '';
+
+if ( isset( $_POST['tpsa_support_message'] ) ) {
+    $message_value = sanitize_textarea_field( wp_unslash( $_POST['tpsa_support_message'] ) );
+}
+?>
+
                                 <textarea name="tpsa_support_message" rows="6" style="width:100%;" required><?php
-echo isset( $_POST['tpsa_support_message'] ) ? esc_textarea( wp_unslash( $_POST['tpsa_support_message'] ) ) : '';
+echo esc_textarea( $message_value );
 ?></textarea>
                             </div>
                             <p class="tp-field-desc"></p>
