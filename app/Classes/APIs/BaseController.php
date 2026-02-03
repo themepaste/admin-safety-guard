@@ -65,7 +65,7 @@ abstract class BaseController {
             return new WP_REST_Response(
                 [
                     'error'   => true,
-                    'message' => __( 'Table does not exist.', 'tp-secure-plugin' ),
+                    'message' => __( 'Table does not exist.', 'admin-safety-guard' ),
                 ],
                 500
             );
@@ -102,9 +102,9 @@ abstract class BaseController {
         );
 
         if ( empty( $results ) && !empty( $search ) ) {
-            return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given search.', 'tp-secure-plugin' ) );
+            return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given search.', 'admin-safety-guard' ) );
         } elseif ( empty( $results ) ) {
-            return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given page.', 'tp-secure-plugin' ) );
+            return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given page.', 'admin-safety-guard' ) );
         }
 
         return $this->build_response( $results, $total_items, $page, $limit );

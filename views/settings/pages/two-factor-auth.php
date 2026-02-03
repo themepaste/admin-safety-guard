@@ -58,7 +58,7 @@ if ( is_array( $current_settings_fields ) && !empty( $current_settings_fields ) 
             <div class="tpsa-save-button">
                 <?php
 printf( '<button type="submit">%1$s</button>',
-    esc_html__( 'Save Settings', 'tp-secure-plugin' )
+    esc_html__( 'Save Settings', 'admin-safety-guard' )
 );
 ?>
             </div>

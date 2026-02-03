@@ -25,7 +25,7 @@ $current_tab_label = $args['current_tab_label'];
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
                     <p><?php esc_html_e( 'This feature guards your site from brute-force attacks by restricting failed login attempts and
-                        automatically locking out repeated offenders.', 'tp-secure-plugin' ); ?></p>
+                        automatically locking out repeated offenders.', 'admin-safety-guard' ); ?></p>
                 </div>
             </div>
         </h2>
@@ -56,7 +56,7 @@ if ( is_array( $current_settings_fields ) && !empty( $current_settings_fields ) 
             <div class="tpsa-save-button">
                 <?php
 printf( '<button type="submit">%1$s</button>',
-    esc_html__( 'Save Settings', 'tp-secure-plugin' )
+    esc_html__( 'Save Settings', 'admin-safety-guard' )
 );
 ?>
             </div>

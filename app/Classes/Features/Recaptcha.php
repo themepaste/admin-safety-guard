@@ -179,7 +179,7 @@ class Recaptcha implements FeatureInterface {
      */
     public function show_recaptcha_error() {
         echo '<div style="color: red; margin: 10px 0;">';
-        esc_html_e( 'reCAPTCHA keys are not configured properly. Please contact the site administrator.', 'tp-secure-plugin' );
+        esc_html_e( 'reCAPTCHA keys are not configured properly. Please contact the site administrator.', 'admin-safety-guard' );
         echo '</div>';
     }
 
@@ -197,7 +197,7 @@ class Recaptcha implements FeatureInterface {
         }
 
         if ( empty( $_POST['g-recaptcha-response'] ) ) {
-            return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA verification missing.', 'tp-secure-plugin' ) );
+            return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA verification missing.', 'admin-safety-guard' ) );
         }
 
         $response = $this->verify_recaptcha( sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) );
@@ -299,7 +299,7 @@ class Recaptcha implements FeatureInterface {
         $version = $this->settings['version'] ?? 'v2';
 
         if ( empty( $token ) ) {
-            return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA token is missing.', 'tp-secure-plugin' ) );
+            return new WP_Error( 'recaptcha_missing', __( 'reCAPTCHA token is missing.', 'admin-safety-guard' ) );
         }
 
         $response = wp_remote_post(
@@ -317,22 +317,22 @@ class Recaptcha implements FeatureInterface {
             error_log( '[TPSA reCAPTCHA] wp_remote_post error: ' . $response->get_error_message() );
             error_log( '[TPSA reCAPTCHA] error code: ' . $response->get_error_code() );
 
-            return new WP_Error( 'recaptcha_failed', __( 'Could not contact reCAPTCHA server.', 'tp-secure-plugin' ) );
+            return new WP_Error( 'recaptcha_failed', __( 'Could not contact reCAPTCHA server.', 'admin-safety-guard' ) );
         }
 
         $body = json_decode( wp_remote_retrieve_body( $response ), true );
 
         if ( empty( $body['success'] ) ) {
-            return new WP_Error( 'recaptcha_invalid', __( 'reCAPTCHA verification failed.', 'tp-secure-plugin' ) );
+            return new WP_Error( 'recaptcha_invalid', __( 'reCAPTCHA verification failed.', 'admin-safety-guard' ) );
         }
 
         if ( 'v3' === $version ) {
             if ( empty( $body['score'] ) || $body['score'] < 0.5 ) {
-                return new WP_Error( 'recaptcha_low_score', __( 'reCAPTCHA score too low. Try again.', 'tp-secure-plugin' ) );
+                return new WP_Error( 'recaptcha_low_score', __( 'reCAPTCHA score too low. Try again.', 'admin-safety-guard' ) );
             }
 
             if ( empty( $body['action'] ) || 'login_register' !== $body['action'] ) {
-                return new WP_Error( 'recaptcha_action_mismatch', __( 'reCAPTCHA action mismatch.', 'tp-secure-plugin' ) );
+                return new WP_Error( 'recaptcha_action_mismatch', __( 'reCAPTCHA action mismatch.', 'admin-safety-guard' ) );
             }
         }
 

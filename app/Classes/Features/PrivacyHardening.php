@@ -46,20 +46,19 @@ class PrivacyHardening implements FeatureInterface {
      */
 
     public function register_hooks() {
-        $this->action( 'init', [$this, 'disable_XML_RPC']);
+        $this->action( 'init', [$this, 'disable_XML_RPC'] );
     }
 
-    
     public function disable_XML_RPC() {
         $settings = $this->get_settings();
-        if( $this->is_enabled( $settings, 'xml-rpc-enable' ) ) {
+        if ( $this->is_enabled( $settings, 'xml-rpc-enable' ) ) {
 
             $this->filter( 'xmlrpc_enabled', '__return_false' );
 
             if ( isset( $_SERVER['SCRIPT_FILENAME'] ) && basename( $_SERVER['SCRIPT_FILENAME'] ) === 'xmlrpc.php' ) {
                 header( 'HTTP/1.1 403 Forbidden' );
                 header( 'Content-Type: text/plain; charset=utf-8' );
-                esc_html_e( 'XML-RPC disabled by site admin.', 'tp-secure-plugin' );
+                esc_html_e( 'XML-RPC disabled by site admin.', 'admin-safety-guard' );
                 exit;
             }
         }

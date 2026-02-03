@@ -16,11 +16,11 @@ $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
 
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;     ?>
+        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;      ?>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p><?php esc_html_e( 'This feature conditionally hides the admin bar for specific user roles or chosen pages, enabling cleaner interfaces and tailored backend visibility.', 'tp-secure-plugin' ); ?>
+                    <p><?php esc_html_e( 'This feature conditionally hides the admin bar for specific user roles or chosen pages, enabling cleaner interfaces and tailored backend visibility.', 'admin-safety-guard' ); ?>
                     </p>
                 </div>
             </div>
@@ -55,7 +55,7 @@ if ( is_array( $current_settings_fields ) && !empty( $current_settings_fields ) 
             <div class="tpsa-save-button">
                 <?php
 printf( '<button type="submit">%1$s</button>',
-    esc_html__( 'Save Settings', 'tp-secure-plugin' )
+    esc_html__( 'Save Settings', 'admin-safety-guard' )
 );
 ?>
             </div>

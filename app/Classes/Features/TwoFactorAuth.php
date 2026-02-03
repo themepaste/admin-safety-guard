@@ -132,16 +132,16 @@ label[for="user_pass"],
 
 <div id="tpsa_otp_wrap">
     <label for="tpsa_otp_field">
-        <?php echo esc_html__( 'One Time Password', 'tp-secure-plugin' ); ?>
+        <?php echo esc_html__( 'One Time Password', 'admin-safety-guard' ); ?>
     </label>
     <input type="hidden" name="tpsa_user_id" value="<?php echo esc_attr( $user_id ); ?>">
     <input type="hidden" name="tpsa_otp_verify" value="1">
     <input type="text" name="tpsa_otp" id="tpsa_otp_field" class="input"
-        placeholder="<?php echo esc_attr__( 'Enter OTP', 'tp-secure-plugin' ); ?>" required autocomplete="off">
+        placeholder="<?php echo esc_attr__( 'Enter OTP', 'admin-safety-guard' ); ?>" required autocomplete="off">
     <?php $this->sent_email_message( $user ); ?>
 </div>
 <button type="submit" id="tpsa_verify_btn">
-    <?php echo esc_html__( 'Verify OTP', 'tp-secure-plugin' ); ?>
+    <?php echo esc_html__( 'Verify OTP', 'admin-safety-guard' ); ?>
 </button>
 <?php
 }
@@ -172,7 +172,7 @@ label[for="user_pass"],
                 'login_message',
                 function () {
                     echo '<div style="color:red; margin-bottom:10px;">' .
-                    esc_html__( 'Invalid OTP. Please try again.', 'tp-secure-plugin' ) .
+                    esc_html__( 'Invalid OTP. Please try again.', 'admin-safety-guard' ) .
                         '</div>';
                 }
             );
@@ -192,7 +192,7 @@ label[for="user_pass"],
                 'login_message',
                 function () {
                     echo '<div style="color:red; margin-bottom:10px;">' .
-                    esc_html__( 'Login data missing. Please try logging in again.', 'tp-secure-plugin' ) .
+                    esc_html__( 'Login data missing. Please try logging in again.', 'admin-safety-guard' ) .
                         '</div>';
                 }
             );
@@ -214,7 +214,7 @@ label[for="user_pass"],
                 'login_message',
                 function () {
                     echo '<div style="color:red; margin-bottom:10px;">' .
-                    esc_html__( 'Login failed after OTP verification. Please try again.', 'tp-secure-plugin' ) .
+                    esc_html__( 'Login failed after OTP verification. Please try again.', 'admin-safety-guard' ) .
                         '</div>';
                 }
             );
@@ -356,7 +356,7 @@ label[for="user_pass"],
 <p style="color: green; font-weight: 600; margin-bottom: 20px;">
     <?php
 printf(
-            __( 'OTP code sent to your email address %s. Please check your inbox or spam folder.', 'tp-secure-plugin' ),
+            __( 'OTP code sent to your email address %s. Please check your inbox or spam folder.', 'admin-safety-guard' ),
             esc_html( $masked_email )
         );
         ?>

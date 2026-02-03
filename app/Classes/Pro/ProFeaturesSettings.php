@@ -22,11 +22,11 @@ class ProFeaturesSettings implements FeatureInterface {
     public function extend_pro_settings( $settings ) {
         $settings['firewall-malware']['sub'] = [
             'advanced-malware-scanner' => array(
-                'label'  => __( 'Advanced Malware Scanner', 'tp-secure-plugin' ),
+                'label'  => __( 'Advanced Malware Scanner', 'admin-safety-guard' ),
                 'is_pro' => true,
             ),
             'web-application-firewall' => array(
-                'label'  => __( 'Web Application Firewall', 'tp-secure-plugin' ),
+                'label'  => __( 'Web Application Firewall', 'admin-safety-guard' ),
                 'is_pro' => true,
             ),
         ];

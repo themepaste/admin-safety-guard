@@ -130,19 +130,19 @@ class LimitLoginAttempts implements FeatureInterface {
                 function () {
                     ?>
 <div class="notice notice-error is-dismissible">
-    <p><strong><?php _e( 'Warning:', 'tp-secure-plugin' ); ?></strong>
-        <?php _e( 'WordPress Cron is currently disabled.', 'tp-secure-plugin' ); ?></p>
-    <p><?php _e( 'Please check the following to resolve the issue:', 'tp-secure-plugin' ); ?></p>
+    <p><strong><?php _e( 'Warning:', 'admin-safety-guard' ); ?></strong>
+        <?php _e( 'WordPress Cron is currently disabled.', 'admin-safety-guard' ); ?></p>
+    <p><?php _e( 'Please check the following to resolve the issue:', 'admin-safety-guard' ); ?></p>
     <ul>
-        <li><?php _e( 'Ensure the <code>DISABLE_WP_CRON</code> constant is <strong>not</strong> defined in your <code>wp-config.php</code> file. If it is, remove or comment out the line: <code>define(\'DISABLE_WP_CRON\', true);</code>', 'tp-secure-plugin' ); ?>
+        <li><?php _e( 'Ensure the <code>DISABLE_WP_CRON</code> constant is <strong>not</strong> defined in your <code>wp-config.php</code> file. If it is, remove or comment out the line: <code>define(\'DISABLE_WP_CRON\', true);</code>', 'admin-safety-guard' ); ?>
         </li>
-        <li><?php _e( 'Ensure your server cron is properly configured to trigger <code>wp-cron.php</code> periodically. You may need to set up a server-side cron job (using <code>cron</code> on Linux or Task Scheduler on Windows).', 'tp-secure-plugin' ); ?>
+        <li><?php _e( 'Ensure your server cron is properly configured to trigger <code>wp-cron.php</code> periodically. You may need to set up a server-side cron job (using <code>cron</code> on Linux or Task Scheduler on Windows).', 'admin-safety-guard' ); ?>
         </li>
-        <li><?php _e( 'If you\'re unsure how to configure the server cron, please consult your hosting provider for assistance.', 'tp-secure-plugin' ); ?>
+        <li><?php _e( 'If you\'re unsure how to configure the server cron, please consult your hosting provider for assistance.', 'admin-safety-guard' ); ?>
         </li>
     </ul>
-    <p><strong><?php _e( 'Note:', 'tp-secure-plugin' ); ?></strong>
-        <?php _e( 'This plugin will not function properly without a working cron job. The blocked users will not be unblocked automatically if the cron is not running.', 'tp-secure-plugin' ); ?>
+    <p><strong><?php _e( 'Note:', 'admin-safety-guard' ); ?></strong>
+        <?php _e( 'This plugin will not function properly without a working cron job. The blocked users will not be unblocked automatically if the cron is not running.', 'admin-safety-guard' ); ?>
     </p>
 </div>
 <?php

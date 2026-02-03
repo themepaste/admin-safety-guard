@@ -46,7 +46,7 @@ class TablePrefixCheck implements FeatureInterface {
      */
     public function extend_pro_settings( $settings ) {
         $settings['table-prefix-check'] = [
-            'label'  => __( 'Check DB Table Prefix', 'tp-secure-plugin' ),
+            'label'  => __( 'Check DB Table Prefix', 'admin-safety-guard' ),
             'class'  => '',
             'is_pro' => true,
         ];
@@ -70,19 +70,19 @@ class TablePrefixCheck implements FeatureInterface {
         //DB table prefix check
         $fields['table-prefix-check']['fields']['new-prefix'] = array(
             'type'    => 'text',
-            'label'   => __( 'New Prefix', 'tp-secure-plugin' ),
+            'label'   => __( 'New Prefix', 'admin-safety-guard' ),
             'class'   => '',
             'id'      => '',
-            'desc'    => __( 'Make a full backup first. The plugin will try to update wp-config.php and references in options/usermeta', 'tp-secure-plugin' ),
+            'desc'    => __( 'Make a full backup first. The plugin will try to update wp-config.php and references in options/usermeta', 'admin-safety-guard' ),
             'default' => '',
         );
 
         $fields['table-prefix-check']['fields']['i-understand'] = array(
             'type'    => 'text',
-            'label'   => __( 'Type "I UNDERSTAND"', 'tp-secure-plugin' ),
+            'label'   => __( 'Type "I UNDERSTAND"', 'admin-safety-guard' ),
             'class'   => '',
             'id'      => '',
-            'desc'    => __( 'Type "I UNDERSTAND" in this field', 'tp-secure-plugin' ),
+            'desc'    => __( 'Type "I UNDERSTAND" in this field', 'admin-safety-guard' ),
             'default' => '',
         );
 

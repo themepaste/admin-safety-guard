@@ -18,9 +18,9 @@ printf( '<img src="%1$s" >', esc_url( $tpsm_icon ) );
 
         <!-- Plugin title and tagline -->
         <div class="tpsa-titles">
-            <h1><?php esc_html_e( 'Admin Safety Guard', 'tp-secure-plugin' ); ?></h1>
+            <h1><?php esc_html_e( 'Admin Safety Guard', 'admin-safety-guard' ); ?></h1>
             <p style="margin:0; color:#814bfe;">
-                <?php esc_html_e( 'Shield Your Site with Confidence', 'tp-secure-plugin' ); ?></p>
+                <?php esc_html_e( 'Shield Your Site with Confidence', 'admin-safety-guard' ); ?></p>
         </div>
     </div>
 
@@ -28,7 +28,7 @@ printf( '<img src="%1$s" >', esc_url( $tpsm_icon ) );
     <div class="tpsa-topbar-info-area">
         <!-- Link to plugin documentation -->
         <a href="https://themepaste.com/documentation/admin-safety-guard/" target="_blank">
-            <?php esc_html_e( 'Documentation', 'tp-secure-plugin' ); ?>
+            <?php esc_html_e( 'Documentation', 'admin-safety-guard' ); ?>
         </a>
     </div>
 </div>

@@ -60,8 +60,8 @@ class Settings {
      */
     public function register_settings_page() {
         add_menu_page(
-            esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
-            esc_html__( 'Admin Safety Guard', 'tp-secure-plugin' ),
+            esc_html__( 'Admin Safety Guard', 'admin-safety-guard' ),
+            esc_html__( 'Admin Safety Guard', 'admin-safety-guard' ),
             'manage_options',
             self::$SETTING_PAGE_ID,
             [$this, 'render_settings_page'],
@@ -71,8 +71,8 @@ class Settings {
 
         add_submenu_page(
             self::$SETTING_PAGE_ID, // parent slug
-            __( 'Support', 'tp-secure-plugin' ), // page title
-            __( 'Support', 'tp-secure-plugin' ), // menu title
+            __( 'Support', 'admin-safety-guard' ), // page title
+            __( 'Support', 'admin-safety-guard' ), // menu title
             'manage_options', // capability
             'asg-support', // submenu slug
             [$this, 'render_asg_support_page']// callback function
@@ -125,7 +125,7 @@ class Settings {
         $settings_link = sprintf(
             '<a href="%1$s">%2$s</a>',
             esc_url( $this->setting_page_url ),
-            esc_html__( 'Settings', 'tp-secure-plugin' )
+            esc_html__( 'Settings', 'admin-safety-guard' )
         );
 
         array_unshift( $links, $settings_link );

@@ -33,7 +33,7 @@ class SocialLogin implements FeatureInterface {
      */
     public function extend_pro_settings( $settings ) {
         $settings['social-login'] = [
-            'label'  => __( 'Social Login', 'tp-secure-plugin' ),
+            'label'  => __( 'Social Login', 'admin-safety-guard' ),
             'class'  => '',
             'is_pro' => true,
         ];
@@ -56,10 +56,10 @@ class SocialLogin implements FeatureInterface {
         // Social Login
         $fields['social-login']['fields']['social-logins'] = array(
             'type'    => 'social-login',
-            'label'   => __( 'Social Login', 'tp-secure-plugin' ),
+            'label'   => __( 'Social Login', 'admin-safety-guard' ),
             'class'   => '',
             'id'      => '',
-            'desc'    => __( 'Enable or disable providers for login.', 'tp-secure-plugin' ),
+            'desc'    => __( 'Enable or disable providers for login.', 'admin-safety-guard' ),
             'default' => array(),
             'options' => array(
                 'google'   => array(

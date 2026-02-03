@@ -8,7 +8,7 @@ Author: Themepaste Team
 Author URI: http://themepaste.com/
 License: GPL2 or Later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: tp-secure-plugin
+Text Domain: admin-safety-guard
  */
 
 if ( !defined( 'ABSPATH' ) ) {

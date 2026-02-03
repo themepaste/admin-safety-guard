@@ -24,11 +24,11 @@ $suggestions = [
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;       ?>
+        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;        ?>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p><?php esc_html_e( 'This feature allows you to enable or disable social login options for your website. You can select which social networks you want to allow users to log in with.', 'tp-secure-plugin' ); ?>
+                    <p><?php esc_html_e( 'This feature allows you to enable or disable social login options for your website. You can select which social networks you want to allow users to log in with.', 'admin-safety-guard' ); ?>
                     </p>
                 </div>
             </div>
@@ -92,7 +92,7 @@ $suggestions = [
             <div class="tpsa-save-button">
                 <?php
 printf( '<button type="button" id="tpsa_table-prefix-check_submit">%1$s</button>',
-    esc_html__( 'Change Prefix', 'tp-secure-plugin' )
+    esc_html__( 'Change Prefix', 'admin-safety-guard' )
 );
 ?>
             </div>

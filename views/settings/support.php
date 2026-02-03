@@ -29,7 +29,7 @@ if (
             'tpsa_support_form_nonce'
         )
     ) {
-        $support_notice = __( 'Security check failed. Please try again.', 'tp-secure-plugin' );
+        $support_notice = __( 'Security check failed. Please try again.', 'admin-safety-guard' );
         $support_notice_class = 'error';
     } else {
 
@@ -40,10 +40,10 @@ if (
         $phone = isset( $_POST['tpsa_support_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsa_support_phone'] ) ) : '';
 
         if ( empty( $name ) || empty( $email ) || empty( $message ) || empty( $phone ) ) {
-            $support_notice = __( 'Please fill all required fields.', 'tp-secure-plugin' );
+            $support_notice = __( 'Please fill all required fields.', 'admin-safety-guard' );
             $support_notice_class = 'error';
         } elseif ( !is_email( $email ) ) {
-            $support_notice = __( 'Please enter a valid email address.', 'tp-secure-plugin' );
+            $support_notice = __( 'Please enter a valid email address.', 'admin-safety-guard' );
             $support_notice_class = 'error';
         } else {
 
@@ -77,7 +77,7 @@ if (
             if ( is_wp_error( $response ) ) {
                 $support_notice = sprintf(
                     /* translators: %s: error message */
-                    __( 'Could not send support request. Error: %s', 'tp-secure-plugin' ),
+                    __( 'Could not send support request. Error: %s', 'admin-safety-guard' ),
                     $response->get_error_message()
                 );
                 $support_notice_class = 'error';
@@ -87,7 +87,7 @@ if (
                 $data = json_decode( $body, true );
 
                 if ( 200 === $code || 201 === $code ) {
-                    $support_notice = __( 'Thank you! Your support request has been sent successfully.', 'tp-secure-plugin' );
+                    $support_notice = __( 'Thank you! Your support request has been sent successfully.', 'admin-safety-guard' );
                     $support_notice_class = 'updated';
 
                     // Clear fields after success
@@ -102,7 +102,7 @@ if (
                     }
                     $support_notice = sprintf(
                         /* translators: %d: status code */
-                        __( 'Support request failed (HTTP %d).%s', 'tp-secure-plugin' ),
+                        __( 'Support request failed (HTTP %d).%s', 'admin-safety-guard' ),
                         $code,
                         $error_msg
                     );
@@ -131,7 +131,7 @@ if (
             <!-- Start support from here -->
             <div class="tpsa-support-box tpsa-setting-wrapper"
                 style="background:#fff; padding:20px; border-radius:8px; width:100%;">
-                <h2><?php esc_html_e( 'Support Request', 'tp-secure-plugin' ); ?></h2>
+                <h2><?php esc_html_e( 'Support Request', 'admin-safety-guard' ); ?></h2>
 
                 <form method="post">
                     <?php wp_nonce_field( 'tpsa_support_form_nonce', 'tpsa_support_form_nonce' ); ?>
@@ -139,7 +139,7 @@ if (
                     <div class="tp-field">
                         <div class="tp-field-label">
                             <label>
-                                <?php esc_html_e( 'Your Name', 'tp-secure-plugin' ); ?>
+                                <?php esc_html_e( 'Your Name', 'admin-safety-guard' ); ?>
                                 <span style="color:red;">*</span>
                             </label>
                         </div>
@@ -156,7 +156,7 @@ if (
                     <div class="tp-field">
                         <div class="tp-field-label">
                             <label>
-                                <?php esc_html_e( 'Your Email', 'tp-secure-plugin' ); ?>
+                                <?php esc_html_e( 'Your Email', 'admin-safety-guard' ); ?>
                                 <span style="color:red;">*</span>
                             </label>
                         </div>
@@ -174,7 +174,7 @@ if (
                     <div class="tp-field">
                         <div class="tp-field-label">
                             <label>
-                                <?php esc_html_e( 'Phone Number (with country code)', 'tp-secure-plugin' ); ?>
+                                <?php esc_html_e( 'Phone Number (with country code)', 'admin-safety-guard' ); ?>
                                 <span style="color:red;">*</span>
                             </label>
                         </div>
@@ -191,7 +191,7 @@ if (
                     <div class="tp-field">
                         <div class="tp-field-label">
                             <label>
-                                <?php esc_html_e( 'Your Message', 'tp-secure-plugin' ); ?>
+                                <?php esc_html_e( 'Your Message', 'admin-safety-guard' ); ?>
                                 <span style="color:red;">*</span>
                             </label>
                         </div>
@@ -211,7 +211,7 @@ echo isset( $_POST['tpsa_support_message'] ) ? esc_textarea( wp_unslash( $_POST[
                             <div class="tp-switch-wrapper">
                                 <div class="tpsa-save-button">
                                     <button type="submit">
-                                        <?php esc_html_e( 'Send Support Request', 'tp-secure-plugin' ); ?>
+                                        <?php esc_html_e( 'Send Support Request', 'admin-safety-guard' ); ?>
                                     </button>
                                 </div>
                             </div>
