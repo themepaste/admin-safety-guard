@@ -7,7 +7,6 @@
 *.tar.gz
 *.zip
 postcss.config.js
-webpack.config.js
 composer.lock
 .DS_Store
 package.json
