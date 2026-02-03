@@ -8,7 +8,6 @@
 *.zip
 postcss.config.js
 webpack.config.js
-composer.json
 composer.lock
 .DS_Store
 package.json
