@@ -80,7 +80,7 @@ class FormProcessor {
         }
 
         // Redirect or render message
-        wp_redirect( add_query_arg(
+        wp_safe_redirect( add_query_arg(
             array(
                 'page'           => Settings::$SETTING_PAGE_ID,
                 'tpsa-setting'   => $screen_slug,
@@ -88,7 +88,7 @@ class FormProcessor {
             ),
             admin_url( 'admin.php' )
         ) );
-        exit;
+        exit();
     }
 
     /**

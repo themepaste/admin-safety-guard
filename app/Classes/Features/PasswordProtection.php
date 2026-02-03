@@ -109,8 +109,8 @@ class PasswordProtection implements FeatureInterface {
         if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_site_password'] ) ) {
             if ( trim( $_POST['tpsa_site_password'] ) === $password ) {
                 setcookie( $cookie_name, md5( $password ), time() + $password_second, COOKIEPATH, COOKIE_DOMAIN );
-                wp_redirect( $_SERVER['REQUEST_URI'] );
-                exit;
+                wp_safe_redirect( $_SERVER['REQUEST_URI'] );
+                exit();
             } else {
                 $GLOBALS['tpsa_password_error'] = __( 'Incorrect password.', 'admin-safety-guard' );
             }
@@ -119,7 +119,7 @@ class PasswordProtection implements FeatureInterface {
         // If the cookie is not set or invalid, show password form.
         if ( !isset( $_COOKIE[$cookie_name] ) || $_COOKIE[$cookie_name] !== md5( $password ) ) {
             $this->render_password_form();
-            exit;
+            exit();
         }
     }
 
