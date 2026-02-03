@@ -8,7 +8,7 @@ Stable tag: 1.2.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Secure your WordPress login with Admin Safety Guard: limit login attempts, 2FA, reCAPTCHA, IP blocking, disable XML-RPC, activity tracking, custom login URL, redirects, and branded login styles.
+Admin Safety Guard secures WordPress: limit logins, 2FA, reCAPTCHA, IP block, disable XML-RPC, activity logs, custom URLs and branding.
 
 == Description ==
 
