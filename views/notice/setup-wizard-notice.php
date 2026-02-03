@@ -14,7 +14,7 @@ $setup_url = esc_url( admin_url( 'admin.php?page=tpasg_setup_wizard' ) );
 
         </span>
         <!-- <br> -->
-        <a href="<?php echo $setup_url; ?>"
+        <a href="<?php echo esc_url( $setup_url ); ?>"
             class="button button-primary tpasg-notice-button"><?php esc_html_e( 'Launch Setup Wizard', 'admin-safety-guard' )?></a>
     </p>
 </div>

@@ -47,8 +47,8 @@ class Reports {
         $end_ts = current_time( 'timestamp' );
         $start_ts = $end_ts - DAY_IN_SECONDS;
 
-        $start_mysql = date( 'Y-m-d H:i:s', $start_ts );
-        $end_mysql = date( 'Y-m-d H:i:s', $end_ts );
+        $start_mysql = gmdate( 'Y-m-d H:i:s', $start_ts );
+        $end_mysql = gmdate( 'Y-m-d H:i:s', $end_ts );
 
         $series = [];
 

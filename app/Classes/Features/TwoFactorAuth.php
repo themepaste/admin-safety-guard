@@ -249,7 +249,7 @@ label[for="user_pass"],
         $remember = !empty( $_POST['rememberme'] );
 
         // Generate and store OTP + remember flag.
-        $otp = rand( 1000, 99999 );
+        $otp = wp_rand( 1000, 99999 );
 
         update_user_meta(
             $user->ID,

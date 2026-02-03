@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace ThemePaste\SecureAdmin\Classes;
 
 defined( 'ABSPATH' ) || exit;
 
-use ThemePaste\SecureAdmin\Traits\Hook;
 use ThemePaste\SecureAdmin\Traits\Asset;
+use ThemePaste\SecureAdmin\Traits\Hook;
 
 class Cron {
 
@@ -17,7 +17,7 @@ class Cron {
         $this->schedule_cron_event();
 
         // Hook the function to the cron event
-        $this->action( 'remove_old_block_users_data', [ $this, 'remove_old_block_users_data_function' ] );
+        $this->action( 'remove_old_block_users_data', [$this, 'remove_old_block_users_data_function'] );
     }
 
     // Function to remove old records
@@ -25,7 +25,7 @@ class Cron {
         global $wpdb;
 
         // Get the timestamp for 24 hours ago
-        $time_24_hours_ago = date('Y-m-d H:i:s', strtotime('-24 hours'));
+        $time_24_hours_ago = gmdate( 'Y-m-d H:i:s', strtotime( '-24 hours' ) );
         $block_table = get_tpsa_db_table_name( 'block_users' );
 
         // Delete records older than 24 hours
@@ -40,8 +40,8 @@ class Cron {
     // Schedule the cron event
     private function schedule_cron_event() {
         // Schedule the event if it's not already scheduled
-        if (!wp_next_scheduled('remove_old_block_users_data')) {
-            wp_schedule_event(time(), 'daily', 'remove_old_block_users_data');
+        if ( !wp_next_scheduled( 'remove_old_block_users_data' ) ) {
+            wp_schedule_event( time(), 'daily', 'remove_old_block_users_data' );
         }
     }
 }

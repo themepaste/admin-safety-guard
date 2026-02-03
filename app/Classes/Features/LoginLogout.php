@@ -69,7 +69,8 @@ class LoginLogout implements FeatureInterface {
      */
     function redirect_wp_admin() {
         $request_uri = $_SERVER['REQUEST_URI'];
-        $admin_path = parse_url( admin_url(), PHP_URL_PATH ); // This gives the correct path to wp-admin
+        $admin_path = wp_parse_url( admin_url(), PHP_URL_PATH );
+        // This gives the correct path to wp-admin
         error_log( 'Request URI: ' . $request_uri );
         error_log( 'Admin path: ' . $admin_path );
 
