@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, log
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -151,6 +151,10 @@ A: [Support](https://themepaste.com/contact)
 
 == Changelog ==
 
+= 1.2.0 =
+* [Fix] fixed the taxdomain and esc issues.
+
+
 = 1.1.9 =
 * [New] Added breadcrumb navigation for better page clarity and navigation.
 * [New] All major pages are now fully dynamic.
@@ -160,7 +164,6 @@ A: [Support](https://themepaste.com/contact)
 * [Fix] Resolved layout and alignment inconsistencies.
 * [Maintenance] Refactored code for better performance and maintainability.
 * [Maintenance] General stability improvements and internal optimizations.
-
 
 
 = 1.1.8 =
