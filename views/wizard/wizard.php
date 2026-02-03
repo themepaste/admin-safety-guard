@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 <div class="tpsm-wizard-wrapper">
     <div class="tpsm-wizard-container">
-        
+
         <div class="tpsm-wizard-logo">
             <img src="<?php echo esc_url( TPSA_ASSETS_URL . '/admin/img/plugin-icon.png' ); ?>" alt="Shipping Manager">
         </div>
@@ -16,11 +16,11 @@ defined( 'ABSPATH' ) || exit;
             <?php wp_nonce_field( 'tpsm-nonce_action', 'tpsm-nonce_name' ); ?>
             <input type="hidden" name="tpsm_optin_submit" value="1">
             <button type="submit" name="tpsm_optin_choice" value="0" class="button button-secondary tpsm-optin-deny">
-                <?php esc_html_e( 'Not now', 'shipping-manager' ); ?>
+                <?php esc_html_e( 'Not now', 'admin-safety-guard' ); ?>
             </button>
-            
+
             <button type="submit" name="tpsm_optin_choice" value="1" class="active button button-primary tpsm-optin-allow">
-                <?php esc_html_e( 'Allow & Continue', 'shipping-manager' ); ?>
+                <?php esc_html_e( 'Allow & Continue', 'admin-safety-guard' ); ?>
             </button>
         </form>
     </div>

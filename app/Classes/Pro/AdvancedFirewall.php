@@ -52,93 +52,93 @@ class AdvancedFirewall implements FeatureInterface {
             [
                 'enable'              => [
                     'type'    => 'switch',
-                    'label'   => __( 'Enable Firewall', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'Enable Firewall', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'Turn the Web Application Firewall on or off.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'Turn the Web Application Firewall on or off.', 'admin-safety-guard' ),
                     'default' => 0,
                 ],
 
                 'mode'                => [
                     'type'    => 'option',
-                    'label'   => __( 'Mode', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'Mode', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'Monitor only (log requests) or Block (actively block suspicious requests).', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'Monitor only (log requests) or Block (actively block suspicious requests).', 'admin-safety-guard' ),
                     'default' => 'monitor',
                     'options' => [
-                        'monitor' => __( 'Monitor only', 'admin-safety-guard-pro' ),
-                        'block'   => __( 'Block & log', 'admin-safety-guard-pro' ),
+                        'monitor' => __( 'Monitor only', 'admin-safety-guard' ),
+                        'block'   => __( 'Block & log', 'admin-safety-guard' ),
                     ],
                 ],
 
                 'protected-areas'     => [
                     'type'    => 'multi-check',
-                    'label'   => __( 'Protected Areas', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'Protected Areas', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'Choose which areas of the site should be protected by the firewall rules.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'Choose which areas of the site should be protected by the firewall rules.', 'admin-safety-guard' ),
                     'default' => ['login', 'admin', 'xmlrpc', 'rest'],
                     'options' => [
-                        'login'  => __( 'Login page (wp-login.php)', 'admin-safety-guard-pro' ),
-                        'admin'  => __( 'Admin area (wp-admin)', 'admin-safety-guard-pro' ),
-                        'xmlrpc' => __( 'XML-RPC endpoint', 'admin-safety-guard-pro' ),
-                        'rest'   => __( 'REST API (/wp-json/)', 'admin-safety-guard-pro' ),
-                        'front'  => __( 'Front-end pages', 'admin-safety-guard-pro' ),
+                        'login'  => __( 'Login page (wp-login.php)', 'admin-safety-guard' ),
+                        'admin'  => __( 'Admin area (wp-admin)', 'admin-safety-guard' ),
+                        'xmlrpc' => __( 'XML-RPC endpoint', 'admin-safety-guard' ),
+                        'rest'   => __( 'REST API (/wp-json/)', 'admin-safety-guard' ),
+                        'front'  => __( 'Front-end pages', 'admin-safety-guard' ),
                     ],
                 ],
 
                 'whitelist-ip'        => [
                     'type'    => 'single-repeater',
-                    'label'   => __( 'Whitelist IP Addresses', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'Whitelist IP Addresses', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'These IP addresses will bypass firewall checks.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'These IP addresses will bypass firewall checks.', 'admin-safety-guard' ),
                     'default' => '',
                 ],
 
                 'block-ip-address'    => [
                     'type'    => 'single-repeater',
-                    'label'   => __( 'Block IP Addresses', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'Block IP Addresses', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'Requests from these IP addresses will always be blocked.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'Requests from these IP addresses will always be blocked.', 'admin-safety-guard' ),
                     'default' => '',
                 ],
 
                 'blocked-user-agents' => [
                     'type'    => 'textarea',
-                    'label'   => __( 'Blocked User Agents', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'Blocked User Agents', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'One user agent per line. Matching user agents will be blocked.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'One user agent per line. Matching user agents will be blocked.', 'admin-safety-guard' ),
                     'default' => '',
                 ],
 
                 'enable-sqli'         => [
                     'type'    => 'switch',
-                    'label'   => __( 'SQL Injection Protection', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'SQL Injection Protection', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'Scan request parameters for common SQL injection patterns.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'Scan request parameters for common SQL injection patterns.', 'admin-safety-guard' ),
                     'default' => 1,
                 ],
 
                 'enable-xss'          => [
                     'type'    => 'switch',
-                    'label'   => __( 'XSS Protection', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'XSS Protection', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'Scan request parameters for common cross-site scripting payloads.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'Scan request parameters for common cross-site scripting payloads.', 'admin-safety-guard' ),
                     'default' => 1,
                 ],
 
                 'max-request-size'    => [
                     'type'    => 'number',
-                    'label'   => __( 'Max Request Size (KB)', 'admin-safety-guard-pro' ),
+                    'label'   => __( 'Max Request Size (KB)', 'admin-safety-guard' ),
                     'class'   => '',
                     'id'      => '',
-                    'desc'    => __( 'Block requests with a body larger than this size. Use 0 to disable.', 'admin-safety-guard-pro' ),
+                    'desc'    => __( 'Block requests with a body larger than this size. Use 0 to disable.', 'admin-safety-guard' ),
                     'default' => 512, // 512 KB
                 ],
             ]

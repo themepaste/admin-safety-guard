@@ -27,11 +27,11 @@ class Wizard {
         }
 
         if ( !isset( $_POST['tpsm-nonce_name'] ) || !wp_verify_nonce( $_POST['tpsm-nonce_name'], 'tpsm-nonce_action' ) ) {
-            wp_die( esc_html__( 'Nonce verification failed.', 'shipping-manager' ) );
+            wp_die( esc_html__( 'Nonce verification failed.', 'admin-safety-guard' ) );
         }
 
         if ( !current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'Unauthorized user', 'shipping-manager' ) );
+            wp_die( esc_html__( 'Unauthorized user', 'admin-safety-guard' ) );
         }
 
         $choice = isset( $_POST['tpsm_optin_choice'] ) ? sanitize_text_field( $_POST['tpsm_optin_choice'] ) : '0';
