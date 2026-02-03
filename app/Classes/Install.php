@@ -102,6 +102,8 @@ class Install {
             ),
             admin_url( 'admin-post.php' )
         );
+        // Add nonce
+        $deactivate_url = wp_nonce_url( $deactivate_url, 'tpsa_safe_deactivate', 'tpsa_nonce' );
 
         $subject = sprintf(
             '[%s] %s has been activated',
@@ -276,6 +278,12 @@ class Install {
         // Only allow admins with plugin activation capability
         if ( !current_user_can( 'activate_plugins' ) ) {
             wp_die( esc_html__( 'You do not have permission to deactivate plugins.', 'admin-safety-guard' ) );
+        }
+
+        // ✅ Nonce verification (fixes the warning)
+        $nonce = isset( $_GET['tpsa_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['tpsa_nonce'] ) ) : '';
+        if ( empty( $nonce ) || !wp_verify_nonce( $nonce, 'tpsa_safe_deactivate' ) ) {
+            wp_die( esc_html__( 'Security check failed.', 'admin-safety-guard' ) );
         }
 
         $stored_token = get_option( 'tp_admin_safety_guard_deactivate_token' );

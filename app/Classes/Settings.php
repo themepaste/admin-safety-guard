@@ -35,22 +35,24 @@ class Settings {
     public $setting_page_url = '';
 
     /**
-     * Constructor.
+     * Initialize hooks.
      */
     public function init() {
         $this->setting_page_url = add_query_arg(
-            [
+            array(
                 'page' => self::$SETTING_PAGE_ID,
-            ],
+            ),
             admin_url( 'admin.php' )
         );
 
-        $this->action( 'admin_menu', [$this, 'register_settings_page'] );
-        $this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, [$this, 'add_settings_link'] );
+        $this->action( 'admin_menu', array( $this, 'register_settings_page' ) );
+        $this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, array( $this, 'add_settings_link' ) );
 
-        //Process and save settings
-        $this->action( 'admin_post_tpsa_process_form', [FormProcessor::class, 'process_form'] );
-        $this->action( 'admin_init', [$this, 'redirect_to_default_tab'] );
+        // Process and save settings (nonce should be validated inside FormProcessor::process_form)
+        $this->action( 'admin_post_tpsa_process_form', array( FormProcessor::class, 'process_form' ) );
+
+        // Admin redirect handler
+        $this->action( 'admin_init', array( $this, 'redirect_to_default_tab' ) );
     }
 
     /**
@@ -64,20 +66,19 @@ class Settings {
             esc_html__( 'Admin Safety Guard', 'admin-safety-guard' ),
             'manage_options',
             self::$SETTING_PAGE_ID,
-            [$this, 'render_settings_page'],
+            array( $this, 'render_settings_page' ),
             'dashicons-lock',
             56
         );
 
         add_submenu_page(
-            self::$SETTING_PAGE_ID, // parent slug
-            __( 'Support', 'admin-safety-guard' ), // page title
-            __( 'Support', 'admin-safety-guard' ), // menu title
-            'manage_options', // capability
-            'asg-support', // submenu slug
-            [$this, 'render_asg_support_page']// callback function
+            self::$SETTING_PAGE_ID,
+            __( 'Support', 'admin-safety-guard' ),
+            __( 'Support', 'admin-safety-guard' ),
+            'manage_options',
+            'asg-support',
+            array( $this, 'render_asg_support_page' )
         );
-
     }
 
     /**
@@ -89,26 +90,43 @@ class Settings {
         printf( '%s', Utility::get_template( 'settings/layout.php' ) );
     }
 
+    /**
+     * Renders the support page layout.
+     *
+     * @return void
+     */
     public function render_asg_support_page() {
         printf( '%s', Utility::get_template( 'settings/support.php' ) );
     }
 
+    /**
+     * Redirect to a default tab if no tab is provided.
+     *
+     * Fixes:
+     * - MissingUnslash
+     * - InputNotSanitized
+     * - NonceVerification.Recommended (sniff triggered by direct $_GET usage)
+     *
+     * @return void
+     */
     public function redirect_to_default_tab() {
-        if (
-            is_admin() &&
-            current_user_can( 'manage_options' ) &&
-            isset( $_GET['page'] ) &&
-            $_GET['page'] === self::$SETTING_PAGE_ID &&
-            !isset( $_GET['tpsa-setting'] )
-        ) {
+        if ( !is_admin() || !current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        $page = $this->get_query_key( 'page' );
+        $tpsa_setting = $this->get_query_key( 'tpsa-setting' );
+
+        if ( $page === sanitize_key( self::$SETTING_PAGE_ID ) && empty( $tpsa_setting ) ) {
             $redirect_url = add_query_arg(
-                [
+                array(
                     'page'         => self::$SETTING_PAGE_ID,
                     'tab'          => 'analytics',
                     'tpsa-setting' => 'analytics',
-                ],
+                ),
                 admin_url( 'admin.php' )
             );
+
             wp_safe_redirect( $redirect_url );
             exit;
         }
@@ -118,7 +136,6 @@ class Settings {
      * Adds a "Settings" link to the plugin actions.
      *
      * @param array $links Existing plugin action links.
-     *
      * @return array Modified plugin action links.
      */
     public function add_settings_link( $links ) {
@@ -133,7 +150,28 @@ class Settings {
         return $links;
     }
 
+    /**
+     * Get current screen slug from query string (sanitized).
+     *
+     * Fixes:
+     * - MissingUnslash
+     * - InputNotSanitized
+     *
+     * @return string|null
+     */
     public static function get_current_screen() {
-        return $_GET['tpsa-setting'] ?? null;
+        return isset( $_GET['tpsa-setting'] )
+        ? sanitize_key( wp_unslash( $_GET['tpsa-setting'] ) )
+        : null;
+    }
+
+    /**
+     * Safely read a "key-like" query var (slug/page/tab).
+     *
+     * @param string $key Query var name.
+     * @return string Sanitized value or empty string.
+     */
+    private function get_query_key( $key ) {
+        return isset( $_GET[$key] ) ? sanitize_key( wp_unslash( $_GET[$key] ) ) : '';
     }
 }
