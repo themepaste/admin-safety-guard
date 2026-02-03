@@ -31,7 +31,7 @@ class Cron {
         // Delete records older than 24 hours
         $wpdb->query(
             $wpdb->prepare(
-                "DELETE FROM $block_table WHERE login_time < %s",
+                "DELETE FROM {$block_table} WHERE login_time < %s",
                 $time_24_hours_ago
             )
         );
