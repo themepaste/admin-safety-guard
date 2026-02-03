@@ -266,8 +266,8 @@ label[for="user_pass"],
         $this->send_mail( $user, $otp );
 
         // Redirect to OTP verification page.
-        wp_redirect( wp_login_url() . '?tpsa_verify_email_otp=' . intval( $user->ID ) );
-        exit;
+        wp_safe_redirect( wp_login_url() . '?tpsa_verify_email_otp=' . intval( $user->ID ) );
+        exit();
     }
 
     /**
