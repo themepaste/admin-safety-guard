@@ -48,10 +48,10 @@ class Settings {
         $this->action( 'admin_menu', array( $this, 'register_settings_page' ) );
         $this->filter( 'plugin_action_links_' . TPSA_PLUGIN_BASENAME, array( $this, 'add_settings_link' ) );
 
-        // Process and save settings (nonce should be validated inside FormProcessor::process_form)
+        // Process and save settings (nonce validated inside FormProcessor::process_form).
         $this->action( 'admin_post_tpsa_process_form', array( FormProcessor::class, 'process_form' ) );
 
-        // Admin redirect handler
+        // Admin redirect handler (routing only).
         $this->action( 'admin_init', array( $this, 'redirect_to_default_tab' ) );
     }
 
@@ -102,10 +102,8 @@ class Settings {
     /**
      * Redirect to a default tab if no tab is provided.
      *
-     * Fixes:
-     * - MissingUnslash
-     * - InputNotSanitized
-     * - NonceVerification.Recommended (sniff triggered by direct $_GET usage)
+     * NOTE: This method only reads query vars for routing/UI and does not process
+     * form submissions or change data, so nonce verification is not required here.
      *
      * @return void
      */
@@ -114,7 +112,10 @@ class Settings {
             return;
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reading query vars for routing/UI; no state change.
         $page = $this->get_query_key( 'page' );
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reading query vars for routing/UI; no state change.
         $tpsa_setting = $this->get_query_key( 'tpsa-setting' );
 
         if ( $page === sanitize_key( self::$SETTING_PAGE_ID ) && empty( $tpsa_setting ) ) {
@@ -153,15 +154,12 @@ class Settings {
     /**
      * Get current screen slug from query string (sanitized).
      *
-     * Fixes:
-     * - MissingUnslash
-     * - InputNotSanitized
-     *
      * @return string|null
      */
     public static function get_current_screen() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reading query var for routing/UI; no state change.
         return isset( $_GET['tpsa-setting'] )
-        ? sanitize_key( wp_unslash( $_GET['tpsa-setting'] ) )
+        ? sanitize_key( wp_unslash( $_GET['tpsa-setting'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read only.
         : null;
     }
 
@@ -172,6 +170,9 @@ class Settings {
      * @return string Sanitized value or empty string.
      */
     private function get_query_key( $key ) {
-        return isset( $_GET[$key] ) ? sanitize_key( wp_unslash( $_GET[$key] ) ) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reading query var for routing/UI; no state change.
+        return isset( $_GET[$key] )
+        ? sanitize_key( wp_unslash( $_GET[$key] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read only.
+        : '';
     }
 }

@@ -26,7 +26,11 @@ class Wizard {
             return;
         }
 
-        if ( !isset( $_POST['tpsm-nonce_name'] ) || !wp_verify_nonce( $_POST['tpsm-nonce_name'], 'tpsm-nonce_action' ) ) {
+        $nonce = isset( $_POST['tpsm-nonce_name'] )
+        ? sanitize_text_field( wp_unslash( $_POST['tpsm-nonce_name'] ) )
+        : '';
+
+        if ( empty( $nonce ) || !wp_verify_nonce( $nonce, 'tpsm-nonce_action' ) ) {
             wp_die( esc_html__( 'Nonce verification failed.', 'admin-safety-guard' ) );
         }
 
