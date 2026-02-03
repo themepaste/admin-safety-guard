@@ -275,7 +275,7 @@ class Install {
 
         // Only allow admins with plugin activation capability
         if ( !current_user_can( 'activate_plugins' ) ) {
-            wp_die( __( 'You do not have permission to deactivate plugins.', 'admin-safety-guard' ) );
+            wp_die( esc_html__( 'You do not have permission to deactivate plugins.', 'admin-safety-guard' ) );
         }
 
         $stored_token = get_option( 'tp_admin_safety_guard_deactivate_token' );
@@ -283,7 +283,7 @@ class Install {
 
         // Check token
         if ( empty( $stored_token ) || empty( $token ) || !hash_equals( $stored_token, $token ) ) {
-            wp_die( __( 'Invalid or expired deactivation link.', 'admin-safety-guard' ) );
+            wp_die( esc_html__( 'Invalid or expired deactivation link.', 'admin-safety-guard' ) );
         }
 
         // Token is valid, so delete it to avoid unlimited re-use (optional but recommended)
