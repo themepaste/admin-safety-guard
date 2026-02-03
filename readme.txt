@@ -1,6 +1,6 @@
-=== Admin Safety Guard – WP Security: Limit Login Attempts, IP Blocking, 2FA & reCAPTCHA ===
+=== Admin Safety Guard — Login Security & 2FA ===
 Contributors: themepaste, habibnote
-Tags: admin safety guard, limit login attempts, 2fa, recaptcha, wp security, login security, brute force, ip block, xml-rpc, social login
+Tags: admin safety guard, limit login attempts, 2fa, recaptcha, login security
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
