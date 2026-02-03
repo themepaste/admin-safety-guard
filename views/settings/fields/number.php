@@ -1,16 +1,16 @@
 <?php
-    /**
-     * Output a text input field.
-     *
-     * @package ThemePaste
-     */
+/**
+ * Output a text input field.
+ *
+ * @package ThemePaste
+ */
 
-    defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit;
 
-    $id_name    = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
-    $value      = isset( $args['value'] ) && ! empty( $args['value'] ) ? $args['value'] : '';
-    
-    $field_template = '
+$id_name = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
+$value = isset( $args['value'] ) && !empty( $args['value'] ) ? $args['value'] : '';
+
+$field_template = '
         <div class="tp-field">
             <div class="tp-field-label">
                 <label>%1$s</label>
@@ -22,13 +22,12 @@
                 <p class="tp-field-desc">%4$s</p>
             </div>
         </div>';
-    $field_template = apply_filters( $id_name, $field_template, $args );
+$field_template = apply_filters( $id_name, $field_template, $args );
 
-    printf( $field_template,
-        esc_html( $args['field']['label'] ),    // %1$s == Label
-        $id_name,                               // %2$s == ID & Name
-        esc_attr( $value ),                     // %3$s == value
-        esc_html( $args['field']['desc'] )      // %4$s == Description
-    );
+printf( $field_template,
+    esc_html( $args['field']['label'] ), // %1$s == Label
+    esc_attr( $id_name ), // %2$s == ID & Name
+    esc_attr( $value ), // %3$s == value
+    esc_html( $args['field']['desc'] ) // %4$s == Description
+);
 ?>
-

@@ -27,7 +27,7 @@ foreach ( $settings_option as $key => $value ) {
     printf(
         '<li><a class="%1$s" href="%2$s"><span>%5$s</span>%3$s<sup style="color: green;"> %4$s</sup></a></li>',
         esc_attr( $active_class ),
-        $setting_url,
+        esc_url( $setting_url ),
         esc_html( $value['label'] ),
         // $value['is_pro'] ? 'pro' : '',
         '',

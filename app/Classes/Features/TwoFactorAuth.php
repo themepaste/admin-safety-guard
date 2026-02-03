@@ -357,7 +357,7 @@ label[for="user_pass"],
     <?php
 printf(
             /* translators: %s is the user's masked email address */
-            __( 'OTP code sent to your email address %s. Please check your inbox or spam folder.', 'admin-safety-guard' ),
+            esc_html__( 'OTP code sent to your email address %s. Please check your inbox or spam folder.', 'admin-safety-guard' ),
             esc_html( $masked_email )
         );
 
