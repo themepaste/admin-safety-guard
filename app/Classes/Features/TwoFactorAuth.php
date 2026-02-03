@@ -356,9 +356,11 @@ label[for="user_pass"],
 <p style="color: green; font-weight: 600; margin-bottom: 20px;">
     <?php
 printf(
+            /* translators: %s is the user's masked email address */
             __( 'OTP code sent to your email address %s. Please check your inbox or spam folder.', 'admin-safety-guard' ),
             esc_html( $masked_email )
         );
+
         ?>
 </p>
 <?php
