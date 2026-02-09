@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, login security
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -150,6 +150,13 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.2.2 – Maintenance Update =
+* Fixed critical errors and PHP warnings
+* Improved WordPress coding standards compliance
+* Optimized long descriptions and code structure
+* Enhanced stability and performance
+* General bug fixes and cleanup
 
 = 1.2.1 – Security & Compliance Update =
 * Fixed security issues reported by WordPress Plugin Review Team
