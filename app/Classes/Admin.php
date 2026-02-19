@@ -121,20 +121,28 @@ class Admin {
             $glue = strpos( $login_url, '?' ) !== false ? '&' : '?';
 
             $localize = [
-                'nonce'          => wp_create_nonce( 'tpsa-nonce' ),
-                'site_url'       => site_url(),
-                'ajax_url'       => admin_url( 'admin-ajax.php' ),
-                'screen_slug'    => Settings::$SETTING_PAGE_ID,
-                'setting_slug'   => $current_setting_screen,
-                'rest_url'       => esc_url_raw( rest_url() ),
-                'limit_login'    => $this->is_enabled( $this->get_settings() ),
-                'admin_url'      => admin_url(),
-                'assets_url'     => TPSA_ASSETS_URL,
-                'previewUrl'     => $login_url . $glue . 'cdp_preview=1',
-                'social_login'   => array_keys( (array) get_option( 'social_login_crendentials' ) ),
-                'sameOrigin'     => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
-                'feature_status' => tpsa_get_features_summary(),
-                'total_users'    => count_users()['total_users'],
+                'nonce'           => wp_create_nonce( 'tpsa-nonce' ),
+                'site_url'        => site_url(),
+                'ajax_url'        => admin_url( 'admin-ajax.php' ),
+                'screen_slug'     => Settings::$SETTING_PAGE_ID,
+                'setting_slug'    => $current_setting_screen,
+                'rest_url'        => esc_url_raw( rest_url() ),
+                'limit_login'     => $this->is_enabled( $this->get_settings() ),
+                'admin_url'       => admin_url(),
+                'assets_url'      => TPSA_ASSETS_URL,
+                'previewUrl'      => $login_url . $glue . 'cdp_preview=1',
+                'social_login'    => array_keys( (array) get_option( 'social_login_crendentials' ) ),
+                'sameOrigin'      => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
+                'feature_status'  => tpsa_get_features_summary(),
+                'total_users'     => count_users()['total_users'],
+
+                //server info
+                'php_version'     => phpversion(),
+                'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
+                'server_os'       => PHP_OS,
+                'site_url'        => get_bloginfo( 'url' ),
+                'memory_limit'    => ini_get( 'memory_limit' ),
+                'max_execution'   => ini_get( 'max_execution_time' ),
             ];
 
             if ( $current_setting_screen === 'customize' ) {

@@ -161,16 +161,6 @@ export default function StatsCards() {
       trendTone: 'bad',
       icon: 'alert',
     },
-    {
-      id: 'uptime',
-      theme: 'green',
-      label: 'Monitoring',
-      value: '98%',
-      trendText: 'Excellent',
-      trendTone: 'good',
-      icon: 'trend',
-      showCheck: true,
-    },
   ];
 
   return (
@@ -197,13 +187,7 @@ export default function StatsCards() {
               >
                 {/* left mini icon */}
                 <TPStatsIcon name="trend" className="tpStats__trendIcon" />
-                {s.showCheck && (
-                  // <TPStatsIcon
-                  //   name="check"
-                  //   className="tpStats__trendIcon tpStats__trendIcon--check"
-                  // />
-                  <></>
-                )}
+                {s.showCheck && <></>}
                 <span className="tpStats__trendText">{s.trendText}</span>
               </div>
             </div>
@@ -212,6 +196,44 @@ export default function StatsCards() {
             <p className="tpStats__value">{s.value}</p>
           </div>
         ))}
+
+        {/* New Card */}
+        <div className={`tpStats__card tpStats__card--green`}>
+          <div className="tpStats__top">
+            <div className={`tpStats__iconBox tpStats__iconBox--green`}>
+              <TPStatsIcon
+                name="server"
+                className={`tpStats__icon tpStats__icon--green`}
+              />
+            </div>
+
+            <div className={`tpStats__trend tpStats__trend--good`}>
+              <TPStatsIcon name="trend" className="tpStats__trendIcon" />
+              <span className="tpStats__trendText">Server Info</span>
+            </div>
+          </div>
+
+          <div className="tpStats__details">
+            <p>
+              <strong>PHP Version:</strong> {tpsaAdmin.php_version}
+            </p>
+            <p>
+              <strong>Server:</strong> {tpsaAdmin.server_software}
+            </p>
+            <p>
+              <strong>Operating System:</strong> {tpsaAdmin.server_os}
+            </p>
+            <p>
+              <strong>Memory Limit:</strong> {tpsaAdmin.memory_limit}
+            </p>
+            <p>
+              <strong>Max Execution Time:</strong>
+              {tpsaAdmin.max_execution}
+            </p>
+          </div>
+        </div>
+
+        {/* end of new card */}
       </div>
     </section>
   );
