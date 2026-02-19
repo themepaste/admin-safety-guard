@@ -134,6 +134,22 @@ class Admin {
 
             $this->localize_script( 'tpsa-admin', 'tpsaAdmin', $localize );
         }
+
+        // Deactivate
+        if ( $screen === 'plugins.php' ) {
+            wp_enqueue_script(
+                'tpsa-deactivate',
+                TPSA_ASSETS_URL . '/admin/js/deactivate.js',
+                ['jquery'],
+                '1.0',
+                true
+            );
+
+            wp_localize_script( 'tpsa-deactivate', 'tpsaDeactivate', [
+                'ajax_url'    => admin_url( 'admin-ajax.php' ),
+                'plugin_slug' => plugin_basename( __FILE__ ),
+            ] );
+        }
     }
 
     /**
