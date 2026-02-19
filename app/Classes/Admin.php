@@ -147,7 +147,7 @@ class Admin {
 
             wp_localize_script( 'tpsa-deactivate', 'tpsaDeactivate', [
                 'ajax_url'    => admin_url( 'admin-ajax.php' ),
-                'plugin_slug' => plugin_basename( __FILE__ ),
+                'plugin_slug' => TPSA_PLUGIN_BASENAME,
             ] );
         }
     }
