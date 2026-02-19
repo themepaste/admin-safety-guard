@@ -1,0 +1,86 @@
+#tpsm-modal {
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.tpsm-modal-content {
+    background: #ffffff;
+    width: 500px;
+    max-width: 90%;
+    margin: 8% auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    animation: tpsmFadeIn 0.3s ease;
+}
+
+.tpsm-modal-content h2 {
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.tpsm-modal-content p {
+    color: #666;
+}
+
+.tpsm-modal-content label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.tpsm-textarea {
+    width: 100%;
+    margin-top: 15px;
+    height: 80px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.tpsm-modal-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.tpsm-submit-btn {
+    background: #2271b1;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.tpsm-submit-btn:hover {
+    background: #135e96;
+}
+
+.tpsm-skip-btn {
+    background: #f1f1f1;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.tpsm-skip-btn:hover {
+    background: #ddd;
+}
+
+@keyframes tpsmFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -58,6 +58,15 @@ class Admin {
                 TPSA_ASSETS_URL . '/admin/css/fields.css'
             );
         }
+
+        // Deactivate
+        if ( $screen === 'plugins.php' ) {
+            $this->enqueue_style(
+                'tpsa-deactivate',
+                TPSA_ASSETS_URL . '/admin/css/deactivate.css'
+            );
+
+        }
     }
 
     public function admin_enqueue_scripts( $screen ) {
@@ -148,6 +157,7 @@ class Admin {
             wp_localize_script( 'tpsa-deactivate', 'tpsaDeactivate', [
                 'ajax_url'    => admin_url( 'admin-ajax.php' ),
                 'plugin_slug' => TPSA_PLUGIN_BASENAME,
+                'nonce'       => wp_create_nonce( 'tpsm_feedback_nonce' ),
             ] );
         }
     }
