@@ -242,7 +242,6 @@ const tpStatsCss = `
    Fully scoped styles
    ========================= */
 .tpStats{
-  /* you can remove padding if your layout already has spacing */
   padding: 6px 2px;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
   margin-bottom: 30px;
@@ -255,10 +254,37 @@ const tpStatsCss = `
 }
 
 @media (min-width: 768px){
-  .tpStats__grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tpStats__grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-@media (min-width: 1024px){
+@media (min-width: 1600px){
   .tpStats__grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* On 3-column layout: 4th stat card becomes full row with horizontal/flex style */
+@media (min-width: 768px) and (max-width: 1399px){
+  .tpStats__card:nth-child(4){
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: auto;
+    padding: 20px 32px;
+  }
+  .tpStats__card:nth-child(4) .tpStats__top{
+    margin-bottom: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+  .tpStats__card:nth-child(4) .tpStats__label{
+    margin: 0;
+  }
+}
+
+/* Last item (Server Info) always full row */
+.tpStats__card--full{
+  grid-column: 1 / -1;
+  min-height: auto;
 }
 
 /* Card base */
