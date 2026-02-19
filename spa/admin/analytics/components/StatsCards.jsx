@@ -102,18 +102,6 @@ function TPStatsIcon({ name, className }) {
           />
         </svg>
       );
-    case 'check':
-      return (
-        <svg {...common}>
-          <path
-            d="M20 6L9 17l-5-5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      );
     default:
       return null;
   }
@@ -161,6 +149,16 @@ export default function StatsCards() {
       trendTone: 'bad',
       icon: 'alert',
     },
+    // {
+    //   id: 'uptime',
+    //   theme: 'green',
+    //   label: 'Monitoring',
+    //   value: '98%',
+    //   trendText: 'Excellent',
+    //   trendTone: 'good',
+    //   icon: 'trend',
+    //   showCheck: true,
+    // },
   ];
 
   return (
@@ -202,7 +200,7 @@ export default function StatsCards() {
           <div className="tpStats__top">
             <div className={`tpStats__iconBox tpStats__iconBox--green`}>
               <TPStatsIcon
-                name="server"
+                name="trend"
                 className={`tpStats__icon tpStats__icon--green`}
               />
             </div>
