@@ -13,6 +13,7 @@ $saved_settings = get_option( $option_name, [] );
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
 $db_prefix = tp_asg_pro_current_prefix();
 $is_pro = $settings_option[$screen_slug]['is_pro'] ?? false;
+$is_valid_license_available = is_valid_license_available();
 
 $suggestions = [
     tp_asg_pro_random_prefix( 5 ),
@@ -24,7 +25,7 @@ $suggestions = [
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;        ?>
+        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;         ?>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
@@ -102,4 +103,4 @@ printf( '<button type="button" id="tpsa_table-prefix-check_submit">%1$s</button>
 
 
 <!-- PRO POPUP OVERLAY -->
-<?php echo $is_pro ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>
+<?php echo $is_pro && !$is_valid_license_available ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>

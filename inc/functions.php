@@ -842,3 +842,12 @@ if ( !function_exists( 'tp_is_pro_active' ) ) {
         return false;
     }
 }
+
+if ( !function_exists( 'is_valid_license_available' ) ) {
+    function is_valid_license_available() {
+        if ( !class_exists( 'ThemePaste\AdminSafetyGuard\Pro\App' ) ) {
+            return false;
+        }
+        return ThemePaste\AdminSafetyGuard\Pro\App::has_valid_license();
+    }
+}

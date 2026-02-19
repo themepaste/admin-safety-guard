@@ -15,6 +15,7 @@ $current_tab = $args['current_tab'];
 $current_url = $args['current_url'];
 $current_tab_label = $args['current_tab_label'];
 $is_pro = $settings_option[$current_tab]['sub'][$screen_slug]['is_pro'] ?? false;
+$is_valid_license_available = is_valid_license_available();
 ?>
 
 <div class="tpsa-setting-wrapper">
@@ -67,4 +68,4 @@ printf( '<button type="submit">%1$s</button>',
 
 
 <!-- PRO POPUP OVERLAY -->
-<?php echo $is_pro ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>
+<?php echo $is_pro && !$is_valid_license_available ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>

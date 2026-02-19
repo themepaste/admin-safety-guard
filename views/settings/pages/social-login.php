@@ -12,11 +12,12 @@ $option_name = $args['option_name'];
 $saved_settings = get_option( $option_name, [] );
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
 $is_pro = $settings_option[$screen_slug]['is_pro'] ?? false;
+$is_valid_license_available = is_valid_license_available();
 ?>
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;        ?>
+        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;         ?>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
@@ -62,4 +63,4 @@ printf( '<button type="submit">%1$s</button>',
 </div>
 
 <!-- PRO POPUP OVERLAY -->
-<?php echo $is_pro ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>
+<?php echo $is_pro && !$is_valid_license_available ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>
