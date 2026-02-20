@@ -166,6 +166,11 @@ class Admin {
                 'ajax_url'    => admin_url( 'admin-ajax.php' ),
                 'plugin_slug' => TPSA_PLUGIN_BASENAME,
                 'nonce'       => wp_create_nonce( 'tpsm_feedback_nonce' ),
+                'admin_name'  => wp_get_current_user()->display_name,
+                'admin_email' => wp_get_current_user()->user_email,
+                'site_url'    => site_url(),
+                'plugin_name' => 'Admin Safety Guard',
+                'tp_rest_url' => 'http://localhost:10078/wp-json/tpsa/v1/feedback',
             ] );
         }
     }

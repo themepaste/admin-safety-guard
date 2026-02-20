@@ -1,5 +1,7 @@
 jQuery(document).ready(function ($) {
-  let tpsaDeactivateUrl = '';
+  console.log(tpsaDeactivate);
+
+  let deactivateUrl = '';
 
   // Append modal HTML once
   if ($('#tpsm-modal').length === 0) {
@@ -35,7 +37,7 @@ jQuery(document).ready(function ($) {
     function (e) {
       e.preventDefault();
 
-      tpsaDeactivateUrl = $(this).attr('href');
+      deactivateUrl = $(this).attr('href');
 
       $('#tpsm-modal').fadeIn();
     },
@@ -43,7 +45,7 @@ jQuery(document).ready(function ($) {
 
   // Skip button
   $(document).on('click', '.tpsm-skip-btn', function () {
-    window.location.href = tpsaDeactivateUrl;
+    window.location.href = deactivateUrl;
   });
 
   // Submit with AJAX
@@ -53,18 +55,35 @@ jQuery(document).ready(function ($) {
     const reason = $('input[name="reason"]:checked').val();
     const details = $('.tpsm-textarea').val();
 
-    $.post(
-      tpsaDeactivate.ajax_url,
-      {
-        action: 'tpsm_feedback',
-        nonce: tpsaDeactivate.nonce,
+    // console.log(reason, details);
+
+    $.ajax({
+      url: tpsaDeactivate.tp_rest_url, // localized REST URL
+      method: 'POST',
+      contentType: 'application/json',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader(
+          'x-api-key',
+          'a2e4a51671af827045df95bcd686c7ae4dae3b99',
+        );
+      },
+      data: JSON.stringify({
+        website_url: tpsaDeactivate.site_url,
+        admin_name: tpsaDeactivate.admin_name,
+        admin_email: tpsaDeactivate.admin_email,
+        plugin_name: tpsaDeactivate.plugin_name,
         reason: reason,
-        details: details,
+        feedback: details,
+      }),
+      success: function (response) {
+        console.log('Feedback sent:', response);
+        // window.location.href = deactivateUrl;
       },
-      function () {
-        // Always deactivate even if AJAX fails
-        window.location.href = tpsaDeactivateUrl;
+      error: function (error) {
+        console.log('API Error:', error);
+        // Always deactivate even if API fails
+        // window.location.href = deactivateUrl;
       },
-    );
+    });
   });
 });
