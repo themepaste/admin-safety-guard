@@ -170,7 +170,7 @@ class Admin {
                 'admin_email' => wp_get_current_user()->user_email,
                 'site_url'    => site_url(),
                 'plugin_name' => 'Admin Safety Guard',
-                'tp_rest_url' => 'http://localhost:10078/wp-json/tpsa/v1/feedback',
+                'tp_rest_url' => 'https://themepaste.com/wp-json/tpsa/v1/feedback',
             ] );
         }
     }

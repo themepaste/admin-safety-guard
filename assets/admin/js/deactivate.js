@@ -1,6 +1,4 @@
 jQuery(document).ready(function ($) {
-  console.log(tpsaDeactivate);
-
   let deactivateUrl = '';
 
   // Append modal HTML once
