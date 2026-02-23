@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, login security
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -330,10 +330,13 @@ Purpose:
 Used for:
 - Collecting optional admin email addresses for plugin updates and notifications
 - Sending support requests from the plugin support form
+- Collecting optional feedback when a user attempts to deactivate the plugin
+- Managing plugin-related notifications (only if the user provides contact details)
 
 When it is used:
 - When a user submits the built-in support form
 - When a user opts to send diagnostic information
+- Submitting the optional deactivation feedback form
 
 What data is sent:
 - Name
@@ -342,6 +345,9 @@ What data is sent:
 - Message content
 - Site URL
 - Plugin name
+- Feedback text (if provided)
+- Support message content
+- Deactivation reason (if provided)
 
 No data is sent without user action.
 
@@ -353,6 +359,8 @@ https://themepaste.com/terms-condition
 
 Privacy Policy:
 https://themepaste.com/privacy-policy
+
+
 
 
 == Development / Source Code ==
