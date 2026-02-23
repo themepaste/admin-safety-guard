@@ -151,6 +151,11 @@ A: [Support](https://themepaste.com/contact)
 
 == Changelog ==
 
+= 1.2.3 – Maintenance Update =
+* Enhanced stability and performance
+* General bug fixes and cleanup
+* Added a deactivation modal
+
 = 1.2.2 – Maintenance Update =
 * Fixed critical errors and PHP warnings
 * Improved WordPress coding standards compliance
