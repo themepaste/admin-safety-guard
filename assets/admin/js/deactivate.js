@@ -74,13 +74,11 @@ jQuery(document).ready(function ($) {
         feedback: details,
       }),
       success: function (response) {
-        console.log('Feedback sent:', response);
-        // window.location.href = deactivateUrl;
+        window.location.href = deactivateUrl;
       },
       error: function (error) {
-        console.log('API Error:', error);
         // Always deactivate even if API fails
-        // window.location.href = deactivateUrl;
+        window.location.href = deactivateUrl;
       },
     });
   });
