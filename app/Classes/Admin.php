@@ -46,13 +46,28 @@ class Admin {
         $feedback = sanitize_textarea_field( $_POST['feedback'] );
         $api_url = 'https: //themepaste.com/wp-json/tpsa/v1/feedback';
 
-        wp_send_json_success( [
-            'success'  => true,
-            'url'      => $api_url,
-            'reason'   => $reason,
-            'feedback' => $feedback,
+        $response = wp_remote_post( $api_url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'x-api-key'    => 'a2e4a51671af827045df95bcd686c7ae4dae3b99',
+            ],
+
+            'body'    => json_encode( [
+                'website_url' => site_url(),
+                'admin_name'  => wp_get_current_user()->display_name,
+                'admin_email' => wp_get_current_user()->user_email,
+                'plugin_name' => 'Admin Safety Guard',
+                'reason'      => $reason,
+                'feedback'    => $feedback,
+            ] ),
+            'timeout' => 20,
         ] );
 
+        if ( is_wp_error( $response ) ) {
+            wp_send_json_error( ['message' => 'API request failed'] );
+        }
+
+        wp_send_json_success( ['message' => 'Success'] );
         exit;
     }
 
@@ -179,14 +194,7 @@ class Admin {
             );
 
             wp_localize_script( 'tpsa-deactivate', 'tpsaDeactivate', [
-                'ajax_url'    => admin_url( 'admin-ajax.php' ),
-                'plugin_slug' => TPSA_PLUGIN_BASENAME,
-                'nonce'       => wp_create_nonce( 'tpsm_feedback_nonce' ),
-                'admin_name'  => wp_get_current_user()->display_name,
-                'admin_email' => wp_get_current_user()->user_email,
-                'site_url'    => site_url(),
-                'plugin_name' => 'Admin Safety Guard',
-                'tp_rest_url' => 'https://themepaste.com/wp-json/tpsa/v1/feedback',
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
             ] );
         }
     }
