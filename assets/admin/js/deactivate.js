@@ -61,32 +61,20 @@ jQuery(document).ready(function ($) {
     const reason = $('input[name="reason"]:checked').val();
     const details = $('.tpsm-textarea').val();
 
-    console.log(tpsaDeactivate.tp_rest_url);
-
     $.ajax({
-      url: tpsaDeactivate.tp_rest_url, // localized REST URL
+      url: tpsaDeactivate.ajax_url, // or use localized script
       method: 'POST',
-      contentType: 'application/json',
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader(
-          'x-api-key',
-          'a2e4a51671af827045df95bcd686c7ae4dae3b99',
-        );
-      },
-      data: JSON.stringify({
-        website_url: tpsaDeactivate.site_url,
-        admin_name: tpsaDeactivate.admin_name,
-        admin_email: tpsaDeactivate.admin_email,
-        plugin_name: tpsaDeactivate.plugin_name,
+      data: {
+        action: 'tpsa_deactivate_plugin',
         reason: reason,
         feedback: details,
-      }),
-      success: function (response) {
-        window.location.href = deactivateUrl;
       },
-      error: function (error) {
-        // Always deactivate even if API fails
-        window.location.href = deactivateUrl;
+      success: function (response) {
+        console.log(response);
+        // window.location.href = deactivateUrl;
+      },
+      error: function () {
+        // window.location.href = deactivateUrl;
       },
     });
   });

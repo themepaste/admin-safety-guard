@@ -31,6 +31,7 @@ class Admin {
         } );
         $this->action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_styles'] );
         $this->action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_scripts'] );
+        $this->ajax_priv( 'tpsa_deactivate_plugin', [$this, 'tpsa_deactivate_plugin_callback'] );
 
         add_action( 'login_init', function () {
             if ( isset( $_GET['cdp_preview'] ) ) {
@@ -38,6 +39,21 @@ class Admin {
             }
         } );
 
+    }
+
+    public function tpsa_deactivate_plugin_callback() {
+        $reason = sanitize_text_field( $_POST['reason'] );
+        $feedback = sanitize_textarea_field( $_POST['feedback'] );
+        $api_url = 'https: //themepaste.com/wp-json/tpsa/v1/feedback';
+
+        wp_send_json_success( [
+            'success'  => true,
+            'url'      => $api_url,
+            'reason'   => $reason,
+            'feedback' => $feedback,
+        ] );
+
+        exit;
     }
 
     /**
