@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, login security
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -150,6 +150,12 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.2.5 – Security & Stability Update =
+* Improved deactivation process
+* Added nonce verification for AJAX security
+* Fixed cross-origin (CORS) issue during API request
+* Enhanced server-side API handling
 
 = 1.2.4 – Maintenance Update =
 * Deactivation issue fixed
