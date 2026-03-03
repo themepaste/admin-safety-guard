@@ -20,8 +20,11 @@ jQuery(document).ready(function ($) {
                         <textarea name="details" class="tpsm-textarea" placeholder="Additional feedback (optional)"></textarea>
 
                         <div class="tpsm-modal-buttons">
-                            <button type="submit" class="tpsm-submit-btn">Submit & Deactivate</button>
                             <button type="button" class="tpsm-skip-btn">Skip</button>
+                            <div>
+                              <button type="button" class="tpsm-cancel-btn">Cancel</button>
+                              <button type="submit" class="tpsm-submit-btn">Submit & Deactivate</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -41,6 +44,11 @@ jQuery(document).ready(function ($) {
     },
   );
 
+  // Cancel button
+  $(document).on('click', '.tpsm-cancel-btn', function () {
+    $('#tpsm-modal').fadeOut();
+  });
+
   // Skip button
   $(document).on('click', '.tpsm-skip-btn', function () {
     window.location.href = deactivateUrl;
@@ -53,7 +61,7 @@ jQuery(document).ready(function ($) {
     const reason = $('input[name="reason"]:checked').val();
     const details = $('.tpsm-textarea').val();
 
-    // console.log(reason, details);
+    console.log(tpsaDeactivate.tp_rest_url);
 
     $.ajax({
       url: tpsaDeactivate.tp_rest_url, // localized REST URL
