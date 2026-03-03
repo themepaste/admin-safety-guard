@@ -70,11 +70,10 @@ jQuery(document).ready(function ($) {
         feedback: details,
       },
       success: function (response) {
-        console.log(response);
-        // window.location.href = deactivateUrl;
+        window.location.href = deactivateUrl;
       },
       error: function () {
-        // window.location.href = deactivateUrl;
+        window.location.href = deactivateUrl;
       },
     });
   });
