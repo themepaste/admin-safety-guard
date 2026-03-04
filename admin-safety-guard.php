@@ -60,18 +60,7 @@ final class TPSucureAdmin {
         // Include custom helper functions from the inc/functions.php file
         require_once dirname( __FILE__ ) . '/inc/functions.php';
 
-        /**
-         * Check if the Composer autoloader class for TPShippingManager exists.
-         *
-         * The class name usually includes the suffix defined in the composer.json
-         * file, typically something like 'ComposerAutoloaderInitTPShippingManager'.
-         *
-         * If the class does not exist, include the Composer autoloader file to
-         * register the necessary autoload mappings.
-         */
-        // if ( ! class_exists( 'ComposerAutoloaderInitTPShippingManager' ) ) {
         require_once dirname( __FILE__ ) . '/vendor/autoload.php';
-        // }
     }
 
     /**
