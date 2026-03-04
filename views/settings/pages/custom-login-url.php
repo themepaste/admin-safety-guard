@@ -19,7 +19,7 @@ $current_tab_label = $args['current_tab_label'];
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
         <h2><span><a href="<?php echo esc_url( $current_url ); ?>"><?php echo esc_html( $current_tab_label ); ?></a>
-                <?php echo esc_html( ' / Limit Login Attempts Settings' ); ?>
+                <?php echo esc_html( ' / Custom Login URL Settings' ); ?>
             </span>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
@@ -32,6 +32,7 @@ $current_tab_label = $args['current_tab_label'];
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
             <input type="hidden" name="action" value="tpsa_process_form">
+            <input type="hidden" name="screen_tab" value="<?php echo esc_attr( $current_tab ); ?>">
             <input type="hidden" name="screen_slug" value="<?php echo esc_attr( $screen_slug ); ?>">
 
             <!-- Switch for enable disable  -->
