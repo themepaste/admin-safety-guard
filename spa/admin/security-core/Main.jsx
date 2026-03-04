@@ -10,8 +10,19 @@ function Main() {
   );
 }
 
-ReactDOM.createRoot(
-  document.getElementById('tpsa-security-core-wrapper')
-).render(<Main />);
+const initApp = () => {
+  const container = document.getElementById('tpsa-security-core-wrapper');
+
+  if (!container) return;
+
+  const root = ReactDOM.createRoot(container);
+  root.render(<Main />);
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 export default Main;
