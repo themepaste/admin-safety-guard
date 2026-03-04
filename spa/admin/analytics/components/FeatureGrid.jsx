@@ -38,6 +38,17 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=limit-login-attempts',
   },
   {
+    id: 'custom-login-url',
+    category: 'security-core',
+    name: 'Custom Login URL',
+    description: 'Prevent brute force attacks',
+    icon: Lock,
+    // stats: { value: '0', label: 'Attacks Blocked' },
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=custom-login-url',
+  },
+  {
     id: 'two-factor-auth',
     category: 'security-core',
     name: 'Two-Factor Authentication',
@@ -65,7 +76,7 @@ const defaultFeatures = [
     name: 'Google reCAPTCHA',
     description: 'Bot protection',
     icon: Shield,
-    stats: { value: '0', label: 'Bots Blocked' },
+    // stats: { value: '0', label: 'Bots Blocked' },
     url:
       admin_url +
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=recaptcha',
@@ -76,7 +87,7 @@ const defaultFeatures = [
     name: 'Web Application Firewall',
     description: 'Real-time protection',
     icon: ShieldAlert,
-    stats: { value: '0', label: 'Threats Blocked' },
+    // stats: { value: '0', label: 'Threats Blocked' },
     url:
       admin_url +
       'admin.php?page=tp-admin-safety-guard&tab=firewall-malware&tpsa-setting=web-application-firewall',
@@ -87,7 +98,7 @@ const defaultFeatures = [
     name: 'Malware Scanner',
     description: 'Automated scanning',
     icon: Scan,
-    stats: { value: '0', label: 'Files Scanned' },
+    // stats: { value: '0', label: 'Files Scanned' },
     url:
       admin_url +
       'admin.php?page=tp-admin-safety-guard&tab=firewall-malware&tpsa-setting=advanced-malware-scanner',
@@ -184,17 +195,19 @@ export default function FeatureGrid({
                 <h4 className="fg-title">{feature.name}</h4>
                 <p className="fg-desc">{feature.description}</p>
 
-                <div className="fg-footerRow">
-                  <div>
-                    <p className="fg-statValue">{feature.stats.value}</p>
-                    <p className="fg-statLabel">{feature.stats.label}</p>
-                  </div>
+                {feature.stats && (
+                  <div className="fg-footerRow">
+                    <div>
+                      <p className="fg-statValue">{feature.stats.value}</p>
+                      <p className="fg-statLabel">{feature.stats.label}</p>
+                    </div>
 
-                  <ChevronRight
-                    className={`fg-chevron ${isSelected ? 'is-selected' : ''}`}
-                    aria-hidden="true"
-                  />
-                </div>
+                    <ChevronRight
+                      className={`fg-chevron ${isSelected ? 'is-selected' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className={`fg-panel ${isSelected ? 'is-open' : ''}`}>
@@ -362,7 +375,6 @@ export default function FeatureGrid({
         }
 
         .${uid} .fg-panel{
-          border-top:1px solid #e2e8f0;
           background:#f8fafc;
           max-height:0;
           overflow:hidden;
