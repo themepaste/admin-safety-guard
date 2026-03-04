@@ -26,6 +26,9 @@ class FormProcessor {
         $screen_slug = isset( $_POST['screen_slug'] )
         ? sanitize_key( wp_unslash( $_POST['screen_slug'] ) )
         : '';
+        $screen_tab = isset( $_POST['screen_tab'] )
+        ? sanitize_key( wp_unslash( $_POST['screen_tab'] ) )
+        : '';
 
         if ( empty( $screen_slug ) ) {
             wp_die( esc_html__( 'Missing screen_slug.', 'admin-safety-guard' ) );
@@ -111,6 +114,7 @@ class FormProcessor {
         $redirect_url = add_query_arg(
             array(
                 'page'           => Settings::$SETTING_PAGE_ID,
+                'tab'            => $screen_tab,
                 'tpsa-setting'   => $screen_slug,
                 'settings-saved' => '1',
             ),
