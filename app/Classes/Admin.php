@@ -139,12 +139,12 @@ class Admin {
             } elseif ( $current_setting_screen === 'monitoring-analytics' ) {
                 $this->enqueue_script(
                     'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/monitoringAnalytics.bundle.js'
+                    TPSA_ASSETS_URL . '/admin/build/monitoringAnalytics.bundle.js', [], null, array( 'in_footer' => false )
                 );
             } elseif ( $current_setting_screen === 'customize' ) {
                 $this->enqueue_script(
                     'tpsa-customize',
-                    TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js'
+                    TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js', [], null, array( 'in_footer' => false )
                 );
             }
 

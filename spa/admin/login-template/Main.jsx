@@ -4,18 +4,29 @@ import './assets/style.css';
 import TemplateList from './components/TemplateList';
 
 function Main() {
-    return (
-        <>
-            <div className="tp-login-template">
-                <h2>Login Template</h2>
-                <TemplateList />
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="tp-login-template">
+        <h2>Login Template</h2>
+        <TemplateList />
+      </div>
+    </>
+  );
 }
 
-ReactDOM.createRoot(document.getElementById('tp-login-template')).render(
-    <Main />
-);
+const initApp = () => {
+  const container = document.getElementById('tpsa-login-template');
+
+  if (!container) return;
+
+  const root = ReactDOM.createRoot(container);
+  root.render(<Main />);
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 export default Main;
