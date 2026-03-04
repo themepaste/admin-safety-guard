@@ -109,7 +109,7 @@ class Admin {
             $this->enqueue_script(
                 'tpsa-admin',
                 TPSA_ASSETS_URL . '/admin/js/admin.js',
-                ['jquery']
+                ['jquery'], null, array( 'in_footer' => false )
             );
             if ( $current_setting_screen === 'login-logs-activity' ) {
                 $this->enqueue_script(
@@ -119,7 +119,7 @@ class Admin {
             } elseif ( $current_setting_screen === 'analytics' ) {
                 $this->enqueue_script(
                     'tpsa-analytics',
-                    TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js'
+                    TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js', [], null, array( 'in_footer' => false )
                 );
             } elseif ( $current_setting_screen === 'security-core' ) {
                 $this->enqueue_script(
