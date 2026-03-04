@@ -6,28 +6,24 @@ module.exports = (env, argv) => {
     entry: {
       loginTemplate: path.resolve(
         __dirname,
-        './spa/admin/login-template/Main.jsx'
+        './spa/admin/login-template/Main.jsx',
       ),
       loginLogActivity: path.resolve(
         __dirname,
-        './spa/admin/login-logs-activity/Main.jsx'
+        './spa/admin/login-logs-activity/Main.jsx',
       ),
       analytics: path.resolve(__dirname, './spa/admin/analytics/Main.jsx'),
       securityCore: path.resolve(
         __dirname,
-        './spa/admin/security-core/Main.jsx'
+        './spa/admin/security-core/Main.jsx',
       ),
       firewallMalware: path.resolve(
         __dirname,
-        './spa/admin/firewall-malware/Main.jsx'
+        './spa/admin/firewall-malware/Main.jsx',
       ),
       privacyHardening: path.resolve(
         __dirname,
-        './spa/admin/privacy-hardening/Main.jsx'
-      ),
-      monitoringAnalytics: path.resolve(
-        __dirname,
-        './spa/admin/monitoring-analytics/Main.jsx'
+        './spa/admin/privacy-hardening/Main.jsx',
       ),
     },
     output: {

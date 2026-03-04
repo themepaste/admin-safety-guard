@@ -114,7 +114,7 @@ class Admin {
             if ( $current_setting_screen === 'login-logs-activity' ) {
                 $this->enqueue_script(
                     'tpsa-login-log-activity',
-                    TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js'
+                    TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js', [], null, array( 'in_footer' => false )
                 );
             } elseif ( $current_setting_screen === 'analytics' ) {
                 $this->enqueue_script(
@@ -135,11 +135,6 @@ class Admin {
                 $this->enqueue_script(
                     'tpsa-security-core',
                     TPSA_ASSETS_URL . '/admin/build/privacyHardening.bundle.js', [], null, array( 'in_footer' => false )
-                );
-            } elseif ( $current_setting_screen === 'monitoring-analytics' ) {
-                $this->enqueue_script(
-                    'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/monitoringAnalytics.bundle.js', [], null, array( 'in_footer' => false )
                 );
             } elseif ( $current_setting_screen === 'customize' ) {
                 $this->enqueue_script(
