@@ -14,13 +14,13 @@ function Main() {
         <LoginActivity />
         <FeatureStatusDonut />
       </div>
-      <FeatureGrid />
+      {/* <FeatureGrid /> */}
     </>
   );
 }
 
 ReactDOM.createRoot(document.getElementById('tpsa-analytics-wrapper')).render(
-  <Main />
+  <Main />,
 );
 
 export default Main;
