@@ -223,17 +223,6 @@ export default function FeatureGrid({
                   >
                     Configure Settings
                   </button>
-
-                  {/* <button
-                    type="button"
-                    className="fg-secondaryBtn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onViewDetails?.(feature);
-                    }}
-                  >
-                    View Details
-                  </button> */}
                 </div>
               </div>
             </div>
