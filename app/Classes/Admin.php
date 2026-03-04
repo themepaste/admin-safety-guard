@@ -134,7 +134,7 @@ class Admin {
             } elseif ( $current_setting_screen === 'privacy-hardening' ) {
                 $this->enqueue_script(
                     'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/privacyHardening.bundle.js'
+                    TPSA_ASSETS_URL . '/admin/build/privacyHardening.bundle.js', [], null, array( 'in_footer' => false )
                 );
             } elseif ( $current_setting_screen === 'monitoring-analytics' ) {
                 $this->enqueue_script(
