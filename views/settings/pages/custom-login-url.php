@@ -11,15 +11,21 @@ $submit_button = $prefix . '-' . $screen_slug . '_submit';
 $option_name = $args['option_name'];
 $saved_settings = get_option( $option_name, [] );
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
+$current_tab = $args['current_tab'];
+$current_url = $args['current_url'];
+$current_tab_label = $args['current_tab_label'];
 ?>
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( 'Set Custom login/logout Url' ); // page_label;  ?>
+        <h2><span><a href="<?php echo esc_url( $current_url ); ?>"><?php echo esc_html( $current_tab_label ); ?></a>
+                <?php echo esc_html( ' / Limit Login Attempts Settings' ); ?>
+            </span>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p>This feature lets you redefine the default WordPress login URL, making it harder for attackers to locate and exploit standard entry points.</p>
+                    <p><?php esc_html_e( 'This feature guards your site from brute-force attacks by restricting failed login attempts and
+                        automatically locking out repeated offenders.', 'admin-safety-guard' ); ?></p>
                 </div>
             </div>
         </h2>

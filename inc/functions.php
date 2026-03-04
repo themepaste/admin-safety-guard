@@ -29,6 +29,9 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                         'limit-login-attempts' => array(
                             'label' => __( 'Limit Login Attempts', 'admin-safety-guard' ),
                         ),
+                        'custom-login-url'     => array(
+                            'label' => __( 'Custom Login URL', 'admin-safety-guard' ),
+                        ),
                         'two-factor-auth'      => array(
                             'label' => __( 'Two-Factor Authentication', 'admin-safety-guard' ),
                         ),
