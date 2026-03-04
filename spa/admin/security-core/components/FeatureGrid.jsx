@@ -17,6 +17,17 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=limit-login-attempts',
   },
   {
+    id: 'custom-login-url',
+    category: 'security-core',
+    name: 'Custom Login URL',
+    description: 'Prevent brute force attacks',
+    status: 'active',
+    icon: Lock,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=custom-login-url',
+  },
+  {
     id: 'two-factor-auth',
     category: 'security-core',
     name: 'Two-Factor Authentication',
