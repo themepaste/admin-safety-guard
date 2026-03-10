@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, login security
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -150,6 +150,13 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.2.6 – Performance & Security Update =
+* [improve] Optimized React rendering by loading React assets in the head for faster UI initialization.
+* [feature] Added Login Attempt Limiter to help prevent brute-force login attacks.
+* [fix] Fixed React render delay issue on slow client sites.
+* [fix] Resolved minor UI and stability issues.
+* [improve] General performance improvements.
 
 = 1.2.5 – Security & Stability Update =
 * Improved deactivation process
