@@ -3,21 +3,9 @@ defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Helpers\Utility;
 
-// $prefix = $args['prefix'];
-// $screen_slug = $args['current_screen'];
-// $settings_option = $args['settings_option'];
-// $page_label = $args['page_label'];
-// $submit_button = $prefix . '-' . $screen_slug . '_submit';
-// $option_name = $args['option_name'];
-// $saved_settings = get_option( $option_name, [] );
-// $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
-// $current_tab = $args['current_tab'];
-// $current_url = $args['current_url'];
-// $current_tab_label = $args['current_tab_label'];
+$screen_slug = $args['current_screen'];
+$current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
 
-echo "<pre>";
-print_r( $args );
-echo "</pre>";
 ?>
 
 <div class="tpsa-setting-wrapper">
@@ -39,7 +27,7 @@ echo "</pre>";
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
             <input type="hidden" name="action" value="tpsa_process_form">
-            <input type="hidden" name="screen_tab" value="<?php echo esc_attr( $current_tab ); ?>">
+            <input type="hidden" name="screen_tab" value="<?php echo esc_attr( $args['current_tab'] ); ?>">
             <input type="hidden" name="screen_slug" value="<?php echo esc_attr( $screen_slug ); ?>">
 
             <!-- Switch for enable disable  -->
