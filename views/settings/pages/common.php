@@ -5,6 +5,8 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 
 $screen_slug = $args['current_screen'];
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
+$saved_settings = get_option( $args['option_name'], [] );
+$page_label = isset( $args['page_label_forsub'] ) && !empty( $args['page_label_forsub'] ) ? $args['page_label_forsub'] : $args['page_label'];
 
 ?>
 
@@ -13,7 +15,7 @@ $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [
         <!-- START HEADING AND PAGINATION  -->
         <h2><span><a
                     href="<?php echo esc_url( $args['current_url'] ); ?>"><?php echo esc_html( $args['current_tab_label'] ); ?></a>
-                <?php echo esc_html( ' / ' . $args['page_label'] . ' Settings' ); ?>
+                <?php echo esc_html( ' / ' . $page_label . ' Settings' ); ?>
             </span>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
@@ -24,13 +26,15 @@ $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [
             </div>
         </h2>
         <!-- END HEADING AND PAGINATION  -->
+
+        <!-- START SETTINGS FORM -->
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
             <input type="hidden" name="action" value="tpsa_process_form">
             <input type="hidden" name="screen_tab" value="<?php echo esc_attr( $args['current_tab'] ); ?>">
             <input type="hidden" name="screen_slug" value="<?php echo esc_attr( $screen_slug ); ?>">
 
-            <!-- Switch for enable disable  -->
+            <!-- RENDER ALL FIELDS -->
             <div class="tpsa-setting-row">
                 <?php
 if ( is_array( $current_settings_fields ) && !empty( $current_settings_fields ) ) {
@@ -57,5 +61,7 @@ printf( '<button type="submit">%1$s</button>',
 ?>
             </div>
         </form>
+
+        <!-- END SETTINGS FORM -->
     </div>
 </div>

@@ -18,8 +18,10 @@ foreach ( $settings_option as $key => $value ) {
         foreach ( $features as $sub_key => $sub_value ) {
             if ( $current_screen == $sub_key ) {
                 $template = Utility::get_template( 'settings/pages/' . $sub_key . '.php', $args );
-                if ( $template ) {
+                if ( isset( $template ) && !empty( $template ) && $template ) {
                     echo $template;
+                } else {
+                    echo Utility::get_template( 'settings/pages/common.php', $args );
                 }
             }
         }
