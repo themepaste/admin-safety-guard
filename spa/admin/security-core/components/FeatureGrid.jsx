@@ -157,27 +157,33 @@ export default function FeatureGrid({
                     />
                   </div>
 
-                  <span
-                    className={`fg-status ${
-                      allActiveFeatures.includes(feature.id)
-                        ? 'is-active'
-                        : 'is-inactive'
-                    }`}
-                  >
-                    {allActiveFeatures.includes(feature.id) ? (
-                      <span className="fg-statusInner">
-                        <Check className="fg-statusIcon" aria-hidden="true" />
-                        Active
-                        <span>{feature.free ? ' (Free)' : '(Pro)'}</span>
-                      </span>
-                    ) : (
-                      <span className="fg-statusInner">
-                        <X className="fg-statusIcon" aria-hidden="true" />
-                        Inactive
-                        <span>{feature.free ? ' (Free)' : '(Pro)'}</span>
-                      </span>
-                    )}
-                  </span>
+                  <div className="fg-badges">
+                    <span
+                      className={`fg-status ${
+                        allActiveFeatures.includes(feature.id)
+                          ? 'is-active'
+                          : 'is-inactive'
+                      }`}
+                    >
+                      {allActiveFeatures.includes(feature.id) ? (
+                        <>
+                          <Check className="fg-statusIcon" aria-hidden="true" />
+                          Active
+                        </>
+                      ) : (
+                        <>
+                          <X className="fg-statusIcon" aria-hidden="true" />
+                          Inactive
+                        </>
+                      )}
+                    </span>
+
+                    <span
+                      className={`fg-plan ${feature.free ? 'is-free' : 'is-pro'}`}
+                    >
+                      {feature.free ? 'Free' : 'Pro'}
+                    </span>
+                  </div>
                 </div>
 
                 <h4 className="fg-title">{feature.name}</h4>
@@ -384,6 +390,28 @@ export default function FeatureGrid({
           background:#f8fafc;
           border-color:#cbd5e1;
         }
+          .${uid} .fg-badges{
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+
+.${uid} .fg-plan{
+  font-size:12px;
+  font-weight:700;
+  padding:6px 10px;
+  border-radius:999px;
+}
+
+.${uid} .fg-plan.is-free{
+  background:#dcfce7;
+  color:#15803d;
+}
+
+.${uid} .fg-plan.is-pro{
+  background:#fed7aa;
+  color:#c2410c;
+}
       `}</style>
     </div>
   );
