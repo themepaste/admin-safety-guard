@@ -11,6 +11,7 @@ const defaultFeatures = [
     name: 'Limit Login Attempts',
     description: 'Prevent brute force attacks',
     status: 'active',
+    free: true,
     icon: Lock,
     url:
       admin_url +
@@ -22,6 +23,7 @@ const defaultFeatures = [
     name: 'Custom Login URL',
     description: 'Prevent brute force attacks',
     status: 'active',
+    free: true,
     icon: Lock,
     url:
       admin_url +
@@ -33,6 +35,7 @@ const defaultFeatures = [
     name: 'Two-Factor Authentication',
     description: 'Extra layer of security',
     status: 'active',
+    free: true,
     icon: Shield,
     url:
       admin_url +
@@ -44,6 +47,7 @@ const defaultFeatures = [
     name: 'Password Protection',
     description: 'Enforce strong passwords',
     status: 'active',
+    free: true,
     icon: Lock,
     url:
       admin_url +
@@ -55,6 +59,7 @@ const defaultFeatures = [
     name: 'Google reCAPTCHA',
     description: 'Bot protection',
     status: 'active',
+    free: true,
     icon: Shield,
     url:
       admin_url +
@@ -66,6 +71,7 @@ const defaultFeatures = [
     name: 'Hide Admin Bar',
     description: 'Hide the admin bar from non-admins',
     status: 'active',
+    free: true,
     icon: Shield,
     url:
       admin_url +
@@ -77,6 +83,7 @@ const defaultFeatures = [
     name: 'Passwordless Login',
     description: 'Allow users to log in without a password',
     status: 'active',
+    free: false,
     icon: Shield,
     url:
       admin_url +
@@ -88,6 +95,7 @@ const defaultFeatures = [
     name: 'Social Login',
     description: 'Allow users to log in using social media accounts',
     status: 'active',
+    free: false,
     icon: Shield,
     url:
       admin_url +
@@ -160,11 +168,13 @@ export default function FeatureGrid({
                       <span className="fg-statusInner">
                         <Check className="fg-statusIcon" aria-hidden="true" />
                         Active
+                        <span>{feature.free ? ' (Free)' : '(Pro)'}</span>
                       </span>
                     ) : (
                       <span className="fg-statusInner">
                         <X className="fg-statusIcon" aria-hidden="true" />
                         Inactive
+                        <span>{feature.free ? ' (Free)' : '(Pro)'}</span>
                       </span>
                     )}
                   </span>
