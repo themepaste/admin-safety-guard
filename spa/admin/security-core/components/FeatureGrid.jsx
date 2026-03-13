@@ -71,6 +71,18 @@ const defaultFeatures = [
       admin_url +
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=admin-bar',
   },
+  ,
+  {
+    id: 'Passwordless Login',
+    category: 'security-core',
+    name: 'Passwordless Login',
+    description: 'Allow users to log in without a password',
+    status: 'active',
+    icon: Shield,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=passwordless-login',
+  },
 ];
 
 export default function FeatureGrid({
