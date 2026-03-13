@@ -45,7 +45,8 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                             'label' => __( 'Hide Admin Bar', 'admin-safety-guard' ),
                         ),
                         'passwordless-login'   => array(
-                            'label' => __( 'Passwordless Login', 'admin-safety-guard' ),
+                            'label'  => __( 'Passwordless Login', 'admin-safety-guard' ),
+                            'is_pro' => true,
                         ),
                     ),
                 ),

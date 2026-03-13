@@ -7,7 +7,8 @@ $screen_slug = $args['current_screen'];
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
 $saved_settings = get_option( $args['option_name'], [] );
 $page_label = isset( $args['page_label_forsub'] ) && !empty( $args['page_label_forsub'] ) ? $args['page_label_forsub'] : $args['page_label'];
-
+$is_pro = $args['is_pro'] ?? false;
+$is_valid_license_available = is_valid_license_available();
 ?>
 
 <div class="tpsa-setting-wrapper">
@@ -65,3 +66,7 @@ printf( '<button type="submit">%1$s</button>',
         <!-- END SETTINGS FORM -->
     </div>
 </div>
+
+
+<!-- PRO POPUP OVERLAY -->
+<?php echo $is_pro && !$is_valid_license_available ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>

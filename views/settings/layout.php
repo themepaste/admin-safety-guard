@@ -12,18 +12,17 @@ $current_tab_label = $settings_option[$current_tab]['label'] ?? '';
 $current_url = admin_url( 'admin.php?page=tp-admin-safety-guard&tab=' . $current_tab . '&tpsa-setting=' . $current_tab );
 
 $args = array(
-    'settings_option'            => $settings_option,
-    'settings_fields'            => $settings_fields,
-    'current_screen'             => $current_screen,
-    'current_tab'                => $current_tab,
-    'current_url'                => $current_url,
-    'prefix'                     => get_tpsa_prefix(),
-    'option_name'                => get_tpsa_settings_option_name( $current_screen ),
-    'page_label'                 => !is_null( $current_screen ) && array_key_exists( $current_screen, $settings_option ) ? $settings_option[$current_screen]['label'] : '',
-    'page_label_forsub'          => !is_null( $current_tab ) && array_key_exists( $current_tab, $settings_option ) ? $settings_option[$current_tab]['sub'][$current_screen]['label'] : '',
-    'current_tab_label'          => $current_tab_label,
-    'is_pro'                     => $settings_option[$current_tab]['is_pro'] ?? false,
-    'is_valid_license_available' => is_valid_license_available(),
+    'settings_option'   => $settings_option,
+    'settings_fields'   => $settings_fields,
+    'current_screen'    => $current_screen,
+    'current_tab'       => $current_tab,
+    'current_url'       => $current_url,
+    'prefix'            => get_tpsa_prefix(),
+    'option_name'       => get_tpsa_settings_option_name( $current_screen ),
+    'page_label'        => !is_null( $current_screen ) && array_key_exists( $current_screen, $settings_option ) ? $settings_option[$current_screen]['label'] : '',
+    'page_label_forsub' => !is_null( $current_tab ) && array_key_exists( $current_tab, $settings_option ) ? $settings_option[$current_tab]['sub'][$current_screen]['label'] : '',
+    'current_tab_label' => $current_tab_label,
+    'is_pro'            => $settings_option[$current_tab]['sub'][$current_screen]['is_pro'] ?? false,
 );
 ?>
 
