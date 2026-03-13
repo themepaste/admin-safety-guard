@@ -3,17 +3,17 @@ defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Helpers\Utility;
 
-$prefix = $args['prefix'];
-$screen_slug = $args['current_screen'];
-$settings_option = $args['settings_option'];
-$page_label = $args['page_label'];
-$submit_button = $prefix . '-' . $screen_slug . '_submit';
-$option_name = $args['option_name'];
-$saved_settings = get_option( $option_name, [] );
+// $prefix = $args['prefix'];
+// $screen_slug = $args['current_screen'];
+// $settings_option = $args['settings_option'];
+// $page_label = $args['page_label'];
+// $submit_button = $prefix . '-' . $screen_slug . '_submit';
+// $option_name = $args['option_name'];
+// $saved_settings = get_option( $option_name, [] );
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
-$current_tab = $args['current_tab'];
-$current_url = $args['current_url'];
-$current_tab_label = $args['current_tab_label'];
+// $current_tab = $args['current_tab'];
+// $current_url = $args['current_url'];
+// $current_tab_label = $args['current_tab_label'];
 ?>
 
 <div class="tpsa-setting-wrapper">
@@ -64,3 +64,6 @@ printf( '<button type="submit">%1$s</button>',
         </form>
     </div>
 </div>
+
+<!-- PRO POPUP OVERLAY -->
+<?php echo $is_pro && !$is_valid_license_available ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>
