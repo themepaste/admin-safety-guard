@@ -48,6 +48,10 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                             'label'  => __( 'Passwordless Login', 'admin-safety-guard' ),
                             'is_pro' => true,
                         ),
+                        'social-login'         => array(
+                            'label'  => __( 'Social Login', 'tp-secure-plugin' ),
+                            'is_pro' => true,
+                        ),
                     ),
                 ),
                 'firewall-malware'    => array(
