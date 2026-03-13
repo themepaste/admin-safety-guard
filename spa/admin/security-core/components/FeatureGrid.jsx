@@ -285,6 +285,7 @@ export default function FeatureGrid({
           font-weight:700;
           line-height:1;
           user-select:none;
+          gap:4px;
         }
         .${uid} .fg-statusInner{
           display:inline-flex;
@@ -397,10 +398,12 @@ export default function FeatureGrid({
 }
 
 .${uid} .fg-plan{
+  display:inline-flex;
   font-size:12px;
   font-weight:700;
   padding:6px 10px;
   border-radius:999px;
+  line-height:1;
 }
 
 .${uid} .fg-plan.is-free{
