@@ -78,7 +78,7 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=admin-bar',
   },
   {
-    id: 'Passwordless Login',
+    id: 'passwordless-login',
     category: 'security-core',
     name: 'Passwordless Login',
     description: 'Allow users to log in without a password',
@@ -91,6 +91,18 @@ const defaultFeatures = [
   },
   {
     id: 'social-login',
+    category: 'security-core',
+    name: 'Social Login',
+    description: 'Allow users to log in using social media accounts',
+    status: 'active',
+    free: false,
+    icon: Shield,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=social-login',
+  },
+  {
+    id: '2fa-using-mobile-app',
     category: 'security-core',
     name: 'Social Login',
     description: 'Allow users to log in using social media accounts',
