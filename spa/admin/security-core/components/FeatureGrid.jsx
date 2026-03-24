@@ -90,6 +90,18 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=passwordless-login',
   },
   {
+    id: '2fa-using-mobile-app',
+    category: 'security-core',
+    name: '2FA using Mobile App',
+    description: 'Allow users to log in using mobile app',
+    status: 'active',
+    free: false,
+    icon: Shield,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=2fa-using-mobile-app',
+  },
+  {
     id: 'social-login',
     category: 'security-core',
     name: 'Social Login',
@@ -102,16 +114,16 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=social-login',
   },
   {
-    id: '2fa-using-mobile-app',
+    id: 'table-prefix-check',
     category: 'security-core',
-    name: 'Social Login',
-    description: 'Allow users to log in using social media accounts',
+    name: 'Table Prefix Check',
+    description: 'Prevent table prefix changes',
     status: 'active',
     free: false,
     icon: Shield,
     url:
       admin_url +
-      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=social-login',
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=table-prefix-check',
   },
 ];
 

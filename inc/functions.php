@@ -49,7 +49,11 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                             'is_pro' => true,
                         ),
                         'social-login'         => array(
-                            'label'  => __( 'Social Login', 'tp-secure-plugin' ),
+                            'label'  => __( 'Social Login', 'admin-safety-guard' ),
+                            'is_pro' => true,
+                        ),
+                        'table-prefix-check'   => array(
+                            'label'  => __( 'Table Prefix Check', 'admin-safety-guard' ),
                             'is_pro' => true,
                         ),
                     ),
