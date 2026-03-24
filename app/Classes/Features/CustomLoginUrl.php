@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 use ThemePaste\SecureAdmin\Interfaces\FeatureInterface;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
-class LoginLogout implements FeatureInterface {
+class CustomLoginUrl implements FeatureInterface {
     use Hook;
 
     private $features_id = 'custom-login-url';

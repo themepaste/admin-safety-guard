@@ -29,7 +29,7 @@ class FeatureManager {
     private function load_features() {
         $features = [
             Features\HideAdminBar::class,
-            Features\LoginLogout::class,
+            Features\CustomLoginUrl::class,
             Features\LoginLogsActivity::class,
             Features\LimitLoginAttempts::class,
             Features\Recaptcha::class,
