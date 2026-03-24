@@ -52,6 +52,10 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                             'label'  => __( 'Social Login', 'admin-safety-guard' ),
                             'is_pro' => true,
                         ),
+                        '2fa-using-mobile-app' => array(
+                            'label'  => __( '2FA Using Mobile App', 'admin-safety-guard' ),
+                            'is_pro' => true,
+                        ),
                         'table-prefix-check'   => array(
                             'label'  => __( 'Table Prefix Check', 'admin-safety-guard' ),
                             'is_pro' => true,
