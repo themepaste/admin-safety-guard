@@ -2,114 +2,59 @@ import React, { useState, useEffect } from 'react';
 import '../../login-logs-activity/assets/style.css';
 
 const UserTable = () => {
-  // Dummy static data with username field
-  const initialData = [
-    {
-      id: 1,
-      name: 'John Doe',
-      username: 'johnd',
-      email: 'john@example.com',
-      role: 'Admin',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      username: 'janes',
-      email: 'jane@example.com',
-      role: 'Editor',
-    },
-    {
-      id: 3,
-      name: 'Alice Johnson',
-      username: 'alicej',
-      email: 'alice@example.com',
-      role: 'Subscriber',
-    },
-    {
-      id: 4,
-      name: 'Bob Brown',
-      username: 'bobb',
-      email: 'bob@example.com',
-      role: 'Editor',
-    },
-    {
-      id: 5,
-      name: 'Charlie Davis',
-      username: 'charlied',
-      email: 'charlie@example.com',
-      role: 'Subscriber',
-    },
-    {
-      id: 6,
-      name: 'Eve Martinez',
-      username: 'evem',
-      email: 'eve@example.com',
-      role: 'Admin',
-    },
-    {
-      id: 7,
-      name: 'Frank Lee',
-      username: 'frankl',
-      email: 'frank@example.com',
-      role: 'Editor',
-    },
-    {
-      id: 8,
-      name: 'Grace Kim',
-      username: 'gracek',
-      email: 'grace@example.com',
-      role: 'Subscriber',
-    },
-    {
-      id: 9,
-      name: 'Henry Clark',
-      username: 'henryc',
-      email: 'henry@example.com',
-      role: 'Editor',
-    },
-    {
-      id: 10,
-      name: 'Ivy Scott',
-      username: 'ivys',
-      email: 'ivy@example.com',
-      role: 'Subscriber',
-    },
-    {
-      id: 11,
-      name: 'Jack White',
-      username: 'jackw',
-      email: 'jack@example.com',
-      role: 'Admin',
-    },
-  ];
-
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('All');
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [totalEntries, setTotalEntries] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Filtered and paginated data
-  const filteredData = data.filter((item) => {
-    const matchesSearch =
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.username.toLowerCase().includes(searchTerm.toLowerCase()) || // include username in search
-      item.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === 'All' || item.role === roleFilter;
-    return matchesSearch && matchesRole;
-  });
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError(null);
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    try {
+      const params = new URLSearchParams({
+        per_page: itemsPerPage,
+        page: currentPage,
+      });
 
-  const currentData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+      if (searchTerm.trim() !== '') params.append('s', searchTerm.trim());
+      if (roleFilter !== 'All') params.append('role', roleFilter.toLowerCase());
+
+      const response = await fetch(
+        `${tpsaAdmin.rest_url}secure-admin/v1/2fa/app/users?${params.toString()}`,
+        {
+          method: 'GET',
+          credentials: 'include', // if you need cookies for authentication
+        },
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch users');
+
+      const json = await response.json();
+      setData(json.data || []);
+      setTotalEntries(json.total || 0);
+    } catch (err) {
+      setError(err.message || 'Unknown error');
+    } finally {
+      setLoading(false);
+      setSelectedRows([]); // reset selection on fetch
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [currentPage, itemsPerPage, searchTerm, roleFilter]);
+
+  const totalPages = Math.ceil(totalEntries / itemsPerPage);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedRows(currentData.map((item) => item.id));
+      setSelectedRows(data.map((item) => item.ID));
     } else {
       setSelectedRows([]);
     }
@@ -129,15 +74,12 @@ const UserTable = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  // Reset selection when page changes or filter changes
-  useEffect(() => {
-    setSelectedRows([]);
-    setCurrentPage(1);
-  }, [itemsPerPage, searchTerm, roleFilter]);
-
   return (
     <div className="tpsa-login-log-activity">
       <h3>User Table</h3>
+
+      {loading && <p>Loading...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <div className="tpsa-login-log-activity-header">
         <div className="tpsa-login-log-activity-items-per-page">
@@ -184,32 +126,32 @@ const UserTable = () => {
                 type="checkbox"
                 onChange={handleSelectAll}
                 checked={
-                  currentData.length > 0 &&
-                  currentData.every((item) => selectedRows.includes(item.id))
+                  data.length > 0 &&
+                  data.every((item) => selectedRows.includes(item.ID))
                 }
               />
             </th>
             <th>Name</th>
-            <th>Username</th> {/* New field */}
+            <th>Username</th>
             <th>Email</th>
             <th>Role</th>
           </tr>
         </thead>
         <tbody>
-          {currentData.length > 0 ? (
-            currentData.map((user) => (
-              <tr key={user.id}>
+          {data.length > 0 ? (
+            data.map((user) => (
+              <tr key={user.ID}>
                 <td>
                   <input
                     type="checkbox"
-                    checked={selectedRows.includes(user.id)}
-                    onChange={() => handleSelectRow(user.id)}
+                    checked={selectedRows.includes(user.ID)}
+                    onChange={() => handleSelectRow(user.ID)}
                   />
                 </td>
                 <td>{user.name}</td>
-                <td>{user.username}</td> {/* New field */}
+                <td>{user.username}</td>
                 <td>{user.email}</td>
-                <td>{user.role}</td>
+                <td>{user.roles.join(', ')}</td>
               </tr>
             ))
           ) : (
@@ -229,7 +171,7 @@ const UserTable = () => {
         </span>
         <button
           onClick={handleNextPage}
-          disabled={currentPage === totalPages || filteredData.length === 0}
+          disabled={currentPage === totalPages || totalEntries === 0}
         >
           Next
         </button>
