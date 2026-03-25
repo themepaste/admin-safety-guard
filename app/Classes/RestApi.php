@@ -6,6 +6,7 @@ use ThemePaste\SecureAdmin\Classes\APIs\BlockUsersController;
 use ThemePaste\SecureAdmin\Classes\APIs\FailedLoginsController;
 use ThemePaste\SecureAdmin\Classes\APIs\Reports;
 use ThemePaste\SecureAdmin\Classes\APIs\SuccessLoginsController;
+use ThemePaste\SecureAdmin\Classes\APIs\TwoFAByAppUsers;
 
 class RestApi {
 
@@ -88,6 +89,38 @@ class RestApi {
                 'permission_callback' => function ( $request ) {
                     return FailedLoginsController::get()->authorize_request( $request );
                 },
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/2fa/app/users',
+            [
+                'methods'             => 'GET',
+                'callback'            => function ( $request ) {
+                    return TwoFAByAppUsers::get()->get_data( $request );
+                },
+                'permission_callback' => function ( $request ) {
+                    return TwoFAByAppUsers::get()->authorize_request( $request );
+                },
+                'args'                => [
+                    'per_page' => [
+                        'default'           => 10,
+                        'sanitize_callback' => 'absint',
+                    ],
+                    'page'     => [
+                        'default'           => 1,
+                        'sanitize_callback' => 'absint',
+                    ],
+                    's'        => [
+                        'default'           => '',
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'role'     => [
+                        'default'           => '',
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
             ]
         );
 
