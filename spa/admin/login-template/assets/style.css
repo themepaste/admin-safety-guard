@@ -1,5 +1,6 @@
 /* ==== Premium UI for Template Studio / Builder ==== */
-.tp-login-template {
+.tp-login-template,
+#tpsa-login-template {
     width: 100%;
 }
 
