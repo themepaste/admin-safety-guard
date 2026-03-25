@@ -25,6 +25,10 @@ module.exports = (env, argv) => {
         __dirname,
         './spa/admin/privacy-hardening/Main.jsx',
       ),
+      twoFAUsingMobileApp: path.resolve(
+        __dirname,
+        './spa/admin/2fa-using-mobile-app/Main.jsx',
+      ),
     },
     output: {
       filename: '[name].bundle.js',

@@ -126,10 +126,16 @@ class Admin {
                     'tpsa-security-core',
                     TPSA_ASSETS_URL . '/admin/build/securityCore.bundle.js', [], null, array( 'in_footer' => false )
                 );
-            } elseif ( $current_setting_screen === 'firewall-malware' ) {
+
+            } elseif ( $current_setting_screen === 'security-core' ) {
                 $this->enqueue_script(
                     'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/firewallMalware.bundle.js', [], null, array( 'in_footer' => false )
+                    TPSA_ASSETS_URL . '/admin/build/securityCore.bundle.js', [], null, array( 'in_footer' => false )
+                );
+            } elseif ( $current_setting_screen === '2fa-using-mobile-app' ) {
+                $this->enqueue_script(
+                    'tpsa-2fa-using-mobile-app',
+                    TPSA_ASSETS_URL . '/admin/build/twoFAUsingMobileApp.bundle.js', [], null, array( 'in_footer' => false )
                 );
             } elseif ( $current_setting_screen === 'privacy-hardening' ) {
                 $this->enqueue_script(

@@ -157,9 +157,8 @@ class Settings {
      * @return string|null
      */
     public static function get_current_screen() {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reading query var for routing/UI; no state change.
         return isset( $_GET['tpsa-setting'] )
-        ? sanitize_key( wp_unslash( $_GET['tpsa-setting'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read only.
+        ? sanitize_key( wp_unslash( $_GET['tpsa-setting'] ) )
         : null;
     }
 
