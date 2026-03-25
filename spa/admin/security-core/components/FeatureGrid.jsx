@@ -102,6 +102,18 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=2fa-using-mobile-app',
   },
   {
+    id: 'strong-password',
+    category: 'security-core',
+    name: 'Strong Password Enforcement',
+    description: 'Enforce strong password policies',
+    status: 'active',
+    free: false,
+    icon: Shield,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=strong-password',
+  },
+  {
     id: 'social-login',
     category: 'security-core',
     name: 'Social Login',

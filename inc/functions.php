@@ -56,6 +56,10 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                             'label'  => __( '2FA Using Mobile App', 'admin-safety-guard' ),
                             'is_pro' => true,
                         ),
+                        'strong-password'      => array(
+                            'label'  => __( 'Strong Password', 'admin-safety-guard' ),
+                            'is_pro' => true,
+                        ),
                         'table-prefix-check'   => array(
                             'label'  => __( 'Table Prefix Check', 'admin-safety-guard' ),
                             'is_pro' => true,

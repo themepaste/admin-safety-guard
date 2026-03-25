@@ -54,6 +54,28 @@ class TwoFactorAuth implements FeatureInterface {
             // Intercept username/password login to send OTP first.
             $this->filter( 'authenticate', [$this, 'intercept_login_with_otp'], 30, 3 );
         }
+
+        $this->filter( 'tpsa_otp_email_message', [$this, 'email_message'], 10, 2 );
+        $this->filter( 'tpsa_otp_email_subject', [$this, 'tpsa_otp_email_subject'], 10, 3 );
+    }
+
+    public function email_message( $message, $otp ) {
+        $settings = $this->get_settings();
+        if ( isset( $settings['email-body'] ) ) {
+            $message = $settings['email-body'];
+            $message = str_replace( '{otp}', $otp, $message );
+        }
+        return $message;
+    }
+
+    public function tpsa_otp_email_subject( $subject, $otp ) {
+        $settings = $this->get_settings();
+        if ( isset( $settings['email-subject'] ) ) {
+            $subject = $settings['email-subject'];
+            $subject = str_replace( '{otp}', $otp, $subject );
+            $subject = str_replace( '{site_name}', get_bloginfo( 'name' ), $subject );
+        }
+        return $subject;
     }
 
     /**
