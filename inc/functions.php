@@ -280,13 +280,29 @@ if ( !function_exists( 'tpsa_settings_fields' ) ) {
                 ),
                 'two-factor-auth'      => array(
                     'fields' => array(
-                        'otp-email' => array(
+                        'otp-email'     => array(
                             'type'    => 'switch',
                             'label'   => __( 'OTP via Email', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
                             'desc'    => __( 'After entering the correct login credentials, the user will be asked for the OTP. The OTP will be emailed to the user.', 'admin-safety-guard' ),
                             'default' => 0,
+                        ),
+                        'email-subject' => array(
+                            'type'    => 'text',
+                            'label'   => __( 'Email Subject', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Write email suject. use placeholders {otp}, {site_name}', 'tp-secure-plugin' ),
+                            'default' => '{site_name} login OTP: {otp}',
+                        ),
+                        'email-body'    => array(
+                            'type'    => 'textarea',
+                            'label'   => __( 'Custom Email Body', 'tp-secure-plugin' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Custom email body. use {otp} placeholder for showing OTP', 'tp-secure-plugin' ),
+                            'default' => 'Your OTP is: {otp}',
                         ),
                     ),
                 ),

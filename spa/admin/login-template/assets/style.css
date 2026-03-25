@@ -8,7 +8,6 @@
 .template-studio .tabs {
     display: flex;
     gap: 8px;
-    /* margin: 0 0 14px 0; */
 }
 
 .template-studio .tabs .button {
@@ -20,7 +19,6 @@
     box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
 }
 
-/* Grid for Ready-made cards (keep your existing look) */
 .template-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
