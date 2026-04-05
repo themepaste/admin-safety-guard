@@ -6,18 +6,10 @@ use ThemePaste\SecureAdmin\Helpers\Utility;
 $prefix = $args['prefix'];
 $screen_slug = $args['current_screen'];
 $settings_option = $args['settings_option'];
-// $page_label = $args['page_label'];
 $submit_button = $prefix . '-' . $screen_slug . '_submit';
 $option_name = $args['option_name'];
-// $saved_settings = get_option( $option_name, [] );
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
 $db_prefix = tp_asg_pro_current_prefix();
-// $is_pro = $settings_option[$screen_slug]['is_pro'] ?? false;
-// $is_valid_license_available = is_valid_license_available();
-
-// $screen_slug = $args['current_screen'];
-// $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
-// $saved_settings = get_option( $args['option_name'], [] );
 $page_label = isset( $args['page_label_forsub'] ) && !empty( $args['page_label_forsub'] ) ? $args['page_label_forsub'] : $args['page_label'];
 $is_pro = $args['is_pro'] ?? false;
 $is_valid_license_available = is_valid_license_available();
@@ -32,7 +24,7 @@ $suggestions = [
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;           ?>
+        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;            ?>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
