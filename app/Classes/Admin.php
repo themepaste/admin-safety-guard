@@ -127,10 +127,10 @@ class Admin {
                     TPSA_ASSETS_URL . '/admin/build/securityCore.bundle.js', [], null, array( 'in_footer' => false )
                 );
 
-            } elseif ( $current_setting_screen === 'security-core' ) {
+            } elseif ( $current_setting_screen === 'firewall-malware' ) {
                 $this->enqueue_script(
-                    'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/securityCore.bundle.js', [], null, array( 'in_footer' => false )
+                    'tpsa-firewall-malware',
+                    TPSA_ASSETS_URL . '/admin/build/firewallMalware.bundle.js', [], null, array( 'in_footer' => false )
                 );
             } elseif ( $current_setting_screen === '2fa-using-mobile-app' ) {
                 $this->enqueue_script(
