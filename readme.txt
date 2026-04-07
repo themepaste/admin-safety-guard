@@ -4,23 +4,41 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, login security
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.6
+Stable tag: 1.2.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Admin Safety Guard secures WordPress: limit logins, 2FA, reCAPTCHA, IP block, disable XML-RPC, activity logs, custom URLs and branding.
+Admin Safety Guard secures WordPress: limit logins, 2FA, reCAPTCHA, IP block, disable XML-RPC, activity logs, custom URLs and Malware Scanner.
 
 == Description ==
 
-**Admin Safety Guard** is a complete WordPress security helper focused on securing the login flow and hardening the admin area — without sacrificing usability or performance. It ships with a clean UI, smart defaults, and guardrails against the most common attacks (brute force, credential stuffing, bot logins, and XML-RPC abuse). You also get granular control over the login experience (custom URL, redirects, branding, and more).
+**[Admin Safety Guard](https://themepaste.com)** is a lightweight, high-performance WordPress security firewall dedicated to locking down your most vulnerable entry points: the login screen and the administrative dashboard. Designed with a clean UI and intelligent default settings, it instantly neutralizes brute-force attacks, credential stuffing, and bot traffic without slowing down your site's load times.
+
+It actively patches common vulnerabilities—such as disabling XML-RPC to prevent DDoS attacks—while giving you precise control over who accesses your site and how. From generating a custom, hidden login URL to evade automated scanners, to enforcing Two-Factor Authentication (2FA), blacklisting malicious IPs, and applying custom branding to your login page, Admin Safety Guard provides an uncompromising frontline defense that is incredibly easy to configure.
 
 [youtube https://www.youtube.com/watch?v=KFNUmTHtODE]
 
-Whether you need to block suspicious IPs, enforce two-factor authentication, or ship a branded login for clients, **Admin Safety Guard** has you covered.
 
 ### 🌟 Admin Safety Guard Pro
 
-**[Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro)** takes your security and customization to the next level. It strengthens defenses against unauthorized access, brute-force attacks, and data risks while giving you deeper control over how users log in and interact with your admin area. The Pro version also adds flexible design tools and smart automations — a complete solution for both **security** and **convenience**.
+**[Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro)** elevates your site’s defense into a comprehensive, automated security operations center. Built for power users, agencies, and e-commerce sites requiring strict access control, the Pro tier unlocks enterprise-grade site hardening and deep white-label customization.
+
+It moves beyond basic login protection by introducing proactive defense mechanisms, including Smart 404 Blocking to catch hackers during reconnaissance, comprehensive File and Database Security to protect core assets, and automated Malware Scanning to detect hidden threats. Additionally, Pro grants you granular, role-based control over user sessions, advanced CAPTCHA integrations for ultimate spam prevention, and a suite of flexible design tools to deliver a fully branded, highly secure, and seamless login experience for your clients and team members.
+
+### Why Use an Admin Safety Guard?
+
+Because the default WordPress leaves your front door wide open. With automated bots, brute-force attacks, and credential stuffing on the rise, simply having a strong password is no longer enough.
+
+Admin Safety Guard is engineered to bridge the gap between enterprise-level security and everyday usability, providing a fortified shield around your website without the bloated code that slows down your server.
+
+Here is why site owners, agencies, and developers choose Admin Safety Guard:
+
+- **Proactive, Frontline Defense:** Rather than waiting to clean up after a hack, Admin Safety Guard stops attacks before they breach your server. By hiding your login page with Custom URLs and instantly blocking bots via Smart 404 Blocking and Firewalls, hackers can't attack what they can't find.
+- **Zero Performance Drag:** Many security plugins are notoriously heavy, dragging down site speed and ruining SEO. Admin Safety Guard is built to be incredibly lightweight, running silently in the background to protect your site without consuming massive server resources.
+- ** Uncompromising Login Security:** The wp-admin dashboard is the most targeted area of any WordPress site. With enforced Two-Factor Authentication (2FA), explicit login limits, and seamless reCAPTCHA integration, you ensure that only verified, legitimate users can access your backend.
+- **Client-Ready Professionalism:** Security shouldn't look intimidating. With built-in custom branding, you can replace the generic WordPress logo with your own, adjust the styling, and deliver a seamless, white-labeled login experience that builds trust with your clients.
+- **Set-and-Forget Convenience:** You don't need a degree in cybersecurity to protect your website. Admin Safety Guard ships with a clean UI and intelligent smart defaults, allowing you to instantly deploy complex guardrails—like disabling XML-RPC or locking down database files—with just a few simple clicks.
+- **Total Visibility and Control:** Never guess what is happening on your site. With real-time Activity Logs and granular IP blocking, you maintain complete forensic oversight over every login attempt, system change, and blocked threat.
 
 ---
 
@@ -34,38 +52,6 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 🧩 **Plugin/Theme Authors:** Add layered protection in demo or test environments.  
 📈 **Online Businesses:** Secure customer data with 2FA, CAPTCHA, and password protection.  
 🎓 **Educators & Bloggers:** Maintain a professional look while increasing security.
-
-### ✅ Free Features at a Glance
-- Hide Admin Bar (with conditions)  
-- Dashboard Overview (in progress)  
-- Change Login URL  
-- Redirect After Login / Logout  
-- Limit Login Attempts  
-- CAPTCHA Protection  
-- Login Logs & Activity Tracking  
-- IP Blocking  
-- Two-Factor Authentication (2FA)  
-- Password Protection  
-- Disable XML-RPC  
-- Add Custom Logo on Login Form  
-- Custom Logo & Branding  
-
----
-
-#### 💎 Premium Feature List
-- Passwordless Login  
-- 2FA via Mobile App (TOTP)  
-- CSRF Protection  
-- Database Table Prefix Check  
-- Whitelist IP Addresses  
-- Hide Admin Bar
-- WP Directory File Permissions Check  
-- Social Login (Google, Facebook, etc.)  
-- Disallow Unauthorized REST Requests
-- Password Strength Tool  
-- Provide Login Template (ready-made)  
-- Customize Design Pro (advanced styling)  
-- Email Notification
 
 ---
 
@@ -109,15 +95,20 @@ Whether you need to block suspicious IPs, enforce two-factor authentication, or 
 == Screenshots ==
 
 1. Dashboard Overview  
+2. Dashboard Overview  
+
+
 2. Login Security Settings  
 3. Limit Login Attempts  
-4. Two-Factor Authentication  
-5. CAPTCHA Protection  
-6. IP Blocking  
+4. Security Core Features  
+5. Security Core Features   
+6. Login Limit Attempts
 7. Login URL Customization  
-8. Activity & Login Logs  
-9. Branding Settings  
-10. XML-RPC & Advanced Settings  
+8. Google reCAPTCHA protection
+9. Firewall & Malware
+10. Activity & Login Logs  
+11. XML-RPC & Advanced Settings  
+12. Branding Settings  
 
 ---
 
