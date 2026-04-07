@@ -96,16 +96,15 @@ Here is why site owners, agencies, and developers choose Admin Safety Guard:
 
 1. Dashboard Overview  
 2. Dashboard Overview  
-3. Login Security Settings   
-4. Security Core Features  
-5. Security Core Features   
-6. Login Limit Attempts
-7. Login URL Customization  
-8. Google reCAPTCHA protection
-9. Firewall & Malware
-10. Activity & Login Logs  
-11. XML-RPC & Advanced Settings  
-12. Branding Settings  
+3. Security Core Features    
+4. Security Core Features 
+5. Login Security Settings 
+6. Login URL Customization  
+7. Google reCAPTCHA protection
+8. Firewall & Malware
+9. Activity & Login Logs  
+10. XML-RPC & Advanced Settings  
+11. Branding Settings  
 
 ---
 
