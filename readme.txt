@@ -139,8 +139,13 @@ A: [Support](https://themepaste.com/contact)
 
 == Changelog ==
 
-= 1.2.6 =
-
+= 1.2.7 – UI & Content Update =
+* [improve] Updated plugin layout to be more user-friendly and easier to use.
+* [improve] Optimized code for better performance and smoother experience.
+* [update] Updated readme content for better clarity and documentation.
+* [update] Changed plugin banner and refreshed screenshots with a new layout.
+* [feature] Added visibility of all Pro features in free version (requires Pro plugin to use).
+* [fix] Minor UI improvements and general stability fixes.
 
 = 1.2.6 – Performance & Security Update =
 * [improve] Optimized React rendering by loading React assets in the head for faster UI initialization.
