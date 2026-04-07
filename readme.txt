@@ -88,7 +88,7 @@ Here is why site owners, agencies, and developers choose Admin Safety Guard:
 **🧰 Customize Design Pro:** Fully customize admin and login design with a simple UI.  
 **📧 Email Notification:** Receive and customize security alerts directly to your inbox.
 
-> Explore Pro Features: [Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro)
+> **Explore Pro Features**: [Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro)
 
 ---
 
@@ -96,10 +96,7 @@ Here is why site owners, agencies, and developers choose Admin Safety Guard:
 
 1. Dashboard Overview  
 2. Dashboard Overview  
-
-
-2. Login Security Settings  
-3. Limit Login Attempts  
+3. Login Security Settings   
 4. Security Core Features  
 5. Security Core Features   
 6. Login Limit Attempts
@@ -141,6 +138,9 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.2.6 =
+
 
 = 1.2.6 – Performance & Security Update =
 * [improve] Optimized React rendering by loading React assets in the head for faster UI initialization.
