@@ -62,5 +62,8 @@ printf( '<button type="submit">%1$s</button>',
     </div>
 </div>
 
+<!-- PRO: Social Login Credentials (rendered by admin-safety-guard-pro) -->
+<?php echo Utility::get_pro_template( 'settings/pages/social-credentials.php', [ 'is_valid_license_available' => $is_valid_license_available ] ); ?>
+
 <!-- PRO POPUP OVERLAY -->
 <?php echo $is_pro && !$is_valid_license_available ? Utility::get_template( 'popup/pro-features-popup.php' ) : ''; ?>
