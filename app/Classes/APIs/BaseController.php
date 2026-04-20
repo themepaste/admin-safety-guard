@@ -141,7 +141,9 @@ abstract class BaseController {
      * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
      */
     public function authorize_request( WP_REST_Request $request ) {
-        // Default: allow access. Subclasses should override for specific permissions.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return new WP_Error( 'rest_forbidden', __( 'You do not have permission to access this resource.', 'admin-safety-guard' ), ['status' => 403] );
+        }
         return true;
     }
 

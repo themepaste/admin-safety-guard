@@ -53,9 +53,9 @@ class LoginLogsActivity implements FeatureInterface {
         global $wpdb;
 
         $table      = get_tpsa_db_table_name( 's_logins' );
-        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
-        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
-        $login_time = current_time('mysql');
+        $ip_address = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? 'Unknown' ) );
+        $user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown' ) );
+        $login_time = current_time( 'mysql' );
 
         // Check if user already exists in the table
         $existing = $wpdb->get_row(

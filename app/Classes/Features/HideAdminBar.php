@@ -99,6 +99,6 @@ class HideAdminBar implements FeatureInterface {
      * Check if the feature is enabled.
      */
     private function is_enabled( $settings ) {
-        return isset( $settings['enable'] ) && $settings['enable'] == 1;
+        return isset( $settings['enable'] ) && (int) $settings['enable'] === 1;
     }
 }

@@ -42,9 +42,18 @@ class Admin {
     }
 
     public function tpsa_deactivate_plugin_callback() {
-        $reason = sanitize_text_field( $_POST['reason'] );
-        $feedback = sanitize_textarea_field( $_POST['feedback'] );
-        $api_url = 'https: //themepaste.com/wp-json/tpsa/v1/feedback';
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'tpsa_deactivate_nonce' ) ) {
+            wp_send_json_error( ['message' => 'Nonce verification failed'] );
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( ['message' => 'Unauthorized'] );
+        }
+
+        $reason   = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash( $_POST['reason'] ) ) : '';
+        $feedback = isset( $_POST['feedback'] ) ? sanitize_textarea_field( wp_unslash( $_POST['feedback'] ) ) : '';
+        $api_url  = 'https://themepaste.com/wp-json/tpsa/v1/feedback';
 
         $response = wp_remote_post( $api_url, [
             'headers' => [
@@ -154,6 +163,7 @@ class Admin {
 
             $localize = [
                 'nonce'           => wp_create_nonce( 'tpsa-nonce' ),
+                'rest_nonce'      => wp_create_nonce( 'wp_rest' ),
                 'site_url'        => site_url(),
                 'ajax_url'        => admin_url( 'admin-ajax.php' ),
                 'screen_slug'     => Settings::$SETTING_PAGE_ID,
@@ -170,7 +180,7 @@ class Admin {
 
                 //server info
                 'php_version'     => phpversion(),
-                'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
+                'server_software' => sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown' ) ),
                 'server_os'       => PHP_OS,
                 'site_url'        => get_bloginfo( 'url' ),
                 'memory_limit'    => ini_get( 'memory_limit' ),
@@ -197,6 +207,7 @@ class Admin {
             wp_localize_script( 'tpsa-deactivate', 'tpsaDeactivate', [
                 'ajax_url'    => admin_url( 'admin-ajax.php' ),
                 'plugin_slug' => TPSA_PLUGIN_BASENAME,
+                'nonce'       => wp_create_nonce( 'tpsa_deactivate_nonce' ),
             ] );
         }
     }
@@ -213,7 +224,7 @@ class Admin {
      * Check if the feature is enabled.
      */
     private function is_enabled( $settings ) {
-        return isset( $settings['enable'] ) && $settings['enable'] == 1;
+        return isset( $settings['enable'] ) && (int) $settings['enable'] === 1;
     }
 
 }

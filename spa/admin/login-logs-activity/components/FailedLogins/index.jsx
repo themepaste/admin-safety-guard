@@ -43,6 +43,8 @@ const FailedLogins = () => {
         }secure-admin/v1/failed-logins?${params.toString()}`,
         {
           method: 'GET',
+          headers: { 'X-WP-Nonce': tpsaAdmin.rest_nonce },
+          credentials: 'include',
         },
       );
 

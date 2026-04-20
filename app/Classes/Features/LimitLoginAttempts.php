@@ -64,9 +64,10 @@ class LimitLoginAttempts implements FeatureInterface {
     }
 
     public function maybe_block_custom_login() {
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
         if ( $this->is_permanently_blocked_ip() ) {
             // Only block access to login/registration pages
-            if ( is_page( 'login' ) || is_page( 'register' ) || strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'wp-admin' ) !== false ) {
+            if ( is_page( 'login' ) || is_page( 'register' ) || strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
                 wp_die(
                     '🚫 Access Denied – You have been permanently blocked for 1 day due to repeated login failures.',
                     'Access Denied',
@@ -74,11 +75,8 @@ class LimitLoginAttempts implements FeatureInterface {
                 );
             }
         } elseif ( $this->is_ip_locked_out() ) {
-            global $wp;
-            $current_path = $wp->request;
-
             // Only block login and register pages
-            if ( is_page( 'login' ) || is_page( 'register' ) || strpos( $current_path, 'wp-login.php' ) !== false || strpos( $current_path, 'wp-admin' ) !== false ) {
+            if ( is_page( 'login' ) || is_page( 'register' ) || strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
                 wp_die(
                     '🚫 Access Denied – You have been temporarily blocked due to too many failed login attempts. Please try again after 15 minutes.',
                     'Access Denied',
@@ -89,12 +87,13 @@ class LimitLoginAttempts implements FeatureInterface {
     }
 
     public function maybe_block_login_form() {
-        $settings = $this->get_settings();
+        $settings      = $this->get_settings();
         $block_message = isset( $settings['block-message'] ) ? $settings['block-message'] : 'You have been permanently blocked due to repeated login failures.';
-        $block_for = isset( $settings['block-for'] ) ? $settings['block-for'] : '15';
+        $block_for     = isset( $settings['block-for'] ) ? $settings['block-for'] : '15';
+        $request_uri   = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
         if ( $this->is_permanently_blocked_ip() ) {
-            if ( strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'wp-admin' ) !== false ) {
+            if ( strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
                 wp_die(
                     '🚫 Access Denied – You have been permanently blocked for 1 day due to repeated login failures.',
                     'Access Denied',
@@ -103,7 +102,7 @@ class LimitLoginAttempts implements FeatureInterface {
             }
         } elseif ( $this->is_ip_locked_out() ) {
             // Only show the lockout message if it's for login/registration page
-            if ( strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'wp-admin' ) !== false ) {
+            if ( strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
                 wp_die(
                     esc_html( '🚫 Access Denied – ' . $block_message . '. Please try again after ' . $block_for . ' minutes.' ),
                     esc_html__( 'Access Denied', 'admin-safety-guard' ),

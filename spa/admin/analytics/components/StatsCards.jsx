@@ -111,7 +111,10 @@ export default function StatsCards() {
   const [failedLoginCount, setFailedLoginCount] = useState(1);
 
   useEffect(() => {
-    fetch(restUrl)
+    fetch(restUrl, {
+      headers: { 'X-WP-Nonce': tpsaAdmin.rest_nonce },
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => {
         setFailedLoginCount(data);

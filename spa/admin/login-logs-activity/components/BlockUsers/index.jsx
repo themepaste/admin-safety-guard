@@ -40,6 +40,8 @@ const BlockUsers = () => {
         `${tpsaAdmin.rest_url}secure-admin/v1/block-users?${params.toString()}`,
         {
           method: 'GET',
+          headers: { 'X-WP-Nonce': tpsaAdmin.rest_nonce },
+          credentials: 'include',
         },
       );
 

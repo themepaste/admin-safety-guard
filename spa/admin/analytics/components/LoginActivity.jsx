@@ -4,7 +4,7 @@ import Chart from 'react-apexcharts';
 /**
  * LoginActivity (ApexCharts)
  * Fetches real data from:
- *   /wp-json/secure-admin/v1/dahboard/limit-login-attempts?reports=s_logins,failed_logins,block_users
+ *   /wp-json/secure-admin/v1/dashboard/limit-login-attempts?reports=s_logins,failed_logins,block_users
  *
  * Expected API response:
  * [
@@ -44,7 +44,7 @@ export default function LoginActivity() {
   // If your React app is running inside WP admin, you can use relative URL.
   const endpoint = useMemo(
     () =>
-      `${tpsaAdmin.rest_url}secure-admin/v1/dahboard/limit-login-attempts?reports=s_logins,failed_logins,block_users`,
+      `${tpsaAdmin.rest_url}secure-admin/v1/dashboard/limit-login-attempts?reports=s_logins,failed_logins,block_users`,
     []
   );
 
@@ -58,8 +58,8 @@ export default function LoginActivity() {
 
         const res = await fetch(endpoint, {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // ✅ keep cookies for WP auth if needed
+          headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': tpsaAdmin.rest_nonce },
+          credentials: 'include',
         });
 
         if (!res.ok) {

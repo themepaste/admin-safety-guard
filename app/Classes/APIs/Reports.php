@@ -43,12 +43,9 @@ class Reports {
             $requested = array_keys( $map );
         }
 
-        // Last 24 hours window in WP timezone
-        $end_ts = current_time( 'timestamp' );
-        $start_ts = $end_ts - DAY_IN_SECONDS;
-
-        $start_mysql = gmdate( 'Y-m-d H:i:s', $start_ts );
-        $end_mysql = gmdate( 'Y-m-d H:i:s', $end_ts );
+        // Last 24 hours window in WP timezone (data stored via current_time('mysql'))
+        $end_mysql   = current_time( 'mysql' );
+        $start_mysql = wp_date( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS );
 
         $series = [];
 
@@ -124,7 +121,9 @@ class Reports {
     }
 
     public function authorize_request( WP_REST_Request $request ) {
-        // return current_user_can('manage_options');
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return new \WP_Error( 'rest_forbidden', __( 'You do not have permission to access this resource.', 'admin-safety-guard' ), ['status' => 403] );
+        }
         return true;
     }
 }

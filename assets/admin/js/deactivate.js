@@ -66,6 +66,7 @@ jQuery(document).ready(function ($) {
       method: 'POST',
       data: {
         action: 'tpsa_deactivate_plugin',
+        nonce: tpsaDeactivate.nonce,
         reason: reason,
         feedback: details,
       },

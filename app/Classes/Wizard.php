@@ -38,7 +38,7 @@ class Wizard {
             wp_die( esc_html__( 'Unauthorized user', 'admin-safety-guard' ) );
         }
 
-        $choice = isset( $_POST['tpsm_optin_choice'] ) ? sanitize_text_field( $_POST['tpsm_optin_choice'] ) : '0';
+        $choice = isset( $_POST['tpsm_optin_choice'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsm_optin_choice'] ) ) : '0';
         $value = (int) $choice === 1 ? 1 : 0;
 
         update_option( 'tpsm_is_setup_wizard', $value );
@@ -56,7 +56,6 @@ class Wizard {
         );
 
         wp_safe_redirect( $redirect_url );
-        error_log( 'Redirecting to: ' . $redirect_url );
         exit;
     }
 

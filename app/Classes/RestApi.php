@@ -66,7 +66,7 @@ class RestApi {
 
         register_rest_route(
             'secure-admin/v1',
-            '/dahboard/limit-login-attempts',
+            '/dashboard/limit-login-attempts',
             [
                 'methods'             => 'GET',
                 'callback'            => function ( $request ) {

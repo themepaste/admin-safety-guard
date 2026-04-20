@@ -29,7 +29,8 @@ const UserTable = () => {
         `${tpsaAdmin.rest_url}secure-admin/v1/2fa/app/users?${params.toString()}`,
         {
           method: 'GET',
-          credentials: 'include', // if you need cookies for authentication
+          headers: { 'X-WP-Nonce': tpsaAdmin.rest_nonce },
+          credentials: 'include',
         },
       );
 

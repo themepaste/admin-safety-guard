@@ -12,12 +12,14 @@ const LoginAttempsReports = () => {
         const fetchLoginCounts = async () => {
             try {
                 const response = await fetch(
-                    `${tpsaAdmin.rest_url}secure-admin/v1/dahboard/limit-login-attempts?reports=s_logins,failed_logins,block_users`,
+                    `${tpsaAdmin.rest_url}secure-admin/v1/dashboard/limit-login-attempts?reports=s_logins,failed_logins,block_users`,
                     {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
+                            'X-WP-Nonce': tpsaAdmin.rest_nonce,
                         },
+                        credentials: 'include',
                     }
                 );
                 const data = await response.json();

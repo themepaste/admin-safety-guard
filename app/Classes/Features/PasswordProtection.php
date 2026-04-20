@@ -106,10 +106,19 @@ class PasswordProtection implements FeatureInterface {
         $cookie_name = 'tpsa_site_password';
 
         // Handle form submission.
-        if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['tpsa_site_password'] ) ) {
-            if ( trim( $_POST['tpsa_site_password'] ) === $password ) {
+        if ( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_site_password'] ) ) {
+            $nonce = isset( $_POST['tpsa_pp_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsa_pp_nonce'] ) ) : '';
+            if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'tpsa_password_protection' ) ) {
+                $GLOBALS['tpsa_password_error'] = __( 'Security check failed.', 'admin-safety-guard' );
+                $this->render_password_form();
+                exit();
+            }
+
+            $submitted_password = trim( sanitize_text_field( wp_unslash( $_POST['tpsa_site_password'] ) ) );
+            if ( $submitted_password === $password ) {
                 setcookie( $cookie_name, md5( $password ), time() + $password_second, COOKIEPATH, COOKIE_DOMAIN );
-                wp_safe_redirect( $_SERVER['REQUEST_URI'] );
+                $redirect_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : home_url( '/' );
+                wp_safe_redirect( $redirect_uri );
                 exit();
             } else {
                 $GLOBALS['tpsa_password_error'] = __( 'Incorrect password.', 'admin-safety-guard' );
@@ -146,7 +155,8 @@ class PasswordProtection implements FeatureInterface {
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f9f9f9;">
     <form method="post" style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
         <h2 style="margin-bottom:1rem;"><?php esc_html_e( 'Enter Password to Access', 'admin-safety-guard' ); ?></h2>
-        <?php echo esc_html( $error ); ?>
+        <?php echo wp_kses_post( $error ); ?>
+        <?php wp_nonce_field( 'tpsa_password_protection', 'tpsa_pp_nonce' ); ?>
         <input type="password" name="tpsa_site_password" style="padding:10px; width:100%; margin-bottom:1rem;" required>
         <button type="submit"
             style="padding:10px 20px; background:#0073aa; color:#fff; border:none; cursor:pointer;"><?php esc_html_e( 'Submit', 'admin-safety-guard' ); ?></button>

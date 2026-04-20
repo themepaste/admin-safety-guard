@@ -67,16 +67,12 @@ class CustomLoginUrl implements FeatureInterface {
     /**
      * Redirect /wp-admin to home if not logged in
      */
-    function redirect_wp_admin() {
-        $request_uri = $_SERVER['REQUEST_URI'];
-        $admin_path = wp_parse_url( admin_url(), PHP_URL_PATH );
-        // This gives the correct path to wp-admin
-        error_log( 'Request URI: ' . $request_uri );
-        error_log( 'Admin path: ' . $admin_path );
+    public function redirect_wp_admin() {
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+        $admin_path  = wp_parse_url( admin_url(), PHP_URL_PATH );
 
-        if ( strpos( $request_uri, $admin_path ) === 0 && !is_user_logged_in() ) {
-            $redirect_url = home_url( $this->redirect_slug );
-            error_log( 'Redirecting to: ' . $redirect_url );
+        if ( ! empty( $request_uri ) && strpos( $request_uri, $admin_path ) === 0 && ! is_user_logged_in() ) {
+            $redirect_url = ! empty( $this->redirect_slug ) ? home_url( $this->redirect_slug ) : home_url( '/' );
             wp_safe_redirect( $redirect_url );
             exit();
         }
@@ -86,11 +82,13 @@ class CustomLoginUrl implements FeatureInterface {
      * Show 404 if /wp-login.php is accessed
      */
     public function show_404() {
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
         // Only proceed if custom slug is set
         if (
-            !empty( $this->custom_login_slug ) &&
-            strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false &&
-            strpos( $_SERVER['REQUEST_URI'], '/' . $this->custom_login_slug ) === false
+            ! empty( $this->custom_login_slug ) &&
+            ! empty( $request_uri ) &&
+            strpos( $request_uri, 'wp-login.php' ) !== false &&
+            strpos( $request_uri, '/' . $this->custom_login_slug ) === false
         ) {
             global $wp_query;
             $wp_query->set_404();
@@ -120,7 +118,7 @@ class CustomLoginUrl implements FeatureInterface {
      * Force WordPress to parse /habib-login as wp-login.php
      */
     public function force_custom_login_url() {
-        $request_uri = $_SERVER['REQUEST_URI'];
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
         // Normalize custom login slug match
         if ( preg_match( '#^/' . $this->custom_login_slug . '(/|\?|$)#', $request_uri ) ) {
@@ -158,7 +156,7 @@ class CustomLoginUrl implements FeatureInterface {
     }
 
     private function is_enabled( $settings ) {
-        return isset( $settings['enable'] ) && $settings['enable'] == 1;
+        return isset( $settings['enable'] ) && (int) $settings['enable'] === 1;
     }
 
     /**
