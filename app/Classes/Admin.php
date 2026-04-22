@@ -32,6 +32,7 @@ class Admin {
         $this->action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_styles'] );
         $this->action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_scripts'] );
         $this->ajax_priv( 'tpsa_deactivate_plugin', [$this, 'tpsa_deactivate_plugin_callback'] );
+        $this->ajax_priv( 'tpsa_generate_prefix_suggestions', [$this, 'tpsa_generate_prefix_suggestions_callback'] );
 
         add_action( 'login_init', function () {
             if ( isset( $_GET['cdp_preview'] ) ) {
@@ -225,6 +226,32 @@ class Admin {
      */
     private function is_enabled( $settings ) {
         return isset( $settings['enable'] ) && (int) $settings['enable'] === 1;
+    }
+
+    public function tpsa_generate_prefix_suggestions_callback() {
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'tpsa-nonce' ) ) {
+            wp_send_json_error( ['message' => 'Nonce verification failed'] );
+        }
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( ['message' => 'Permission denied'] );
+        }
+        wp_send_json_success( self::generate_valid_prefix_suggestions() );
+    }
+
+    public static function generate_valid_prefix_suggestions( int $count = 4 ): array {
+        $lengths     = [ 5, 6, 4, 5 ];
+        $suggestions = [];
+        foreach ( array_slice( $lengths, 0, $count ) as $len ) {
+            for ( $try = 0; $try < 20; $try++ ) {
+                $candidate = tp_asg_pro_random_prefix( $len );
+                if ( tp_asg_pro_is_prefix_good( $candidate ) ) {
+                    $suggestions[] = $candidate;
+                    break;
+                }
+            }
+        }
+        return $suggestions;
     }
 
 }

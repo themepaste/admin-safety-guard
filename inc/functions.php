@@ -586,13 +586,22 @@ if ( !function_exists( 'tp_asg_pro_current_prefix' ) ) {
  */
 if ( !function_exists( 'tp_asg_pro_random_prefix' ) ) {
     function tp_asg_pro_random_prefix( int $len = 5 ) {
-        $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-        $s = '';
-        $s .= chr( ord( 'a' ) + random_int( 0, 25 ) );
-        for ( $i = 1; $i < $len; $i++ ) {
-            $s .= $chars[random_int( 0, strlen( $chars ) - 1 )];
+        $letters  = 'abcdefghijklmnopqrstuvwxyz';
+        $alphanum = $letters . '0123456789';
+
+        // First char must be a letter.
+        $chars   = [ $letters[ random_int( 0, 25 ) ] ];
+        // One guaranteed digit placed at a random inner position.
+        $chars[] = (string) random_int( 0, 9 );
+        // Fill remaining positions with random alphanumeric.
+        for ( $i = 2; $i < $len; $i++ ) {
+            $chars[] = $alphanum[ random_int( 0, strlen( $alphanum ) - 1 ) ];
         }
-        return $s . '_';
+        // Shuffle positions 1..end so the digit isn't always second.
+        $tail = array_slice( $chars, 1 );
+        shuffle( $tail );
+
+        return $chars[0] . implode( '', $tail ) . '_';
     }
 }
 
