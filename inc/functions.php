@@ -394,13 +394,19 @@ if ( !function_exists( 'tpsa_settings_fields' ) ) {
                             'desc'    => __( 'logo width', 'admin-safety-guard' ),
                             'default' => 84,
                         ),
-                        'logo-height' => array(
+                        'logo-height'    => array(
                             'type'    => 'number',
                             'label'   => __( 'Logo Height', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
                             'desc'    => __( 'logo height', 'admin-safety-guard' ),
                             'default' => 84,
+                        ),
+                        'login-template' => array(
+                            'type'    => 'login-template',
+                            'class'   => '',
+                            'id'      => '',
+                            'default' => 0,
                         ),
                     ),
                 ),
