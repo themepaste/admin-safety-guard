@@ -3,15 +3,17 @@ defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Helpers\Utility;
 
-$prefix = $args['prefix'];
-$screen_slug = $args['current_screen'];
-$settings_option = $args['settings_option'];
-$submit_button = $prefix . '-' . $screen_slug . '_submit';
-$option_name = $args['option_name'];
+$prefix             = $args['prefix'];
+$screen_slug        = $args['current_screen'];
+$settings_option    = $args['settings_option'];
+$current_url        = $args['current_url'];
+$current_tab_label  = $args['current_tab_label'];
+$submit_button      = $prefix . '-' . $screen_slug . '_submit';
+$option_name        = $args['option_name'];
 $current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
-$db_prefix = tp_asg_pro_current_prefix();
-$page_label = isset( $args['page_label_forsub'] ) && !empty( $args['page_label_forsub'] ) ? $args['page_label_forsub'] : $args['page_label'];
-$is_pro = $args['is_pro'] ?? false;
+$db_prefix          = tp_asg_pro_current_prefix();
+$page_label         = isset( $args['page_label_forsub'] ) && !empty( $args['page_label_forsub'] ) ? $args['page_label_forsub'] : $args['page_label'];
+$is_pro             = $args['is_pro'] ?? false;
 $is_valid_license_available = is_valid_license_available();
 
 $suggestions = [
@@ -24,11 +26,13 @@ $suggestions = [
 
 <div class="tpsa-setting-wrapper">
     <div class="tpsa-general-settings-wrapper">
-        <h2><?php echo esc_html( $page_label . ' Settings' ); // page_label;             ?>
+        <h2><span><a href="<?php echo esc_url( $current_url ); ?>"><?php echo esc_html( $current_tab_label ); ?></a>
+                <?php echo esc_html( ' / ' . $page_label . ' Settings' ); ?>
+            </span>
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p><?php esc_html_e( 'This feature allows you to enable or disable social login options for your website. You can select which social networks you want to allow users to log in with.', 'admin-safety-guard' ); ?>
+                    <p><?php esc_html_e( 'Change the WordPress database table prefix to reduce the risk of SQL injection attacks that target default prefix names.', 'admin-safety-guard' ); ?>
                     </p>
                 </div>
             </div>
