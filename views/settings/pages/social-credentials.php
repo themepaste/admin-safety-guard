@@ -60,10 +60,8 @@ $providers = [
 ];
 ?>
 
-<div class="tpsa-setting-wrapper tpsa-social-credentials-wrapper" style="margin-top:24px;">
+<div class="tpsa-setting-wrapper tpsa-social-credentials-wrapper">
     <div class="tpsa-general-settings-wrapper">
-
-        <h2><?php esc_html_e( 'OAuth App Credentials', 'admin-safety-guard' ); ?></h2>
 
         <p style="color:#5c5c7b;margin:0 0 20px;">
             <?php esc_html_e( 'Enter the Client ID and Secret for each provider you want to use. Credentials are stored separately from the main settings and are never shown in logs.', 'admin-safety-guard' ); ?>
@@ -187,7 +185,7 @@ $providers = [
             <button type="button" id="tpsa-save-credentials"
                     style="background:#814bfe;color:#fff;border:none;padding:10px 24px;border-radius:6px;
                            font-size:14px;font-weight:600;cursor:pointer;">
-                <?php esc_html_e( 'Save Credentials', 'admin-safety-guard' ); ?>
+                <?php esc_html_e( 'Save Settings', 'admin-safety-guard' ); ?>
             </button>
             <span id="tpsa-cred-feedback"
                   style="display:none;margin-left:14px;font-size:13px;font-weight:600;"></span>
@@ -285,7 +283,7 @@ $providers = [
         .finally(function () {
             feedback.style.display = 'inline';
             saveBtn.disabled       = false;
-            saveBtn.textContent    = <?php echo wp_json_encode( __( 'Save Credentials', 'admin-safety-guard' ) ); ?>;
+            saveBtn.textContent    = <?php echo wp_json_encode( __( 'Save Settings', 'admin-safety-guard' ) ); ?>;
         });
     });
 }());

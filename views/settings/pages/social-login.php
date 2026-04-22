@@ -3,17 +3,11 @@ defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Helpers\Utility;
 
-$prefix             = $args['prefix'];
 $screen_slug        = $args['current_screen'];
-$settings_option    = $args['settings_option'];
 $page_label         = isset( $args['page_label_forsub'] ) && !empty( $args['page_label_forsub'] ) ? $args['page_label_forsub'] : $args['page_label'];
 $current_url        = $args['current_url'];
 $current_tab_label  = $args['current_tab_label'];
-$submit_button      = $prefix . '-' . $screen_slug . '_submit';
-$option_name        = $args['option_name'];
-$saved_settings     = get_option( $option_name, [] );
-$current_settings_fields = $args['settings_fields'][$screen_slug]['fields'] ?? [];
-$is_pro                  = $args['is_pro'] ?? false;
+$is_pro             = $args['is_pro'] ?? false;
 $is_valid_license_available = is_valid_license_available();
 ?>
 
@@ -25,44 +19,11 @@ $is_valid_license_available = is_valid_license_available();
             <div class="tp-feature">
                 <button class="tp-help-icon">?</button>
                 <div class="tp-tooltip">
-                    <p><?php esc_html_e( 'This feature allows you to enable or disable social login options for your website. You can select which social networks you want to allow users to log in with.', 'admin-safety-guard' ); ?>
+                    <p><?php esc_html_e( 'Configure OAuth credentials for each social provider. Providers become active once valid credentials are saved.', 'admin-safety-guard' ); ?>
                     </p>
                 </div>
             </div>
         </h2>
-
-        <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-            <?php wp_nonce_field( 'tpsa-nonce_action', 'tpsa-nonce_name' ); ?>
-            <input type="hidden" name="action" value="tpsa_process_form">
-            <input type="hidden" name="screen_slug" value="<?php echo esc_attr( $screen_slug ); ?>">
-
-            <!-- Switch for enable disable  -->
-            <div class="tpsa-setting-row">
-                <?php
-if ( is_array( $current_settings_fields ) && !empty( $current_settings_fields ) ) {
-    foreach ( $current_settings_fields as $key => $field ) {
-        $args = [
-            'prefix'              => $args['prefix'],
-            'key'                 => $key,
-            'field'               => $field,
-            'value'               => isset( $saved_settings[$key] ) ? $saved_settings[$key] : $field['default'],
-            'current_screen_slug' => $screen_slug,
-        ];
-        $field_name = $field['type'];
-        echo Utility::get_template( 'settings/fields/' . $field_name . '.php', $args );
-    }
-}
-?>
-            </div>
-
-            <div class="tpsa-save-button">
-                <?php
-printf( '<button type="submit">%1$s</button>',
-    esc_html__( 'Save Settings', 'admin-safety-guard' )
-);
-?>
-            </div>
-        </form>
     </div>
 </div>
 

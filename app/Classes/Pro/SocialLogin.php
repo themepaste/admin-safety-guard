@@ -53,6 +53,11 @@ class SocialLogin implements FeatureInterface {
      */
     public function extend_pro_fields( $fields ) {
 
+        // Pro plugin registers these fields itself when active — avoid double-registration.
+        if ( tp_is_pro_active() ) {
+            return $fields;
+        }
+
         // Social Login
         $fields['social-login']['fields']['social-logins'] = array(
             'type'    => 'social-login',
