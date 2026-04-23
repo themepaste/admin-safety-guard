@@ -804,29 +804,34 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
         foreach ( $all_features_list as $feature_slug ) {
 
             $total++;
-            if ( isset( $settings_fields[$feature_slug]['fields'] ) ) {
-                $fields = $settings_fields[$feature_slug]['fields'];
+            $fields = isset( $settings_fields[$feature_slug]['fields'] ) ? $settings_fields[$feature_slug]['fields'] : [];
 
-                // If feature has an enable switch
+            if ( !empty( $fields ) ) {
+                $option_name = get_tpsa_settings_option_name( $feature_slug );
+                $saved_opts = get_option( $option_name, [] );
+
+                $is_active = false;
                 if ( isset( $fields['enable'] ) ) {
-
-                    $option_name = get_tpsa_settings_option_name( $feature_slug );
-                    $saved_opts = get_option( $option_name, [] );
-
-                    if ( !empty( $saved_opts['enable'] ) ) {
-                        $active++;
-                        $all_active_features[] = $feature_slug;
-                    } else {
-                        $inactive++;
+                    $is_active = !empty( $saved_opts['enable'] );
+                } else {
+                    // No master 'enable' switch — check if any switch field is on
+                    foreach ( $fields as $field_key => $field_config ) {
+                        if ( isset( $field_config['type'] ) && $field_config['type'] === 'switch' && !empty( $saved_opts[$field_key] ) ) {
+                            $is_active = true;
+                            break;
+                        }
                     }
                 }
-            }
 
-            // If no fields exist → always active
-            if ( empty( $settings_fields[$feature_slug]['fields'] ) ) {
-                $active++;
-                $all_active_features[] = $feature_slug;
-                continue;
+                if ( $is_active ) {
+                    $active++;
+                    $all_active_features[] = $feature_slug;
+                } else {
+                    $inactive++;
+                }
+            } else {
+                // No configurable fields (analytics pages, pro features without settings) → inactive by default
+                $inactive++;
             }
 
         }

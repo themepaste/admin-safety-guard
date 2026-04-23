@@ -20,7 +20,7 @@ $args = array(
     'prefix'            => get_tpsa_prefix(),
     'option_name'       => get_tpsa_settings_option_name( $current_screen ),
     'page_label'        => !is_null( $current_screen ) && array_key_exists( $current_screen, $settings_option ) ? $settings_option[$current_screen]['label'] : '',
-    'page_label_forsub' => !is_null( $current_tab ) && array_key_exists( $current_tab, $settings_option ) ? $settings_option[$current_tab]['sub'][$current_screen]['label'] : '',
+    'page_label_forsub' => !is_null( $current_tab ) && isset( $settings_option[$current_tab]['sub'][$current_screen]['label'] ) ? $settings_option[$current_tab]['sub'][$current_screen]['label'] : '',
     'current_tab_label' => $current_tab_label,
     'is_pro'            => $settings_option[$current_tab]['sub'][$current_screen]['is_pro'] ?? false,
 );
