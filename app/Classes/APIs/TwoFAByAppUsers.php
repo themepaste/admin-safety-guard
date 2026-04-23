@@ -50,11 +50,13 @@ class TwoFAByAppUsers extends BaseController {
         $data = [];
         foreach ( $users as $user ) {
             $data[] = [
-                'ID'       => $user->ID,
-                'name'     => $user->display_name,
-                'username' => $user->user_login,
-                'email'    => $user->user_email,
-                'roles'    => $user->roles,
+                'ID'          => $user->ID,
+                'name'        => $user->display_name,
+                'username'    => $user->user_login,
+                'email'       => $user->user_email,
+                'roles'       => $user->roles,
+                'has_secret'  => ! empty( get_user_meta( $user->ID, '_2fa_setup_secret', true ) ),
+                'is_verified' => ! empty( get_user_meta( $user->ID, '_2fa_app_verified', true ) ),
             ];
         }
 
