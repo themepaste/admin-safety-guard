@@ -25,6 +25,15 @@ class Install {
      * Run installation tasks on plugin activation.
      */
     public function bootstrapping() {
+        // Enable Limit Login Attempts by default on fresh install.
+        add_option( 'tpsa_limit-login-attempts_settings', [
+            'enable'        => 1,
+            'max-attempts'  => 3,
+            'block-for'     => 15,
+            'max-lockout'   => 3,
+            'block-message' => 'You have been locked out due to too many login attempts.',
+        ] );
+
         if ( !$this->is_database_up_to_date() ) {
 
             set_transient( 'tpsm_do_activation_redirect', true, 30 );
