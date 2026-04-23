@@ -4,7 +4,7 @@ Tags: admin safety guard, limit login attempts, 2fa, recaptcha, login security
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.7
+Stable tag: 1.2.8
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -137,6 +137,12 @@ A: [Support](https://themepaste.com/contact)
 ---
 
 == Changelog ==
+
+= 1.2.8 – Bug Fixes & Default Feature Activation =
+* [fix] Fixed PHP warnings on fresh install: "Undefined array key sub" and "Trying to access array offset on value of type null" in layout.php.
+* [fix] All features (free and pro) now correctly default to Inactive on fresh install, giving users full control over what is enabled.
+* [feature] Limit Login Attempts is now automatically enabled with sensible defaults on first install to provide immediate brute-force protection out of the box.
+* [improve] Feature status detection now correctly handles features without a master enable switch (Two-Factor Auth, Privacy Hardening) by checking their individual toggle fields.
 
 = 1.2.7 – UI & Content Update =
 * [improve] Updated plugin layout to be more user-friendly and easier to use.
