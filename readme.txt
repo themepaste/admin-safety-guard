@@ -4,7 +4,7 @@ Tags: login security, limit login attempts, two-factor authentication, brute for
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.8
+Stable tag: 1.2.9
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,11 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 ---
 
 == Changelog ==
+
+= 1.2.9 – Maintenance Update =
+* [update] Refreshed the plugin short description in readme for better clarity on WordPress.org.
+* [improve] Minor readme content polish and consistency tweaks.
+* [maintenance] General housekeeping and version bump for ongoing compatibility.
 
 = 1.2.8 – Bug Fixes & Default Feature Activation =
 * [fix] Fixed PHP warnings on fresh install: "Undefined array key sub" and "Trying to access array offset on value of type null" in layout.php.
