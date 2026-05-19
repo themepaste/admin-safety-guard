@@ -8,7 +8,7 @@ Stable tag: 1.2.8
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Protect your WordPress site from hackers. Limit login attempts, add 2FA, reCAPTCHA, block IPs, hide wp-login.php, track activity logs and more — all free.
+Protect your WP site from hackers for free. Limit logins, add 2FA, reCAPTCHA, block IPs, hide wp-login.php & track activity logs.
 
 == Description ==
 
