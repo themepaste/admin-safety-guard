@@ -102,11 +102,16 @@ class PasswordProtection implements FeatureInterface {
         $password_expiry = isset( $settings['password-expiry'] ) ? (int) $settings['password-expiry'] : 15;
         $password_second = $password_expiry * DAY_IN_SECONDS;
 
-        // Cookie key used to store password hash.
+        // Cookie key used to store the access token.
         $cookie_name = 'tpsa_site_password';
 
+        // Signed, site-secret-keyed token. Unlike a bare md5(password), this cannot
+        // be precomputed/forged without the site's auth keys.
+        $token = $this->get_cookie_token( $password );
+
         // Handle form submission.
-        if ( isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['tpsa_site_password'] ) ) {
+        $request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : '';
+        if ( 'POST' === $request_method && isset( $_POST['tpsa_site_password'] ) ) {
             $nonce = isset( $_POST['tpsa_pp_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsa_pp_nonce'] ) ) : '';
             if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'tpsa_password_protection' ) ) {
                 $GLOBALS['tpsa_password_error'] = __( 'Security check failed.', 'admin-safety-guard' );
@@ -115,8 +120,11 @@ class PasswordProtection implements FeatureInterface {
             }
 
             $submitted_password = trim( sanitize_text_field( wp_unslash( $_POST['tpsa_site_password'] ) ) );
-            if ( $submitted_password === $password ) {
-                setcookie( $cookie_name, md5( $password ), time() + $password_second, COOKIEPATH, COOKIE_DOMAIN );
+
+            // Constant-time comparison to avoid leaking the password via timing.
+            if ( hash_equals( $password, $submitted_password ) ) {
+                $this->set_access_cookie( $cookie_name, $token, time() + $password_second );
+
                 $redirect_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : home_url( '/' );
                 wp_safe_redirect( $redirect_uri );
                 exit();
@@ -125,11 +133,51 @@ class PasswordProtection implements FeatureInterface {
             }
         }
 
-        // If the cookie is not set or invalid, show password form.
-        if ( !isset( $_COOKIE[$cookie_name] ) || $_COOKIE[$cookie_name] !== md5( $password ) ) {
+        // If the cookie is not set or does not match the signed token, show the form.
+        $cookie_value = isset( $_COOKIE[$cookie_name] ) ? (string) wp_unslash( $_COOKIE[$cookie_name] ) : '';
+        if ( '' === $cookie_value || ! hash_equals( $token, $cookie_value ) ) {
             $this->render_password_form();
             exit();
         }
+    }
+
+    /**
+     * Build the signed access-cookie token for a given site password.
+     *
+     * Uses wp_hash() so the token is keyed with the site's secret auth salts and
+     * cannot be reproduced by anyone who does not already know the password AND
+     * have the site secret.
+     *
+     * @param string $password The configured site password.
+     *
+     * @return string
+     */
+    private function get_cookie_token( $password ) {
+        return wp_hash( 'tpsa_pp|' . $password );
+    }
+
+    /**
+     * Set the access cookie with secure attributes (HttpOnly, Secure, SameSite).
+     *
+     * @param string $name    Cookie name.
+     * @param string $value   Cookie value (signed token).
+     * @param int    $expires Expiry timestamp.
+     *
+     * @return void
+     */
+    private function set_access_cookie( $name, $value, $expires ) {
+        setcookie(
+            $name,
+            $value,
+            array(
+                'expires'  => $expires,
+                'path'     => COOKIEPATH ? COOKIEPATH : '/',
+                'domain'   => COOKIE_DOMAIN ? COOKIE_DOMAIN : '',
+                'secure'   => is_ssl(),
+                'httponly' => true,
+                'samesite' => 'Lax',
+            )
+        );
     }
 
     /**

@@ -3,7 +3,7 @@
 use ThemePaste\SecureAdmin\Helpers\Utility;
 ?>
 
-<!-- Sidebar wrapper for the Shipping Manager settings -->
+<!-- Sidebar wrapper for the Admin Safety Guard settings -->
 <div class="tpsa-siderbar-wrapper">
     <ul>
         <?php

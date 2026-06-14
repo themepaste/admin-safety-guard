@@ -290,18 +290,18 @@ if ( !function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                         'email-subject' => array(
                             'type'    => 'text',
-                            'label'   => __( 'Email Subject', 'tp-secure-plugin' ),
+                            'label'   => __( 'Email Subject', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
-                            'desc'    => __( 'Write email suject. use placeholders {otp}, {site_name}', 'tp-secure-plugin' ),
+                            'desc'    => __( 'Write email suject. use placeholders {otp}, {site_name}', 'admin-safety-guard' ),
                             'default' => '{site_name} login OTP: {otp}',
                         ),
                         'email-body'    => array(
                             'type'    => 'textarea',
-                            'label'   => __( 'Custom Email Body', 'tp-secure-plugin' ),
+                            'label'   => __( 'Custom Email Body', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
-                            'desc'    => __( 'Custom email body. use {otp} placeholder for showing OTP', 'tp-secure-plugin' ),
+                            'desc'    => __( 'Custom email body. use {otp} placeholder for showing OTP', 'admin-safety-guard' ),
                             'default' => 'Your OTP is: {otp}',
                         ),
                     ),
@@ -459,8 +459,10 @@ if ( !function_exists( 'get_tpsa_prefix' ) ) {
  *
  * @return string The option name used to store the settings.
  */
-function get_tpsa_settings_option_name( $screen_slug ) {
-    return get_tpsa_prefix() . $screen_slug . '_settings';
+if ( !function_exists( 'get_tpsa_settings_option_name' ) ) {
+    function get_tpsa_settings_option_name( $screen_slug ) {
+        return get_tpsa_prefix() . $screen_slug . '_settings';
+    }
 }
 
 /**
@@ -476,27 +478,117 @@ function get_tpsa_settings_option_name( $screen_slug ) {
  * @return string The full table name with the TPSA prefix.
  */
 
-function get_tpsa_db_table_name( $table_name ) {
-    global $wpdb;
-    $prefix = $wpdb->prefix . TPSA_PREFIX . '_';
-    return $prefix . $table_name;
+if ( !function_exists( 'get_tpsa_db_table_name' ) ) {
+    function get_tpsa_db_table_name( $table_name ) {
+        global $wpdb;
+        $prefix = $wpdb->prefix . TPSA_PREFIX . '_';
+        return $prefix . $table_name;
+    }
 }
 
-function get_tps_all_user_roles() {
-    global $wp_roles;
+if ( !function_exists( 'get_tps_all_user_roles' ) ) {
+    function get_tps_all_user_roles() {
+        global $wp_roles;
 
-    if ( !isset( $wp_roles ) ) {
-        $wp_roles = new WP_Roles();
+        if ( !isset( $wp_roles ) ) {
+            $wp_roles = new WP_Roles();
+        }
+
+        $roles = $wp_roles->roles;
+        $role_names = [];
+
+        foreach ( $roles as $key => $role ) {
+            $role_names[$key] = $role['name'];
+        }
+
+        return $role_names;
     }
+}
 
-    $roles = $wp_roles->roles;
-    $role_names = [];
+if ( !function_exists( 'tpsa_get_client_ip' ) ) {
+    /**
+     * Resolve the client IP address in a spoofing-resistant way.
+     *
+     * By default only REMOTE_ADDR is trusted, because it is set by the web server
+     * from the actual TCP connection and cannot be forged by the client. Request
+     * headers such as X-Forwarded-For / Client-IP ARE attacker-controllable and
+     * must NOT be trusted unless the site genuinely sits behind a reverse proxy or
+     * CDN (Cloudflare, load balancer, etc.) that sets them.
+     *
+     * Sites behind such a proxy can opt in via the `tpsa_trust_proxy_headers`
+     * filter, after which the first valid address from the configured header list
+     * is used. The candidate list is filterable via `tpsa_proxy_ip_headers`.
+     *
+     * @since 1.3.0
+     *
+     * @return string A validated IP address, or '0.0.0.0' if none could be determined.
+     */
+    function tpsa_get_client_ip() {
+        $remote_addr = isset( $_SERVER['REMOTE_ADDR'] )
+        ? trim( (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) )
+        : '';
 
-    foreach ( $roles as $key => $role ) {
-        $role_names[$key] = $role['name'];
+        // Trust the server-provided connection address by default.
+        $ip = filter_var( $remote_addr, FILTER_VALIDATE_IP ) ? $remote_addr : '';
+
+        /**
+         * Whether to trust client-supplied forwarding headers.
+         *
+         * Leave this false unless the site is behind a trusted reverse proxy / CDN,
+         * otherwise visitors can spoof their IP and bypass IP-based protections.
+         *
+         * @since 1.3.0
+         *
+         * @param bool $trust Default false.
+         */
+        if ( apply_filters( 'tpsa_trust_proxy_headers', false ) ) {
+
+            /**
+             * Ordered list of headers to inspect when proxy headers are trusted.
+             *
+             * @since 1.3.0
+             *
+             * @param string[] $headers Server header keys, highest priority first.
+             */
+            $headers = apply_filters(
+                'tpsa_proxy_ip_headers',
+                array(
+                    'HTTP_CF_CONNECTING_IP', // Cloudflare.
+                    'HTTP_X_FORWARDED_FOR',
+                    'HTTP_X_REAL_IP',
+                    'HTTP_CLIENT_IP',
+                )
+            );
+
+            foreach ( $headers as $header ) {
+                if ( empty( $_SERVER[$header] ) ) {
+                    continue;
+                }
+
+                // A forwarded header may be a comma-separated chain; take the
+                // first syntactically valid address.
+                $candidates = explode( ',', (string) wp_unslash( $_SERVER[$header] ) );
+                foreach ( $candidates as $candidate ) {
+                    $candidate = trim( $candidate );
+                    if ( filter_var( $candidate, FILTER_VALIDATE_IP ) ) {
+                        $ip = $candidate;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if ( '' === $ip ) {
+            $ip = '0.0.0.0';
+        }
+
+        // Normalize IPv6 loopback to IPv4 for consistent storage/matching.
+        if ( '::1' === $ip ) {
+            $ip = '127.0.0.1';
+        }
+
+        return $ip;
     }
-
-    return $role_names;
 }
 
 if ( !function_exists( 'tpsm_saved_remote_data' ) ) {
@@ -792,6 +884,13 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
  */
     function tpsa_get_features_summary() {
 
+        // Cache for the duration of the request: this is called several times per
+        // admin page load (localize, security score, sidebar).
+        static $summary = null;
+        if ( null !== $summary ) {
+            return $summary;
+        }
+
         $settings_fields = tpsa_settings_fields();
         $all_features_list = tpsa_all_features();
 
@@ -803,45 +902,64 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
 
         foreach ( $all_features_list as $feature_slug ) {
 
-            $total++;
             $fields = isset( $settings_fields[$feature_slug]['fields'] ) ? $settings_fields[$feature_slug]['fields'] : [];
 
-            if ( !empty( $fields ) ) {
-                $option_name = get_tpsa_settings_option_name( $feature_slug );
-                $saved_opts = get_option( $option_name, [] );
-
-                $is_active = false;
-                if ( isset( $fields['enable'] ) ) {
-                    $is_active = !empty( $saved_opts['enable'] );
-                } else {
-                    // No master 'enable' switch — check if any switch field is on
-                    foreach ( $fields as $field_key => $field_config ) {
-                        if ( isset( $field_config['type'] ) && $field_config['type'] === 'switch' && !empty( $saved_opts[$field_key] ) ) {
-                            $is_active = true;
-                            break;
-                        }
-                    }
-                }
-
-                if ( $is_active ) {
-                    $active++;
-                    $all_active_features[] = $feature_slug;
-                } else {
-                    $inactive++;
-                }
-            } else {
-                // No configurable fields (analytics pages, pro features without settings) → inactive by default
-                $inactive++;
+            // Skip items with no configurable fields: dashboard pages (analytics,
+            // monitoring) and Pro features that are not installed. They are not
+            // user-togglable, so counting them would make a perfect score
+            // impossible in the free version.
+            if ( empty( $fields ) ) {
+                continue;
             }
 
+            // A feature is "scoreable" only if it exposes an on/off control:
+            // either a dedicated 'enable' switch or any field of type 'switch'.
+            $has_enable  = isset( $fields['enable'] );
+            $switch_keys = [];
+            foreach ( $fields as $field_key => $field_config ) {
+                if ( isset( $field_config['type'] ) && 'switch' === $field_config['type'] ) {
+                    $switch_keys[] = $field_key;
+                }
+            }
+
+            if ( !$has_enable && empty( $switch_keys ) ) {
+                continue;
+            }
+
+            // This feature can be turned on/off, so it counts toward the score.
+            $total++;
+
+            $option_name = get_tpsa_settings_option_name( $feature_slug );
+            $saved_opts  = get_option( $option_name, [] );
+
+            $is_active = false;
+            if ( $has_enable ) {
+                $is_active = !empty( $saved_opts['enable'] );
+            } else {
+                foreach ( $switch_keys as $switch_key ) {
+                    if ( !empty( $saved_opts[$switch_key] ) ) {
+                        $is_active = true;
+                        break;
+                    }
+                }
+            }
+
+            if ( $is_active ) {
+                $active++;
+                $all_active_features[] = $feature_slug;
+            } else {
+                $inactive++;
+            }
         }
 
-        return (object) [
+        $summary = (object) [
             'total'               => $total,
             'active'              => $active,
             'inactive'            => $inactive,
             'all_active_features' => $all_active_features,
         ];
+
+        return $summary;
     }
 endif;
 

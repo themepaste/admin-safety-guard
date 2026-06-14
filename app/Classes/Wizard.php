@@ -90,8 +90,8 @@ class Wizard {
 
     public function add_setup_wizard_page() {
         add_menu_page(
-            'Shipping Manager', // Page title
-            'Shipping Manager', // Menu title (won't be visible due to CSS)
+            esc_html__( 'Admin Safety Guard Setup', 'admin-safety-guard' ), // Page title.
+            esc_html__( 'Admin Safety Guard Setup', 'admin-safety-guard' ), // Menu title (hidden via CSS).
             'manage_options',
             'tpasg_setup_wizard',
             [$this, 'render_setup_wizard_page'],

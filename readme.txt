@@ -532,3 +532,13 @@ Important Notes
 [Pinterest](https://uk.pinterest.com/themepaste/)  
 [LinkedIn](https://www.linkedin.com/company/themepaste)  
 [Instagram](https://www.instagram.com/themepasteuk)
+
+
+
+
+
+
+
+
+
+

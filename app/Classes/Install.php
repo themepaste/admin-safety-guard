@@ -19,6 +19,28 @@ class Install {
         $this->activation( [$this, 'bootstrapping'] );
         $this->activation( [$this, 'send_deactivation_email'] );
         $this->action( 'admin_post_admin_safety_guard_deactivate', [$this, 'handle_deactivate'] );
+
+        // Safety net: apply schema changes that ship via a plugin update, where the
+        // activation hook does not re-fire. Idempotent and version-gated.
+        $this->action( 'plugins_loaded', [$this, 'maybe_upgrade_database'] );
+    }
+
+    /**
+     * Ensure the database schema is current on plugin updates.
+     *
+     * Runs the (idempotent) table install whenever the stored DB version does not
+     * match the plugin version, so updating the plugin without a manual reactivation
+     * still creates/updates the custom tables.
+     *
+     * @return void
+     */
+    public function maybe_upgrade_database() {
+        if ( $this->is_database_up_to_date() ) {
+            return;
+        }
+
+        $this->install_tables();
+        $this->update_db_version();
     }
 
     /**
@@ -38,48 +60,60 @@ class Install {
 
             set_transient( 'tpsm_do_activation_redirect', true, 30 );
 
-            $this->create_table(
-                's_logins',
-                "
-                id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                username VARCHAR(100) NOT NULL,
-                user_agent TEXT NOT NULL,
-                ip_address VARCHAR(45) NOT NULL,
-                login_time DATETIME NOT NULL,
-                login_count INT UNSIGNED NOT NULL DEFAULT 1,
-                PRIMARY KEY (id)
-                "
-            );
-
-            $this->create_table(
-                'failed_logins',
-                "
-                id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                username VARCHAR(100) NOT NULL,
-                user_agent TEXT NOT NULL,
-                ip_address VARCHAR(45) NOT NULL,
-                first_login_time DATETIME NOT NULL,
-                last_login_time DATETIME NOT NULL,
-                login_attempts INT UNSIGNED NOT NULL DEFAULT 1,
-                lockouts INT UNSIGNED NOT NULL DEFAULT 0,
-                lockout_time DATETIME DEFAULT NULL,
-                PRIMARY KEY (id)
-                "
-            );
-
-            $this->create_table(
-                'block_users',
-                "
-                id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                user_agent TEXT NOT NULL,
-                ip_address VARCHAR(45) NOT NULL,
-                login_time DATETIME NOT NULL,
-                PRIMARY KEY (id)
-                "
-            );
+            $this->install_tables();
 
             $this->update_db_version();
         }
+    }
+
+    /**
+     * Create or update all custom plugin tables.
+     *
+     * Uses dbDelta(), which is safe to run repeatedly: it creates tables when
+     * missing and applies additive column changes on subsequent runs.
+     *
+     * @return void
+     */
+    private function install_tables() {
+        $this->create_table(
+            's_logins',
+            "
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            username VARCHAR(100) NOT NULL,
+            user_agent TEXT NOT NULL,
+            ip_address VARCHAR(45) NOT NULL,
+            login_time DATETIME NOT NULL,
+            login_count INT UNSIGNED NOT NULL DEFAULT 1,
+            PRIMARY KEY (id)
+            "
+        );
+
+        $this->create_table(
+            'failed_logins',
+            "
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            username VARCHAR(100) NOT NULL,
+            user_agent TEXT NOT NULL,
+            ip_address VARCHAR(45) NOT NULL,
+            first_login_time DATETIME NOT NULL,
+            last_login_time DATETIME NOT NULL,
+            login_attempts INT UNSIGNED NOT NULL DEFAULT 1,
+            lockouts INT UNSIGNED NOT NULL DEFAULT 0,
+            lockout_time DATETIME DEFAULT NULL,
+            PRIMARY KEY (id)
+            "
+        );
+
+        $this->create_table(
+            'block_users',
+            "
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_agent TEXT NOT NULL,
+            ip_address VARCHAR(45) NOT NULL,
+            login_time DATETIME NOT NULL,
+            PRIMARY KEY (id)
+            "
+        );
     }
 
     /**

@@ -55,7 +55,8 @@ class PrivacyHardening implements FeatureInterface {
 
             $this->filter( 'xmlrpc_enabled', '__return_false' );
 
-            if ( isset( $_SERVER['SCRIPT_FILENAME'] ) && basename( $_SERVER['SCRIPT_FILENAME'] ) === 'xmlrpc.php' ) {
+            $script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) ) : '';
+            if ( '' !== $script_filename && basename( $script_filename ) === 'xmlrpc.php' ) {
                 header( 'HTTP/1.1 403 Forbidden' );
                 header( 'Content-Type: text/plain; charset=utf-8' );
                 esc_html_e( 'XML-RPC disabled by site admin.', 'admin-safety-guard' );

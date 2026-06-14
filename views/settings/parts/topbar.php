@@ -1,5 +1,5 @@
 <?php defined( 'ABSPATH' ) || exit; // Exit if accessed directly ?>
-<!-- Top bar wrapper for the Shipping Manager plugin -->
+<!-- Top bar wrapper for the Admin Safety Guard plugin -->
 <div class="tpsa-plugin-topbar-wrapper">
 
     <!-- Logo and title area -->

@@ -28,12 +28,59 @@ class TwoFactorAuth implements FeatureInterface {
     private $feature_id = 'two-factor-auth';
 
     /**
+     * Lifetime of a pending OTP, in seconds.
+     *
+     * @since 1.3.0
+     * @var int
+     */
+    const OTP_TTL = 300; // 5 minutes.
+
+    /**
+     * Maximum number of OTP verification attempts before the code is invalidated.
+     *
+     * @since 1.3.0
+     * @var int
+     */
+    const OTP_MAX_TRIES = 5;
+
+    /**
+     * Build the transient key that holds the pending OTP for a user.
+     *
+     * @param int $user_id User ID.
+     * @return string
+     */
+    private function otp_key( $user_id ) {
+        return 'tpsa_otp_' . (int) $user_id;
+    }
+
+    /**
      * Register hooks for the feature.
      *
      * @return void
      */
     public function register_hooks() {
         $this->action( 'init', [$this, 'email_otp_authentication'] );
+
+        // One-time cleanup: older versions stored plaintext credentials in the
+        // `_tpsa_otp_code` user meta. Scrub any residual rows on upgrade.
+        $this->action( 'admin_init', [$this, 'maybe_purge_legacy_otp_meta'] );
+    }
+
+    /**
+     * Remove legacy `_tpsa_otp_code` user meta left behind by earlier versions,
+     * which may contain plaintext passwords. Runs once per site.
+     *
+     * @return void
+     */
+    public function maybe_purge_legacy_otp_meta() {
+        if ( get_option( 'tpsa_2fa_legacy_otp_purged' ) ) {
+            return;
+        }
+
+        // Delete the meta key for every user in a single query.
+        delete_metadata( 'user', 0, '_tpsa_otp_code', '', true );
+
+        update_option( 'tpsa_2fa_legacy_otp_purged', 1, false );
     }
 
     /**
@@ -51,12 +98,34 @@ class TwoFactorAuth implements FeatureInterface {
             // Render OTP UI on the login form.
             $this->action( 'login_form', [$this, 'render_otp_input'] );
 
+            // Surface an "expired/restart" notice on the standard login screen.
+            $this->filter( 'login_message', [$this, 'otp_login_message'] );
+
             // Intercept username/password login to send OTP first.
             $this->filter( 'authenticate', [$this, 'intercept_login_with_otp'], 30, 3 );
         }
 
         $this->filter( 'tpsa_otp_email_message', [$this, 'email_message'], 10, 2 );
         $this->filter( 'tpsa_otp_email_subject', [$this, 'tpsa_otp_email_subject'], 10, 3 );
+    }
+
+    /**
+     * Show the "code expired, please log in again" notice on the standard login form.
+     *
+     * @param string $message Existing login message markup.
+     * @return string
+     */
+    public function otp_login_message( $message ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only UI flag, no state change.
+        $code = isset( $_GET['tpsa_otp_error'] ) ? sanitize_key( wp_unslash( $_GET['tpsa_otp_error'] ) ) : '';
+
+        // The OTP screen renders its own "invalid" notice; only handle the restart case here.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only UI flag, no state change.
+        if ( 'expired' === $code && !isset( $_GET['tpsa_verify_email_otp'] ) ) {
+            $message .= '<div id="login_error">' . esc_html__( 'Your login code has expired. Please log in again.', 'admin-safety-guard' ) . '</div>';
+        }
+
+        return $message;
     }
 
     public function email_message( $message, $otp ) {
@@ -84,37 +153,48 @@ class TwoFactorAuth implements FeatureInterface {
      * @return void
      */
     public function render_otp_input() {
-        if ( !isset( $_GET['tpsa_verify_email_otp'] ) ) {
+        // The user ID can arrive either via the verification URL (GET) or a failed
+        // re-submission (POST). Never trust it beyond confirming a pending OTP exists.
+        $user_id = 0;
+        if ( isset( $_GET['tpsa_verify_email_otp'] ) ) {
+            $user_id = absint( wp_unslash( $_GET['tpsa_verify_email_otp'] ) );
+        } elseif ( isset( $_POST['tpsa_otp_verify'], $_POST['tpsa_user_id'] ) ) {
+            $user_id = absint( wp_unslash( $_POST['tpsa_user_id'] ) );
+        }
+
+        if ( !$user_id ) {
             return;
         }
 
-        $user_id = intval( $_GET['tpsa_verify_email_otp'] );
-        $user = get_userdata( $user_id );
+        // Only render the OTP UI when a pending OTP actually exists for this user.
+        $pending = get_transient( $this->otp_key( $user_id ) );
+        if ( empty( $pending ) ) {
+            return;
+        }
 
+        $user = get_userdata( $user_id );
         if ( !$user ) {
             return;
         }
 
-        $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
-        $username = isset( $stored_data['username'] ) ? $stored_data['username'] : '';
-        $password = isset( $stored_data['password'] ) ? $stored_data['password'] : '';
+        // Surface verification errors carried back via the redirect.
+        $error_code = isset( $_GET['tpsa_otp_error'] ) ? sanitize_key( wp_unslash( $_GET['tpsa_otp_error'] ) ) : '';
+        if ( 'invalid' === $error_code ) {
+            echo '<div id="login_error">' . esc_html__( 'Invalid OTP. Please try again.', 'admin-safety-guard' ) . '</div>';
+        }
 
-        if ( !empty( $username ) && !empty( $password ) ) {
-            ?>
+        // Keep failed submissions on the OTP screen by pointing the login form back
+        // at the verification URL (the standard form action drops our query var).
+        $otp_action = wp_login_url() . '?tpsa_verify_email_otp=' . $user_id;
+        ?>
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
-    var loginInput = document.getElementById('user_login');
-    var passInput = document.getElementById('user_pass');
-
-    if (loginInput && passInput) {
-        loginInput.value = <?php echo wp_json_encode( $username ); ?>;
-        passInput.value = <?php echo wp_json_encode( $password ); ?>;
+    var form = document.getElementById('loginform');
+    if (form) {
+        form.setAttribute('action', <?php echo wp_json_encode( esc_url_raw( $otp_action ) ); ?>);
     }
 });
 </script>
-<?php
-}
-        ?>
 <style type="text/css">
 #user_login,
 #user_pass,
@@ -174,77 +254,75 @@ label[for="user_pass"],
      * @return void
      */
     public function check_otp_submission() {
-        if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) || !isset( $_POST['tpsa_otp_verify'] ) ) {
+        $request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : '';
+        if ( 'POST' !== $request_method || !isset( $_POST['tpsa_otp_verify'] ) ) {
             return;
         }
 
-        $user_id = isset( $_POST['tpsa_user_id'] ) ? intval( $_POST['tpsa_user_id'] ) : 0;
+        $user_id = isset( $_POST['tpsa_user_id'] ) ? absint( wp_unslash( $_POST['tpsa_user_id'] ) ) : 0;
         $otp_input = isset( $_POST['tpsa_otp'] ) ? sanitize_text_field( wp_unslash( $_POST['tpsa_otp'] ) ) : '';
 
-        if ( !$user_id || empty( $otp_input ) ) {
+        if ( !$user_id || '' === $otp_input ) {
             return;
         }
 
-        $stored_data = get_user_meta( $user_id, '_tpsa_otp_code', true );
-        $stored_otp = isset( $stored_data['otp'] ) ? $stored_data['otp'] : '';
+        $key = $this->otp_key( $user_id );
+        $data = get_transient( $key );
 
-        if ( $otp_input !== $stored_otp ) {
-            // Display error message above the form.
-            add_action(
-                'login_message',
-                function () {
-                    echo '<div style="color:red; margin-bottom:10px;">' .
-                    esc_html__( 'Invalid OTP. Please try again.', 'admin-safety-guard' ) .
-                        '</div>';
-                }
-            );
-            return;
+        // No pending OTP (never issued or expired). Send the user back to a fresh login.
+        if ( empty( $data ) || empty( $data['hash'] ) ) {
+            $this->redirect_to_otp_login( 0, 'expired' );
         }
 
-        // OTP is correct – now perform a proper WordPress login using wp_signon().
-        $username = isset( $stored_data['username'] ) ? $stored_data['username'] : '';
-        $password = isset( $stored_data['password'] ) ? $stored_data['password'] : '';
-        $remember = !empty( $stored_data['remember'] );
-
-        // Clean up OTP data.
-        delete_user_meta( $user_id, '_tpsa_otp_code' );
-
-        if ( empty( $username ) || empty( $password ) ) {
-            add_action(
-                'login_message',
-                function () {
-                    echo '<div style="color:red; margin-bottom:10px;">' .
-                    esc_html__( 'Login data missing. Please try logging in again.', 'admin-safety-guard' ) .
-                        '</div>';
-                }
-            );
-            return;
+        // Throttle brute-force guessing of the OTP.
+        if ( (int) $data['tries'] >= self::OTP_MAX_TRIES ) {
+            delete_transient( $key );
+            $this->redirect_to_otp_login( 0, 'expired' );
         }
 
-        $creds = [
-            'user_login'    => $username,
-            'user_password' => $password,
-            'remember'      => $remember,
-        ];
-
-        // Let WordPress handle auth, cookies, tokens, Remember Me, etc.
-        $secure_cookie = is_ssl();
-        $user = wp_signon( $creds, $secure_cookie );
-
-        if ( is_wp_error( $user ) ) {
-            add_action(
-                'login_message',
-                function () {
-                    echo '<div style="color:red; margin-bottom:10px;">' .
-                    esc_html__( 'Login failed after OTP verification. Please try again.', 'admin-safety-guard' ) .
-                        '</div>';
-                }
-            );
-            return;
+        // Compare against the stored hash in constant time (wp_check_password).
+        if ( !wp_check_password( $otp_input, $data['hash'] ) ) {
+            $data['tries'] = (int) $data['tries'] + 1;
+            set_transient( $key, $data, self::OTP_TTL );
+            $this->redirect_to_otp_login( $user_id, 'invalid' );
         }
 
-        // Successful login, redirect to admin.
+        $user = get_userdata( $user_id );
+        if ( !$user ) {
+            delete_transient( $key );
+            $this->redirect_to_otp_login( 0, 'expired' );
+        }
+
+        // OTP verified — establish the authenticated session WITHOUT ever handling
+        // the password. WordPress already validated the credentials before the OTP
+        // was issued, so we set the auth cookie directly.
+        $remember = !empty( $data['remember'] );
+        delete_transient( $key );
+
+        wp_set_current_user( $user_id );
+        wp_set_auth_cookie( $user_id, $remember, is_ssl() );
+        do_action( 'wp_login', $user->user_login, $user );
+
         wp_safe_redirect( admin_url() );
+        exit;
+    }
+
+    /**
+     * Redirect back to the OTP step (or a fresh login) with an error flag.
+     *
+     * @param int    $user_id User ID to keep on the OTP screen, or 0 for a fresh login.
+     * @param string $code    Error code: 'invalid' or 'expired'.
+     *
+     * @return void
+     */
+    private function redirect_to_otp_login( $user_id, $code ) {
+        $url = wp_login_url();
+        if ( $user_id ) {
+            $url .= '?tpsa_verify_email_otp=' . (int) $user_id;
+        }
+        $url = add_query_arg( 'tpsa_otp_error', sanitize_key( $code ), $url );
+
+        wp_safe_redirect( $url );
         exit;
     }
 
@@ -263,25 +341,26 @@ label[for="user_pass"],
             return $user;
         }
 
-        if ( is_wp_error( $user ) ) {
+        // Only proceed once WordPress has confirmed the credentials are valid.
+        if ( is_wp_error( $user ) || !( $user instanceof \WP_User ) ) {
             return $user;
         }
 
         // Capture the "Remember me" choice from the original login form.
         $remember = !empty( $_POST['rememberme'] );
 
-        // Generate and store OTP + remember flag.
-        $otp = wp_rand( 1000, 99999 );
+        // Generate a 6-digit OTP and persist ONLY its hash (never the password).
+        // The credentials were already validated above, so they are not needed again.
+        $otp = (string) wp_rand( 100000, 999999 );
 
-        update_user_meta(
-            $user->ID,
-            '_tpsa_otp_code',
+        set_transient(
+            $this->otp_key( $user->ID ),
             [
-                'username' => $username,
-                'password' => $password,
-                'otp'      => strval( $otp ),
+                'hash'     => wp_hash_password( $otp ),
                 'remember' => $remember ? 1 : 0,
-            ]
+                'tries'    => 0,
+            ],
+            self::OTP_TTL
         );
 
         // Send OTP email (replace or extend for SMS if needed).

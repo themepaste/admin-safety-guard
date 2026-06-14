@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 use ThemePaste\SecureAdmin\Helpers\Utility;
 ?>
 
-<!-- Main content wrapper for the Shipping Manager settings page -->
+<!-- Main content wrapper for the Admin Safety Guard settings page -->
 <div class="tpsa-main-wrapper">
     <?php
 

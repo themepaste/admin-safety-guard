@@ -86,7 +86,8 @@ class Utility {
      * @return string
      */
     public static function get_screen( $var = '' ) {
-        return isset( $_GET[$var] ) ? sanitize_text_field( $_GET[$var] ) : null;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing/UI value, no state change.
+        return isset( $_GET[$var] ) ? sanitize_text_field( wp_unslash( $_GET[$var] ) ) : null;
     }
 
 }

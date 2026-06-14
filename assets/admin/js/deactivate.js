@@ -19,6 +19,12 @@ jQuery(document).ready(function ($) {
 
                         <textarea name="details" class="tpsm-textarea" placeholder="Additional feedback (optional)"></textarea>
 
+                        <p class="tpsm-modal-disclosure" style="font-size:12px;line-height:1.6;color:#6b7280;margin:10px 0 0;">
+                            ${tpsaDeactivate.i18n.disclosure}
+                            <a href="${tpsaDeactivate.privacy_url}" target="_blank" rel="noopener noreferrer">${tpsaDeactivate.i18n.privacy_label}</a>.
+                            <br>${tpsaDeactivate.i18n.skip_note}
+                        </p>
+
                         <div class="tpsm-modal-buttons">
                             <button type="button" class="tpsm-skip-btn">Skip</button>
                             <div>

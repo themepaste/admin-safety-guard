@@ -190,7 +190,7 @@ echo wp_kses_post(
         $blocked_table = get_tpsa_db_table_name( 'block_users' );
 
         $ip = $this->get_ip_address();
-        $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : 'Unknown';
+        $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : 'Unknown';
         $now = current_time( 'mysql' );
 
         // Find existing row by IP + User Agent (your requested behavior)
@@ -400,23 +400,19 @@ echo wp_kses_post(
         }
     }
 
+    /**
+     * Resolve the current client IP address.
+     *
+     * Delegates to the shared, spoofing-resistant helper which trusts only
+     * REMOTE_ADDR unless the site has opted in to proxy headers via the
+     * `tpsa_trust_proxy_headers` filter. Forwarded headers were previously
+     * trusted unconditionally, which let attackers bypass lockouts and the IP
+     * blocklist by forging X-Forwarded-For / Client-IP.
+     *
+     * @return string
+     */
     private function get_ip_address() {
-        if ( !empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif ( !empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-            $ip = explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] )[0];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-
-        $ip = sanitize_text_field( $ip );
-
-        // Normalize IPv6 loopback to IPv4
-        if ( $ip === '::1' ) {
-            $ip = '127.0.0.1';
-        }
-
-        return $ip;
+        return tpsa_get_client_ip();
     }
 
     /**

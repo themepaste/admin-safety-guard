@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInitTPSecureAdmin
 {
     public static $prefixLengthsPsr4 = array (
-        'T' => 
+        'T' =>
         array (
             'ThemePaste\\SecureAdmin\\' => 23,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'ThemePaste\\SecureAdmin\\' => 
+        'ThemePaste\\SecureAdmin\\' =>
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),

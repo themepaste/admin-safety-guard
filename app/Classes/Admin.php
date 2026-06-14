@@ -209,6 +209,12 @@ class Admin {
                 'ajax_url'    => admin_url( 'admin-ajax.php' ),
                 'plugin_slug' => TPSA_PLUGIN_BASENAME,
                 'nonce'       => wp_create_nonce( 'tpsa_deactivate_nonce' ),
+                'privacy_url' => 'https://themepaste.com/privacy-policy',
+                'i18n'        => [
+                    'disclosure'    => __( 'If you submit feedback, your admin name, email address and site URL are sent to ThemePaste (themepaste.com) along with your message, so we can follow up and improve the plugin.', 'admin-safety-guard' ),
+                    'privacy_label' => __( 'Privacy Policy', 'admin-safety-guard' ),
+                    'skip_note'     => __( 'Prefer not to share anything? Choose “Skip” — no data is sent.', 'admin-safety-guard' ),
+                ],
             ] );
         }
     }

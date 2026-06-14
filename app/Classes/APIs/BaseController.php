@@ -60,8 +60,8 @@ abstract class BaseController {
         $offset = ( $page - 1 ) * $limit;
         $full_table_name = get_tpsa_db_table_name( $table_name );
 
-        // Verify table exists
-        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $full_table_name ) ) !== $full_table_name ) {
+        // Verify table exists (cached).
+        if ( !$this->table_exists( $full_table_name ) ) {
             return new WP_REST_Response(
                 [
                     'error'   => true,
@@ -126,12 +126,44 @@ abstract class BaseController {
 
         $full_table_name = get_tpsa_db_table_name( $table_name );
 
-        // Check table exists
-        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $full_table_name ) ) !== $full_table_name ) {
+        // Check table exists (cached).
+        if ( !$this->table_exists( $full_table_name ) ) {
             return 0;
         }
 
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$full_table_name}" );
+    }
+
+    /**
+     * Whether a fully-qualified table exists, cached per request and for a short
+     * window via a transient to avoid a SHOW TABLES query on every API call.
+     *
+     * @param string $full_table_name Fully-prefixed table name.
+     * @return bool
+     */
+    protected function table_exists( string $full_table_name ): bool {
+        global $wpdb;
+
+        static $checked = [];
+        if ( isset( $checked[$full_table_name] ) ) {
+            return $checked[$full_table_name];
+        }
+
+        $cache_key = 'tpsa_table_exists_' . md5( $full_table_name );
+        $cached = get_transient( $cache_key );
+        if ( '1' === $cached ) {
+            return $checked[$full_table_name] = true;
+        }
+
+        $exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $full_table_name ) ) === $full_table_name );
+
+        // Only cache positive results; a missing table should be re-checked
+        // (e.g. right after activation creates it).
+        if ( $exists ) {
+            set_transient( $cache_key, '1', HOUR_IN_SECONDS );
+        }
+
+        return $checked[$full_table_name] = $exists;
     }
 
     /**
