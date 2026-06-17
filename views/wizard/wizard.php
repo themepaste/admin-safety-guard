@@ -10,29 +10,18 @@ defined( 'ABSPATH' ) || exit;
         <div class="tpsm-wizard-logo">
             <img src="<?php echo esc_url( TPSA_ASSETS_URL . '/admin/img/plugin-icon.png' ); ?>" alt="<?php esc_attr_e( 'Admin Safety Guard', 'admin-safety-guard' ); ?>">
         </div>
-        <h3><?php esc_html_e( 'Never miss an important update', 'admin-safety-guard' ); ?></h3>
-        <p><?php esc_html_e( 'By opting in, you’ll get notifications about important security patches, new features, helpful tips, and occasional special offers.', 'admin-safety-guard' ); ?></p>
+        <h3><?php esc_html_e( 'Stay protected & up to date', 'admin-safety-guard' ); ?></h3>
+        <p><?php esc_html_e( 'Get security patches, new features and helpful tips — straight to your inbox.', 'admin-safety-guard' ); ?></p>
 
-        <div class="tpsm-wizard-consent" style="text-align:left; background:#f6f7fb; border:1px solid #e3e6ef; border-radius:8px; padding:14px 16px; margin:16px 0; font-size:13px; line-height:1.6; color:#4b5563;">
-            <strong><?php esc_html_e( 'What we collect if you allow this:', 'admin-safety-guard' ); ?></strong>
-            <ul style="margin:8px 0 0; padding-left:18px;">
-                <li><?php esc_html_e( 'Your administrator name and email address', 'admin-safety-guard' ); ?></li>
-                <li><?php esc_html_e( 'Your site URL', 'admin-safety-guard' ); ?></li>
-            </ul>
-            <p style="margin:10px 0 0;">
-                <?php
-                printf(
-                    /* translators: 1: company name, 2: opening privacy-policy link tag, 3: closing link tag */
-                    esc_html__( 'This information is sent to %1$s so we can send you the updates above. We never sell your data, and you can opt out at any time. See our %2$sPrivacy Policy%3$s for details.', 'admin-safety-guard' ),
-                    'ThemePaste (themepaste.com)',
-                    '<a href="' . esc_url( 'https://themepaste.com/privacy-policy' ) . '" target="_blank" rel="noopener noreferrer">',
-                    '</a>'
-                );
-                ?>
-            </p>
-            <p style="margin:10px 0 0;">
-                <?php esc_html_e( 'Choosing “Not now” keeps the plugin fully functional — no data is sent.', 'admin-safety-guard' ); ?>
-            </p>
+        <div class="tpsm-wizard-consent">
+            <?php
+            printf(
+                /* translators: 1: opening privacy-policy link tag, 2: closing link tag */
+                esc_html__( 'We share your name, email and site URL with ThemePaste. No spam, opt out anytime. %1$sPrivacy Policy%2$s', 'admin-safety-guard' ),
+                '<a href="' . esc_url( 'https://themepaste.com/privacy-policy' ) . '" target="_blank" rel="noopener noreferrer">',
+                '</a>'
+            );
+            ?>
         </div>
 
         <form action="" method="post">
