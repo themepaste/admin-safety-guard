@@ -4,7 +4,7 @@ Tags: login security, limit login attempts, two-factor authentication, brute for
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.2.9
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,17 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 ---
 
 == Changelog ==
+
+= 1.3.0 – Security & Performance Update =
+* [security] Two-Factor Authentication (Email OTP) now expires codes after 5 minutes and invalidates them after 5 failed attempts to prevent code reuse and brute-forcing.
+* [security] Removed legacy storage of OTP credentials in user meta; a one-time cleanup automatically scrubs any plaintext data left behind by older versions on upgrade.
+* [security] Added a clear "code expired, please log in again" notice on the login screen when an OTP session times out.
+* [security] Password Protection now uses a signed, site-secret-keyed access token with constant-time comparison instead of a plain password hash, so the access cookie cannot be forged or precomputed.
+* [improve] Reworked client IP detection with proxy and Cloudflare support, validation of forwarded headers, and IPv6 loopback normalization for more accurate logging and IP blocking.
+* [improve] Database schema changes now apply automatically on plugin update, not just on activation, so updates stay reliable across versions.
+* [improve] Cached table-existence checks to remove redundant database queries on every REST API request.
+* [improve] More accurate Security Score calculation that only counts features with a real on/off control.
+* [fix] Resolved minor PHP warnings and general stability improvements.
 
 = 1.2.9 – Maintenance Update =
 * [update] Refreshed the plugin short description in readme for better clarity on WordPress.org.
@@ -532,13 +543,3 @@ Important Notes
 [Pinterest](https://uk.pinterest.com/themepaste/)  
 [LinkedIn](https://www.linkedin.com/company/themepaste)  
 [Instagram](https://www.instagram.com/themepasteuk)
-
-
-
-
-
-
-
-
-
-
