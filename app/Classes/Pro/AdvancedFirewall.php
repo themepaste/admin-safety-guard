@@ -40,6 +40,11 @@ class AdvancedFirewall implements FeatureInterface {
      */
     public function extend_pro_fields( $fields ) {
 
+        // Pro plugin registers these fields itself when active — avoid double-registration.
+        if ( tp_is_pro_active() ) {
+            return $fields;
+        }
+
         // If section already exists, we merge; if not, we create a new one.
         if ( !isset( $fields[$this->feature_id] ) ) {
             $fields[$this->feature_id] = [

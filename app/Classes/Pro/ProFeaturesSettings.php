@@ -12,10 +12,10 @@ class ProFeaturesSettings implements FeatureInterface {
     use Hook;
 
     public function register_hooks() {
-        // 1) Extend settings UI
-        $this->filter( 'tpsa_settings_fields', [$this, 'extend_pro_fields'] );
-
-        // Settings label
+        // Add the Pro sub-tabs (Advanced Malware Scanner, Web Application Firewall)
+        // under the "Firewall & Malware" section. The field definitions for those
+        // tabs are registered by their own feature classes (Pro\AdvancedFirewall and
+        // the pro plugin), so this class only extends the settings option (tab) list.
         $this->filter( 'tpsa_settings_option', [$this, 'extend_pro_settings'] );
     }
 
