@@ -67,16 +67,4 @@ class TwoFAByAppUsers extends BaseController {
             'data'     => $data,
         ], 200 );
     }
-
-    /**
-     * Example authorization logic.
-     *
-     * @param WP_REST_Request $request
-     * @return bool
-     */
-    public function authorize_request( WP_REST_Request $request ) {
-        // Only admins can access this endpoint
-        // return current_user_can( 'list_users' );
-        return true;
-    }
 }
