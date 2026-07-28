@@ -1,6 +1,64 @@
-#login {
-    width: 352px !important;
+/**
+ * Google reCAPTCHA v2 on the WordPress login and registration screens.
+ *
+ * The widget is a fixed 304x78px iframe. WordPress's #login box is 320px wide
+ * with 24px of padding on each side of the form, leaving 272px of usable width
+ * — so the widget overflows by 32px.
+ *
+ * The previous fix widened #login to 352px with !important, which made the
+ * whole login box wider than a stock WordPress screen and shifted the logo,
+ * the form and the "Lost your password?" links out of their normal positions.
+ * Scaling the widget instead keeps the login box at its default dimensions and
+ * lines the captcha up flush with the username and password fields.
+ */
+
+.tpsa-recaptcha-wrap {
+    /* Match the vertical rhythm of the fields above it. */
+    margin: 0 0 16px;
 }
-.g-recaptcha {
-    margin-bottom: 20px;
+
+.tpsa-recaptcha-wrap .g-recaptcha {
+    /* 272 / 304 = 0.8947 — fills the form width exactly, no overflow. */
+    transform: scale(0.8947);
+    transform-origin: 0 0;
+    /* Reclaim the space the transform leaves behind (78 * 0.8947 ~= 70). */
+    height: 70px;
+    margin-bottom: 0;
+}
+
+/*
+ * WooCommerce and theme login forms are not 272px wide, so the scale above
+ * would leave a gap. There, let the widget sit at native size and simply shrink
+ * if the container is narrower.
+ */
+.woocommerce .tpsa-recaptcha-wrap .g-recaptcha,
+.woocommerce-page .tpsa-recaptcha-wrap .g-recaptcha {
+    transform: none;
+    height: auto;
+    max-width: 100%;
+    margin-bottom: 16px;
+}
+
+/* Keep the iframe from spilling out of a narrow theme container. */
+.tpsa-recaptcha-wrap .g-recaptcha > div {
+    max-width: 100%;
+}
+
+/* Small screens: WordPress drops #login to a fluid width under 400px. */
+@media screen and (max-width: 400px) {
+    .tpsa-recaptcha-wrap .g-recaptcha {
+        transform: scale(0.77);
+        height: 60px;
+    }
+}
+
+/* Missing-keys warning, shown in place of the widget. */
+.tpsa-recaptcha-error {
+    margin: 0 0 16px;
+    padding: 10px 12px;
+    border-left: 4px solid #d63638;
+    background: #fcf0f1;
+    color: #8a1f22;
+    font-size: 13px;
+    line-height: 1.5;
 }

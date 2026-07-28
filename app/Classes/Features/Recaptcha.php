@@ -53,9 +53,12 @@ class Recaptcha implements FeatureInterface {
             return;
         }
 
-        // If it's email verification page then return (routing only).
+        // Skip the two-factor code screen: the credentials (and therefore the
+        // captcha) were already verified in the first step, and the OTP form is
+        // handled on login_init before `authenticate` runs, so a widget shown
+        // here would never be checked.
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only query var, no state change.
-        if ( isset( $_GET['tpsa_verify_email_otp'] ) ) {
+        if ( isset( $_GET['tpsa_2fa'] ) || isset( $_POST['tpsa_2fa_token'] ) ) {
             return;
         }
 
@@ -72,7 +75,10 @@ class Recaptcha implements FeatureInterface {
         $this->action( 'login_form', array( $this, 'show_recaptcha' ) );
         $this->action( 'register_form', array( $this, 'show_recaptcha' ) );
 
-        $this->filter( 'authenticate', array( $this, 'verify_recaptcha_on_login' ), 21, 3 );
+        // Priority 26: after core (20) and after the lockout check (25), so a
+        // blocked address never costs an outbound call to Google, and before
+        // two-factor (30) so no code is emailed for a failed captcha.
+        $this->filter( 'authenticate', array( $this, 'verify_recaptcha_on_login' ), 26, 3 );
         $this->filter( 'registration_errors', array( $this, 'verify_recaptcha_on_register' ), 10, 1 );
 
         /**
@@ -125,27 +131,53 @@ class Recaptcha implements FeatureInterface {
             // Escape site key for safe JS string usage.
             $site_key_js = esc_js( $site_key );
 
+            // Only the authentication forms get a token. The previous version
+            // injected a hidden g-recaptcha-response into EVERY form on the
+            // page — search, comments, newsletter signups, other plugins'
+            // forms — which is both wasteful and a good way to break them.
+            //
+            // The token also expires after two minutes, so it is refreshed on a
+            // timer and again right before submit; otherwise anyone who pauses
+            // on the login screen gets an unexplained "verification failed".
             $inline_script = "
-				document.addEventListener('DOMContentLoaded', function () {
-					if (typeof grecaptcha !== 'undefined') {
-						grecaptcha.ready(function () {
-							grecaptcha.execute('{$site_key_js}', {action: 'login_register'}).then(function (token) {
-								var forms = document.querySelectorAll('form');
-								if (forms.length) {
-									forms.forEach(function(form) {
-										if (!form.querySelector('input[name=\"g-recaptcha-response\"]')) {
-											var input = document.createElement('input');
-											input.type = 'hidden';
-											input.name = 'g-recaptcha-response';
-											input.value = token;
-											form.appendChild(input);
-										}
-									});
-								}
-							});
+				(function () {
+					var SITE_KEY = '{$site_key_js}';
+					var SELECTOR = 'form#loginform, form#registerform, form#lostpasswordform,' +
+						'form.woocommerce-form-login, form.woocommerce-form-register';
+
+					function forms() {
+						return document.querySelectorAll(SELECTOR);
+					}
+
+					function setToken(token) {
+						forms().forEach(function (form) {
+							var input = form.querySelector('input[name=\"g-recaptcha-response\"]');
+							if (!input) {
+								input = document.createElement('input');
+								input.type = 'hidden';
+								input.name = 'g-recaptcha-response';
+								form.appendChild(input);
+							}
+							input.value = token;
 						});
 					}
-				});
+
+					function refresh() {
+						if (typeof grecaptcha === 'undefined' || !forms().length) { return; }
+						grecaptcha.ready(function () {
+							grecaptcha.execute(SITE_KEY, { action: 'login_register' }).then(setToken);
+						});
+					}
+
+					document.addEventListener('DOMContentLoaded', function () {
+						refresh();
+						// Tokens last ~120s; stay ahead of that.
+						setInterval(refresh, 90000);
+						forms().forEach(function (form) {
+							form.addEventListener('submit', function () { refresh(); });
+						});
+					});
+				})();
 			";
 
             wp_add_inline_script( 'google-recaptcha-v3', $inline_script );
@@ -159,6 +191,8 @@ class Recaptcha implements FeatureInterface {
                 true
             );
 
+            // Loaded on the front end too, so the widget is styled inside
+            // WooCommerce and theme login forms rather than only on wp-login.
             $this->enqueue_style(
                 'google-recaptcha-v2',
                 TPSA_ASSETS_URL . '/login/css/recaptcha.css'
@@ -172,20 +206,28 @@ class Recaptcha implements FeatureInterface {
     public function show_recaptcha() {
         $version = isset( $this->settings['version'] ) ? sanitize_key( $this->settings['version'] ) : 'v2';
 
-        if ( 'v2' === $version ) {
-            $site_key = isset( $this->settings['site-key'] ) ? sanitize_text_field( (string) $this->settings['site-key'] ) : '';
-            $theme = isset( $this->settings['theme'] ) ? sanitize_key( (string) $this->settings['theme'] ) : 'light';
-
-            echo '<div class="g-recaptcha" data-sitekey="' . esc_attr( $site_key ) . '" data-theme="' . esc_attr( $theme ) . '"></div>';
+        // v3 is invisible: it has no widget to place in the form.
+        if ( 'v2' !== $version ) {
+            return;
         }
+
+        $site_key = isset( $this->settings['site-key'] ) ? sanitize_text_field( (string) $this->settings['site-key'] ) : '';
+        $theme = isset( $this->settings['theme'] ) ? sanitize_key( (string) $this->settings['theme'] ) : 'light';
+        $theme = in_array( $theme, ['light', 'dark'], true ) ? $theme : 'light';
+
+        // The wrapper is what the stylesheet targets, so the widget can be
+        // scaled to the form width instead of the login box being widened.
+        echo '<div class="tpsa-recaptcha-wrap">'
+        . '<div class="g-recaptcha" data-sitekey="' . esc_attr( $site_key ) . '" data-theme="' . esc_attr( $theme ) . '"></div>'
+        . '</div>';
     }
 
     /**
      * Show error if keys are missing.
      */
     public function show_recaptcha_error() {
-        echo '<div style="color: red; margin: 10px 0;">';
-        esc_html_e( 'reCAPTCHA keys are not configured properly. Please contact the site administrator.', 'admin-safety-guard' );
+        echo '<div class="tpsa-recaptcha-error">';
+        esc_html_e( 'reCAPTCHA is enabled but its keys are missing, so it cannot be shown. Please contact the site administrator.', 'admin-safety-guard' );
         echo '</div>';
     }
 
@@ -202,6 +244,21 @@ class Recaptcha implements FeatureInterface {
         // Avoid undefined index warning.
         $method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
         if ( 'POST' !== $method ) {
+            return $user;
+        }
+
+        // Something earlier in the chain already rejected this attempt (bad
+        // credentials, or a locked-out address). Verifying the token would be
+        // an outbound HTTP request to Google for a sign-in that cannot succeed
+        // — exactly the request an attacker would love to make us repeat.
+        if ( is_wp_error( $user ) ) {
+            return $user;
+        }
+
+        // The two-factor code screen re-posts to the login form without a
+        // captcha widget; it is handled before `authenticate` and needs no
+        // second verification.
+        if ( isset( $_POST['tpsa_2fa_token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
             return $user;
         }
 
