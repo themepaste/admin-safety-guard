@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Lock, Shield, Check, X } from 'lucide-react';
+import { Lock, Shield, Check, X, Timer } from 'lucide-react';
 
 const admin_url = tpsaAdmin.admin_url;
 const allActiveFeatures = tpsaAdmin.feature_status.all_active_features;
@@ -52,6 +52,18 @@ const defaultFeatures = [
     url:
       admin_url +
       'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=password-protection',
+  },
+  {
+    id: 'session-security',
+    category: 'security-core',
+    name: 'Session Security',
+    description: 'Limit how long a sign-in stays valid',
+    status: 'active',
+    free: true,
+    icon: Timer,
+    url:
+      admin_url +
+      'admin.php?page=tp-admin-safety-guard&tab=security-core&tpsa-setting=session-security',
   },
   {
     id: 'recaptcha',

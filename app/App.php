@@ -60,6 +60,12 @@ final class App {
         // Scheduled cleanup of the log tables (expires blocked IPs).
         self::get( Classes\Cron::class );
 
+        // Central record of everything the plugin blocks.
+        self::get( Classes\ThreatLog::class );
+
+        // Weighted security audit of the whole site.
+        self::get( Classes\SecurityAudit::class );
+
         // Load all features
         self::get( Classes\FeatureManager::class );
 

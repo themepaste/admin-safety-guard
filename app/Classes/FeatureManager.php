@@ -37,6 +37,7 @@ class FeatureManager {
             Features\PasswordProtection::class,
             Features\PrivacyHardening::class,
             Features\Customize::class,
+            Features\SessionSecurity::class,
 
             // Pro upsell surfaces (the pro plugin registers the real features).
             Pro\AdvancedFirewall::class,

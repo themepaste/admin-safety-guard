@@ -106,6 +106,23 @@ class Admin {
     public function admin_enqueue_scripts( $screen ) {
         $current_setting_screen = Settings::get_current_screen();
 
+        // fields.js also powers the support form and the security-issue dialog,
+        // so it has to load on the Support screen too — not just the screens
+        // that mount a React bundle.
+        $plugin_screens = [
+            'toplevel_page_' . Settings::$SETTING_PAGE_ID,
+            'admin-safety-guard_page_tp-admin-safety-guard-pro',
+            'admin-safety-guard_page_asg-support',
+        ];
+
+        if ( in_array( $screen, $plugin_screens, true ) ) {
+            $this->enqueue_script(
+                'tpsa-fields',
+                TPSA_ASSETS_URL . '/admin/js/fields.js',
+                [], null, array( 'in_footer' => true )
+            );
+        }
+
         if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen ) {
 
             // Handle that carries the tpsaAdmin localized data. It has no file

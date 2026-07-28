@@ -16,3 +16,138 @@
     transform: scale(1.01);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
+
+/* ===================================================================
+   Security audit notice — plugin styling rather than the stock
+   red-bar-and-blue-button admin notice.
+   =================================================================== */
+.tpsa-notice {
+    display: flex;
+    padding: 0 !important;
+    border: 1px solid #e2d8fb;
+    border-left: 0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(129, 75, 254, .08);
+    overflow: hidden;
+}
+
+.tpsa-notice__bar {
+    width: 4px;
+    flex: 0 0 auto;
+    background: linear-gradient(180deg, #814bfe, #ec4899);
+}
+
+.tpsa-notice__body {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    flex: 1 1 auto;
+}
+
+.tpsa-notice__icon {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #f3f1ff;
+    color: #814bfe;
+}
+.tpsa-notice__icon svg { width: 18px; height: 18px; }
+
+.tpsa-notice__content { flex: 1 1 auto; min-width: 0; }
+
+.tpsa-notice__title {
+    margin: 0 0 6px !important;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.tpsa-notice__list {
+    margin: 0 0 12px !important;
+    padding: 0;
+    list-style: none;
+}
+.tpsa-notice__list li {
+    position: relative;
+    padding-left: 16px;
+    margin: 0 0 3px;
+    font-size: 13px;
+    color: #3d444b;
+    line-height: 1.5;
+}
+.tpsa-notice__list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #dc2626;
+}
+.tpsa-notice__more { color: #9e8cca !important; }
+.tpsa-notice__more::before { background: #bba8e7 !important; }
+
+.tpsa-notice__actions {
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.tpsa-notice .tpsa-notice__btn {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #814bfe, #9c5bff);
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 4px 12px rgba(129, 75, 254, .22);
+}
+.tpsa-notice .tpsa-notice__btn:hover,
+.tpsa-notice .tpsa-notice__btn:focus {
+    color: #fff !important;
+    filter: brightness(1.05);
+    box-shadow: 0 6px 16px rgba(129, 75, 254, .3);
+}
+
+.tpsa-notice .tpsa-notice__dismiss {
+    font-size: 13px;
+    color: #9e8cca;
+    text-decoration: none !important;
+}
+.tpsa-notice .tpsa-notice__dismiss:hover { color: #64748b; text-decoration: underline !important; }
+
+@media (max-width: 600px) {
+    .tpsa-notice__body { flex-direction: column; gap: 10px; }
+}
+
+/* The list sits between the title and the buttons, so it needs breathing room
+   of its own — without this the bullet collides with the button row. */
+.tpsa-notice .tpsa-notice__list { margin: 0 0 14px !important; }
+.tpsa-notice .tpsa-notice__list li { margin-bottom: 5px; }
+.tpsa-notice .tpsa-notice__list li:last-child { margin-bottom: 0; }
+
+/* Severity chip in front of each issue. */
+.tpsa-notice__sev {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #fdf0f0;
+    color: #c62828;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    vertical-align: 1px;
+}

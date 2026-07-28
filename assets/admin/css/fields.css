@@ -145,3 +145,45 @@
 #tp-login-template {
     width: 100% !important;
 }
+/* --- Colour picker field ------------------------------------------------- */
+.tp-color-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tp-color-wrapper .tp-color-swatch {
+    width: 38px;
+    height: 34px;
+    padding: 2px;
+    border: 1px solid #bba8e7;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+
+.tp-color-wrapper .tp-color-text {
+    width: 130px;
+    padding: 7px 10px;
+    border: 1px solid #bba8e7;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+}
+.tp-color-wrapper .tp-color-text:focus {
+    outline: none;
+    border-color: #814bfe;
+    box-shadow: 0 0 0 2px #ece6f9;
+}
+
+.tp-color-wrapper .tp-color-clear {
+    padding: 6px 12px;
+    border: 1px solid #bba8e7;
+    background: #fff;
+    color: #814bfe;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.tp-color-wrapper .tp-color-clear:hover { background: #f3f1ff; }

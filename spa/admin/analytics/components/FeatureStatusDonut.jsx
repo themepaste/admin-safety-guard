@@ -64,18 +64,35 @@ export default function FeatureStatusDonut() {
       plotOptions: {
         pie: { donut: { size: '68%' } },
       },
-      legend: {
-        show: true,
-        position: 'right',
-        markers: { radius: 8 },
-        formatter: (name, opts) =>
-          `${name}  ${opts.w.globals.series[opts.seriesIndex]}`,
-      },
+      // The legend is deliberately off. It duplicated the Active/Inactive/Total
+      // pills already shown in the footer, and — because it sat on the right —
+      // it pushed the donut off-centre while the centre label stayed centred on
+      // the container, so the text overflowed the ring.
+      legend: { show: false },
       tooltip: {
         y: { formatter: (val) => val },
       },
       dataLabels: { enabled: false },
       fill: { opacity: focusIndex === null ? 1 : 0.35 },
+      // Shrink the donut on narrow screens instead of letting it overflow.
+      responsive: [
+        {
+          breakpoint: 1200,
+          options: { chart: { height: 280 } },
+        },
+        {
+          breakpoint: 782,
+          options: { chart: { height: 240 } },
+        },
+        {
+          breakpoint: 480,
+          options: {
+            chart: { height: 200 },
+            plotOptions: { pie: { donut: { size: '62%' } } },
+            stroke: { width: 3 },
+          },
+        },
+      ],
     }),
     [labels, focusIndex]
   );

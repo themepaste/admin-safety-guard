@@ -98,6 +98,15 @@ class Cron {
             )
         );
 
+        // Threat history.
+        $threats_table = get_tpsa_db_table_name( 'threats' );
+        $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$threats_table} WHERE blocked_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                wp_date( 'Y-m-d H:i:s', time() - ( self::FAILED_LOGIN_RETENTION_DAYS * DAY_IN_SECONDS ) )
+            )
+        );
+
         // Same for the sign-in audit trail, which now records one row per event.
         $success_table = get_tpsa_db_table_name( 's_logins' );
         $wpdb->query(

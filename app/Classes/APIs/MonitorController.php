@@ -4,6 +4,7 @@ namespace ThemePaste\SecureAdmin\Classes\APIs;
 
 defined( 'ABSPATH' ) || exit;
 
+use ThemePaste\SecureAdmin\Classes\ThreatLog;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -115,6 +116,171 @@ class MonitorController extends BaseController {
                 'locked_now'     => $locked_now,
                 'top_offender'   => $top_offender,
                 'protection_on'  => $this->protection_enabled(),
+                // Dashboard tiles.
+                'threats_total'  => ThreatLog::count(),
+                'threats_24h'    => ThreatLog::count( $since_24h ),
+                'threats_prev'   => $this->threats_previous_day(),
+                'active_users'   => $this->active_users( $since_24h ),
+                'total_users'    => $this->total_users(),
+                'failed_prev'    => $this->failed_previous_day(),
+            ],
+            200
+        );
+    }
+
+    /**
+     * Threats recorded in the 24 hours BEFORE the current window, so the
+     * dashboard can show a real trend instead of a hard-coded percentage.
+     *
+     * @return int
+     */
+    private function threats_previous_day() {
+        global $wpdb;
+
+        $table = get_tpsa_db_table_name( ThreatLog::TABLE );
+
+        if ( !ThreatLog::table_exists( $table ) ) {
+            return 0;
+        }
+
+        return (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$table} WHERE blocked_at >= %s AND blocked_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                wp_date( 'Y-m-d H:i:s', time() - ( 2 * DAY_IN_SECONDS ) ),
+                wp_date( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS )
+            )
+        );
+    }
+
+    /**
+     * Failed attempts in the previous 24-hour window, for the trend arrow.
+     *
+     * @return int
+     */
+    private function failed_previous_day() {
+        global $wpdb;
+
+        $table = get_tpsa_db_table_name( 'failed_logins' );
+
+        if ( !$this->table_exists( $table ) ) {
+            return 0;
+        }
+
+        return (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COALESCE( SUM( login_attempts ), 0 ) FROM {$table} WHERE last_login_time >= %s AND last_login_time < %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                wp_date( 'Y-m-d H:i:s', time() - ( 2 * DAY_IN_SECONDS ) ),
+                wp_date( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS )
+            )
+        );
+    }
+
+    /**
+     * Accounts that actually signed in during the window.
+     *
+     * The dashboard previously showed the total number of registered users and
+     * called it "Active Users", which never changes and tells an administrator
+     * nothing about what is happening on the site.
+     *
+     * @param string $since Site-local MySQL datetime.
+     * @return int
+     */
+    private function active_users( $since ) {
+        global $wpdb;
+
+        $table = get_tpsa_db_table_name( 's_logins' );
+
+        if ( !$this->table_exists( $table ) ) {
+            return 0;
+        }
+
+        return (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT( DISTINCT username ) FROM {$table} WHERE login_time >= %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $since
+            )
+        );
+    }
+
+    /**
+     * Registered accounts, cached — count_users() is expensive on large sites.
+     *
+     * @return int
+     */
+    private function total_users() {
+        $total = get_transient( 'tpsa_total_users' );
+
+        if ( false === $total ) {
+            $counts = count_users();
+            $total = isset( $counts['total_users'] ) ? (int) $counts['total_users'] : 0;
+            set_transient( 'tpsa_total_users', $total, HOUR_IN_SECONDS );
+        }
+
+        return (int) $total;
+    }
+
+    /* ---------------------------------------------------------------------
+     * Threat log
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Paginated list of blocked threats.
+     *
+     * @param WP_REST_Request $request Request.
+     * @return WP_REST_Response
+     */
+    public function get_threats( WP_REST_Request $request ) {
+        global $wpdb;
+
+        $table = get_tpsa_db_table_name( ThreatLog::TABLE );
+
+        if ( !ThreatLog::table_exists( $table ) ) {
+            return new WP_REST_Response( ['data' => [], 'total' => 0, 'labels' => ThreatLog::types()], 200 );
+        }
+
+        $page = max( 1, absint( $request->get_param( 'page' ) ) );
+        $limit = absint( $request->get_param( 'limit' ) );
+        $limit = $limit > 0 ? min( $limit, 100 ) : 20;
+        $offset = ( $page - 1 ) * $limit;
+
+        $total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL
+
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$table} ORDER BY id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $limit,
+                $offset
+            ),
+            ARRAY_A
+        );
+
+        return new WP_REST_Response(
+            [
+                'data'   => (array) $rows,
+                'total'  => $total,
+                'page'   => $page,
+                'limit'  => $limit,
+                // Human-readable names, so the UI does not duplicate the list.
+                'labels' => ThreatLog::types(),
+            ],
+            200
+        );
+    }
+
+    /**
+     * Delete the whole threat log.
+     *
+     * @param WP_REST_Request $request Request.
+     * @return WP_REST_Response
+     */
+    public function clear_threats( WP_REST_Request $request ) {
+        $removed = ThreatLog::clear();
+
+        return new WP_REST_Response(
+            [
+                'cleared' => $removed,
+                /* translators: %d: number of records removed. */
+                'message' => sprintf( _n( 'Cleared %d record.', 'Cleared %d records.', $removed, 'admin-safety-guard' ), $removed ),
             ],
             200
         );
@@ -223,6 +389,171 @@ class MonitorController extends BaseController {
                 'blocked' => false,
                 /* translators: %s: IP address. */
                 'message' => sprintf( __( '%s has been released and its counters reset.', 'admin-safety-guard' ), $ip ),
+            ],
+            200
+        );
+    }
+
+    /* ---------------------------------------------------------------------
+     * Purge
+     * ------------------------------------------------------------------- */
+
+    /**
+     * The logs that can be purged, and the datetime column each is aged by.
+     *
+     * @return array<string, array{0:string,1:string}>
+     */
+    private function purgeable() {
+        return [
+            'success' => ['s_logins', 'login_time'],
+            'failed'  => ['failed_logins', 'last_login_time'],
+            'blocked' => ['block_users', 'login_time'],
+            'threats' => ['threats', 'blocked_at'],
+        ];
+    }
+
+    /**
+     * Named retention windows, in seconds. Anything older is removed.
+     *
+     * @return array<string, int>
+     */
+    private function purge_windows() {
+        return [
+            '24h' => DAY_IN_SECONDS,
+            '7d'  => 7 * DAY_IN_SECONDS,
+            '14d' => 14 * DAY_IN_SECONDS,
+            '30d' => 30 * DAY_IN_SECONDS,
+            '90d' => 90 * DAY_IN_SECONDS,
+        ];
+    }
+
+    /**
+     * Delete old records from a log.
+     *
+     * Accepts either a named window (`older_than`: keep the last 7d/14d/30d…),
+     * `all` to empty the log, or an explicit `from`/`to` date range so an
+     * administrator can remove one specific incident.
+     *
+     * @param WP_REST_Request $request Request.
+     * @return WP_REST_Response|WP_Error
+     */
+    public function purge_log( WP_REST_Request $request ) {
+        $logs = $this->purgeable();
+        $type = sanitize_key( (string) $request->get_param( 'type' ) );
+
+        if ( !isset( $logs[$type] ) ) {
+            return new WP_Error( 'tpsa_bad_type', __( 'Unknown log type.', 'admin-safety-guard' ), ['status' => 400] );
+        }
+
+        list( $table_key, $time_column ) = $logs[$type];
+        $table = get_tpsa_db_table_name( $table_key );
+
+        if ( !$this->table_exists( $table ) ) {
+            return new WP_Error( 'tpsa_no_table', __( 'That log table is missing.', 'admin-safety-guard' ), ['status' => 500] );
+        }
+
+        global $wpdb;
+
+        $older_than = sanitize_key( (string) $request->get_param( 'older_than' ) );
+        $from = $this->clean_date( $request->get_param( 'from' ) );
+        $to = $this->clean_date( $request->get_param( 'to' ) );
+
+        $column = '`' . str_replace( '`', '', $time_column ) . '`';
+
+        // 1) Explicit range wins, so a single incident can be removed.
+        if ( '' !== $from || '' !== $to ) {
+            $clauses = [];
+            $values = [];
+
+            if ( '' !== $from ) {
+                $clauses[] = "{$column} >= %s";
+                $values[] = $from . ' 00:00:00';
+            }
+
+            if ( '' !== $to ) {
+                $clauses[] = "{$column} <= %s";
+                $values[] = $to . ' 23:59:59';
+            }
+
+            $removed = $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM {$table} WHERE " . implode( ' AND ', $clauses ), // phpcs:ignore WordPress.DB.PreparedSQL
+                    $values
+                )
+            );
+
+            return $this->purge_response( $removed, $type );
+        }
+
+        // 2) Everything.
+        if ( 'all' === $older_than ) {
+            $removed = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL
+            $wpdb->query( "TRUNCATE TABLE {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL
+
+            return $this->purge_response( $removed, $type );
+        }
+
+        // 3) Named retention window.
+        $windows = $this->purge_windows();
+
+        if ( !isset( $windows[$older_than] ) ) {
+            return new WP_Error(
+                'tpsa_bad_window',
+                __( 'Choose a time period to delete.', 'admin-safety-guard' ),
+                ['status' => 400]
+            );
+        }
+
+        // Rows are written with current_time( 'mysql' ), so the cut-off is
+        // site-local too.
+        $cutoff = wp_date( 'Y-m-d H:i:s', time() - $windows[$older_than] );
+
+        $removed = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$table} WHERE {$column} < %s", // phpcs:ignore WordPress.DB.PreparedSQL
+                $cutoff
+            )
+        );
+
+        return $this->purge_response( $removed, $type );
+    }
+
+    /**
+     * Normalise a YYYY-MM-DD date, rejecting anything else.
+     *
+     * @param mixed $value Raw parameter.
+     * @return string Empty when absent or malformed.
+     */
+    private function clean_date( $value ) {
+        $value = trim( (string) $value );
+
+        if ( '' === $value || !preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ) {
+            return '';
+        }
+
+        // Reject impossible dates such as 2026-02-31.
+        list( $y, $m, $d ) = array_map( 'intval', explode( '-', $value ) );
+
+        return checkdate( $m, $d, $y ) ? $value : '';
+    }
+
+    /**
+     * Standard response for a purge.
+     *
+     * @param mixed  $removed Rows removed, or false on failure.
+     * @param string $type    Log type.
+     *
+     * @return WP_REST_Response
+     */
+    private function purge_response( $removed, $type ) {
+        $count = is_numeric( $removed ) ? (int) $removed : 0;
+
+        return new WP_REST_Response(
+            [
+                'type'    => $type,
+                'removed' => $count,
+                /* translators: %d: number of records deleted. */
+                'message' => sprintf( _n( 'Deleted %d record.', 'Deleted %d records.', $count, 'admin-safety-guard' ), $count ),
             ],
             200
         );

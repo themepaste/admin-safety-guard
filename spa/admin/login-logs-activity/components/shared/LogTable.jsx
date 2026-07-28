@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Download, RefreshCw, Search, ShieldBan, ShieldCheck } from 'lucide-react';
 import { downloadCsv, fetchLog, setBlocked } from './api';
+import PurgeControl from './PurgeControl';
 
 const RANGES = [
   { value: '24h', label: 'Last 24 hours' },
@@ -246,6 +247,15 @@ export default function LogTable({
               </tbody>
             </table>
           </div>
+
+          <PurgeControl
+            type={exportType}
+            onPurged={() => {
+              setPage(1);
+              load();
+              if (onChanged) onChanged();
+            }}
+          />
 
           {total > perPage && (
             <div className="tpsa-log__pager">

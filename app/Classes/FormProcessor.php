@@ -67,6 +67,26 @@ class FormProcessor {
                 $sanitized[$key] = is_scalar( $raw ) ? sanitize_text_field( (string) $raw ) : '';
                 break;
 
+            case 'color':
+                // Accept #rgb / #rrggbb and rgb()/rgba(); store anything else
+                // as empty so an invalid value can never reach a stylesheet.
+                $color = is_scalar( $raw ) ? trim( (string) $raw ) : '';
+
+                if ( '' !== $color
+                    && !preg_match( '/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $color )
+                    && !preg_match( '/^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*(0|1|0?\.\d+)\s*)?\)$/i', $color ) ) {
+                    $color = '';
+                }
+
+                $sanitized[$key] = $color;
+                break;
+
+            case 'textarea':
+                // Preserve line breaks; the feature that renders it decides how
+                // much markup (if any) is allowed.
+                $sanitized[$key] = is_scalar( $raw ) ? sanitize_textarea_field( (string) $raw ) : '';
+                break;
+
             case 'number':
                 // Support int/float safely
                 $num = is_scalar( $raw ) ? filter_var( $raw, FILTER_VALIDATE_FLOAT ) : false;

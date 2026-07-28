@@ -294,9 +294,25 @@
 
 /* Dashboard design for chart */
 .tpsa-activity-wrapper {
-    display: flex;
-    /* align-items: flex-start; */
+    display: grid;
+    /* Two equal columns that collapse to one when there is not room for both.
+       A plain flex row let each card shrink below its chart's usable width,
+       which is what squeezed the donut. */
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    align-items: start;
     gap: 20px;
+}
+
+/* Charts must never force the grid track wider than the column. */
+.tpsa-activity-wrapper > * {
+    min-width: 0;
+}
+
+@media (max-width: 782px) {
+    .tpsa-activity-wrapper {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
 }
 
 .fs-card {
@@ -305,9 +321,15 @@
     border-radius: 14px;
     padding: 16px;
     box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
-    /* max-width: 45%; */
     width: 100%;
     margin-bottom: 20px;
+    /* A grid item defaults to min-width:auto, so an oversized child (the chart
+       canvas, which ApexCharts gives an inline pixel width) stretches the whole
+       track and the card ends up overlapping its neighbour. These two lines are
+       what keep each card inside its own column. */
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .fs-header {
@@ -350,6 +372,13 @@
 
 .fs-chart-wrap {
     position: relative;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    /* Reserve the chart's height so the absolutely-positioned centre label has
+       a stable box to sit in, and so the card does not jump while ApexCharts
+       measures itself. */
+    height: 320px;
 }
 
 .fs-center {
@@ -363,6 +392,20 @@
     text-align: center;
 }
 
+/*
+ * Keep every line inside the donut hole.
+ *
+ * The hole is 68% of the donut diameter, and the donut is sized to the shorter
+ * side of the wrapper. Capping the text block well inside that radius stops
+ * "Total" and "Features in plugin" from running under the ring, which is what
+ * made the circle look broken.
+ */
+.fs-center > * {
+    max-width: 60%;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
 .fs-center-title {
     font-size: 12px;
     color: #6b7280;
@@ -373,13 +416,34 @@
     font-size: 28px;
     font-weight: 800;
     color: #111827;
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 .fs-center-sub {
-    font-size: 12px;
+    font-size: 11px;
     color: #9ca3af;
-    margin-top: 4px;
+    margin-top: 2px;
+}
+
+/* --- Responsive ------------------------------------------------------- */
+@media (max-width: 1200px) {
+    .fs-chart-wrap { height: 280px; }
+    .fs-center-value { font-size: 26px; }
+}
+
+@media (max-width: 782px) {
+    .fs-chart-wrap { height: 240px; }
+    .fs-center-value { font-size: 22px; }
+    .fs-center-title { font-size: 11px; }
+    .fs-center-sub { font-size: 10px; }
+}
+
+@media (max-width: 480px) {
+    .fs-chart-wrap { height: 200px; }
+    .fs-center-value { font-size: 20px; }
+    /* The donut hole is proportionally smaller here, so hide the least
+       important line rather than let it collide with the ring. */
+    .fs-center-sub { display: none; }
 }
 
 .fs-footer {
@@ -387,6 +451,16 @@
     gap: 10px;
     margin-top: 12px;
     flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+    .fs-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .fs-footer { gap: 8px; }
+    .fs-pill { font-size: 11px; }
 }
 
 .fs-pill {
@@ -412,4 +486,15 @@
 
 .fs-gray {
     background: #64748b;
+}
+/* ApexCharts writes an inline width on its own wrapper from a measurement taken
+   before the grid has settled. Clamp it so a stale measurement can never spill
+   the card over the column beside it. */
+.fs-chart-wrap .apexcharts-canvas,
+.fs-chart-wrap > div {
+    max-width: 100% !important;
+}
+
+.fs-chart-wrap svg {
+    max-width: 100%;
 }

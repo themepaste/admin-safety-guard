@@ -154,6 +154,54 @@ class RestApi {
 
         register_rest_route(
             'secure-admin/v1',
+            '/monitor/threats',
+            [
+                'methods'             => 'GET',
+                'callback'            => function ( $request ) use ( $monitor ) {
+                    return $monitor()->get_threats( $request );
+                },
+                'permission_callback' => function ( $request ) use ( $monitor ) {
+                    return $monitor()->authorize_request( $request );
+                },
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/monitor/threats/clear',
+            [
+                'methods'             => 'POST',
+                'callback'            => function ( $request ) use ( $monitor ) {
+                    return $monitor()->clear_threats( $request );
+                },
+                'permission_callback' => function ( $request ) use ( $monitor ) {
+                    return $monitor()->authorize_request( $request );
+                },
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/monitor/purge',
+            [
+                'methods'             => 'POST',
+                'callback'            => function ( $request ) use ( $monitor ) {
+                    return $monitor()->purge_log( $request );
+                },
+                'permission_callback' => function ( $request ) use ( $monitor ) {
+                    return $monitor()->authorize_request( $request );
+                },
+                'args'                => [
+                    'type'       => ['required' => true, 'sanitize_callback' => 'sanitize_key'],
+                    'older_than' => ['sanitize_callback' => 'sanitize_key'],
+                    'from'       => ['sanitize_callback' => 'sanitize_text_field'],
+                    'to'         => ['sanitize_callback' => 'sanitize_text_field'],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
             '/monitor/export',
             [
                 'methods'             => 'GET',

@@ -96,3 +96,30 @@ export async function downloadCsv(type) {
 
   return json.rows || 0;
 }
+
+/** Delete old records from a log. */
+export async function purgeLog(type, { olderThan, from, to }) {
+  const body = { type };
+
+  if (from || to) {
+    if (from) body.from = from;
+    if (to) body.to = to;
+  } else {
+    body.older_than = olderThan;
+  }
+
+  const response = await fetch(`${base()}monitor/purge`, {
+    method: 'POST',
+    headers: headers(),
+    credentials: 'include',
+    body: JSON.stringify(body),
+  });
+
+  const json = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error((json && json.message) || 'The delete failed.');
+  }
+
+  return json;
+}

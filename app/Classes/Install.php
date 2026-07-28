@@ -152,6 +152,24 @@ class Install {
             "
         );
 
+        // Every block the plugin performs, for the dashboard threat counter.
+        $this->create_table(
+            'threats',
+            "
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            threat_type VARCHAR(40) NOT NULL,
+            ip_address VARCHAR(45) NOT NULL,
+            detail VARCHAR(191) NOT NULL DEFAULT '',
+            user_agent TEXT NOT NULL,
+            request_uri VARCHAR(191) NOT NULL DEFAULT '',
+            blocked_at DATETIME NOT NULL,
+            PRIMARY KEY (id),
+            KEY threat_type (threat_type),
+            KEY ip_address (ip_address),
+            KEY blocked_at (blocked_at)
+            "
+        );
+
         $this->create_table(
             'block_users',
             "

@@ -68,7 +68,10 @@ class Notice {
      * @return void
      */
     public function enqueue_assets() {
-        if ( !$this->should_show_notice() ) {
+        // The stylesheet also carries the security-audit notice, which can
+        // appear on any admin screen, so load it whenever an administrator is
+        // looking at wp-admin rather than only on the wizard prompt.
+        if ( !$this->should_show_notice() && !current_user_can( 'manage_options' ) ) {
             return;
         }
 

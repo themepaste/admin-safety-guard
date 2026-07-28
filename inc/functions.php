@@ -38,6 +38,9 @@ if ( !function_exists( 'tpsa_settings_option' ) ) {
                         'password-protection'  => array(
                             'label' => __( 'Password Protection', 'admin-safety-guard' ),
                         ),
+                        'session-security'     => array(
+                            'label' => __( 'Session Security', 'admin-safety-guard' ),
+                        ),
                         'recaptcha'            => array(
                             'label' => __( 'reCAPTCHA', 'admin-safety-guard' ),
                         ),
@@ -245,6 +248,58 @@ if ( !function_exists( 'tpsa_settings_fields' ) ) {
                         ),
                     ),
                 ),
+                'session-security'     => array(
+                    'fields' => array(
+                        'enable'                   => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Enable Session Security', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Protects the period <em>after</em> sign-in. By default a WordPress session stays valid for 2 days — 14 with "Remember Me" — however long the screen is left unattended.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'idle-minutes'             => array(
+                            'type'    => 'number',
+                            'label'   => __( 'Sign Out After Inactivity (minutes)', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Ends an idle session automatically. <strong>Recommended: 30-60.</strong> Set 0 to disable.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'session-hours'            => array(
+                            'type'    => 'number',
+                            'label'   => __( 'Maximum Session Length (hours)', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'How long a normal sign-in lasts. WordPress default is 48. Set 0 to leave it alone.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'remember-hours'           => array(
+                            'type'    => 'number',
+                            'label'   => __( '"Remember Me" Length (hours)', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'WordPress default is 336 (14 days), which is a long time for a stolen cookie to stay valid. Set 0 to leave it alone.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'logout-on-password-change' => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'End Other Sessions On Password Change', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'When someone changes their password, every other device is signed out — so changing it actually locks an intruder out.', 'admin-safety-guard' ),
+                            'default' => 1,
+                        ),
+                        'bind-to-ip'               => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Tie Session To IP Address', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'A stolen session cookie stops working from anywhere else. <strong>Signs out users on mobile networks whose IP changes</strong> — best for fixed office connections.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                    ),
+                ),
                 'login-logs-activity'  => array(
                     'fields' => array(
                         'notify-new-ip' => array(
@@ -414,59 +469,248 @@ if ( !function_exists( 'tpsa_settings_fields' ) ) {
                 ),
                 'privacy-hardening'    => array(
                     'fields' => array(
-                        'xml-rpc-enable' => array(
+                        'xml-rpc-enable'        => array(
                             'type'    => 'switch',
                             'label'   => __( 'Disable XML-RPC', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
-                            'desc'    => __( 'To disable/enable XML-RPC.', 'admin-safety-guard' ),
+                            'desc'    => __( 'Closes a legacy endpoint used for brute-force and DDoS amplification. <strong>Leave off if you use the WordPress mobile app or Jetpack.</strong>', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'block-author-enum'     => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Block Username Discovery', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Stops <code>?author=1</code> and the REST users list from revealing your usernames — the usual first step before a password attack.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'generic-login-errors'  => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide Which Detail Was Wrong', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'WordPress says whether the <em>username</em> or the <em>password</em> was wrong, confirming which accounts exist. This shows one message for both.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'hide-version'          => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide WordPress Version', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Removes the version from your page source, feeds and core asset URLs, so attackers cannot match your site to published exploits.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'remove-meta'           => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Remove Unused Meta Tags', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Strips the RSD, Windows Live Writer and shortlink tags. Legacy publishing hints that no modern site uses.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'disable-pingback'      => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Disable Pingbacks', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Blocks pingback methods and the X-Pingback header, so your site cannot be used to flood someone else\'s.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'disable-file-edit'     => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Disable Theme &amp; Plugin Editor', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Removes the built-in code editors. A stolen admin session can otherwise be turned into running PHP in two clicks.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'security-headers'      => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Send Security Headers', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Adds browser-enforced protections to every page: blocks clickjacking, MIME-type sniffing, referrer leaks and unwanted camera/microphone access.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'disable-app-passwords' => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Disable Application Passwords', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Turns off the API password feature site-wide. <strong>Leave off if any app or integration connects to this site.</strong>', 'admin-safety-guard' ),
                             'default' => 0,
                         ),
                     ),
                 ),
                 'customize'            => array(
                     'fields' => array(
-                        'enable'      => array(
+                        'enable'                 => array(
                             'type'    => 'switch',
-                            'label'   => __( 'Enable', 'admin-safety-guard' ),
+                            'label'   => __( 'Enable Login Branding', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
-                            'desc'    => __( 'To enable/disable customizer.', 'admin-safety-guard' ),
+                            'desc'    => __( 'Replace the WordPress logo and styling on your sign-in screen with your own.', 'admin-safety-guard' ),
                             'default' => 0,
                         ),
-                        'logo'        => array(
+
+                        'logo'                   => array(
                             'type'    => 'upload',
                             'label'   => __( 'Logo', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
-                            'desc'    => __( 'Preferred logo size: 84×84 px. Please upload accordingly.', 'admin-safety-guard' ),
-                            'default' => 0,
+                            'desc'    => __( 'Shown above the form. A square image around 84x84 px works best; larger images are scaled to fit.', 'admin-safety-guard' ),
+                            'default' => '',
                         ),
-                        'logo-url'    => array(
-                            'type'    => 'text',
-                            'label'   => __( 'Logo URL', 'admin-safety-guard' ),
-                            'class'   => '',
-                            'id'      => '',
-                            'desc'    => __( 'Enter logo url', 'admin-safety-guard' ),
-                            'default' => site_url(),
-                        ),
-                        'logo-width'  => array(
+                        'logo-width'             => array(
                             'type'    => 'number',
                             'label'   => __( 'Logo Width', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
-                            'desc'    => __( 'logo width', 'admin-safety-guard' ),
+                            'desc'    => __( 'In pixels, up to 600.', 'admin-safety-guard' ),
                             'default' => 84,
                         ),
-                        'logo-height'    => array(
+                        'logo-height'            => array(
                             'type'    => 'number',
                             'label'   => __( 'Logo Height', 'admin-safety-guard' ),
                             'class'   => '',
                             'id'      => '',
-                            'desc'    => __( 'logo height', 'admin-safety-guard' ),
+                            'desc'    => __( 'In pixels, up to 600.', 'admin-safety-guard' ),
                             'default' => 84,
                         ),
-                        'login-template' => array(
+                        'logo-url'               => array(
+                            'type'    => 'text',
+                            'label'   => __( 'Logo Links To', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Where clicking the logo goes. Leave empty for your home page (WordPress sends it to wordpress.org by default).', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+                        'logo-text'              => array(
+                            'type'    => 'text',
+                            'label'   => __( 'Logo Alt Text', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Read aloud by screen readers. Leave empty to use your site title.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+
+                        'bg-color'               => array(
+                            'type'    => 'color',
+                            'label'   => __( 'Page Background', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Behind the sign-in box. Leave empty to keep the WordPress default.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+                        'bg-image'               => array(
+                            'type'    => 'upload',
+                            'label'   => __( 'Background Image', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Covers the whole page. Sits on top of the background colour.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+                        'form-bg-color'          => array(
+                            'type'    => 'color',
+                            'label'   => __( 'Form Background', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'The white card around the fields.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+                        'form-rounded'           => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Rounded Form Corners', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Softens the corners of the sign-in card.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'text-color'             => array(
+                            'type'    => 'color',
+                            'label'   => __( 'Text Colour', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Field labels and helper text. Useful when using a dark background.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+                        'link-color'             => array(
+                            'type'    => 'color',
+                            'label'   => __( 'Link Colour', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'The links below the form.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+                        'button-color'           => array(
+                            'type'    => 'color',
+                            'label'   => __( 'Button Colour', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'The Log In button, and the highlight on a focused field.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+
+                        'hide-logo'              => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide Logo Entirely', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'For a minimal, text-free sign-in screen.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'hide-lost-password'     => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide "Lost your password?"', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Hides the link. Password reset still works if someone has the direct URL.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'hide-register'          => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide Register Link', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Hides the sign-up link when registration is open but you link to it yourself.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'hide-back-to-site'      => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide "Back to site"', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Removes the link under the form.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'hide-language-switcher' => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Hide Language Switcher', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Only appears on multilingual installs.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+                        'remember-me'            => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Tick "Remember Me" By Default', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Convenient on trusted devices. Leave off for shared or public computers.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
+
+                        'custom-css'             => array(
+                            'type'    => 'textarea',
+                            'label'   => __( 'Custom CSS', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Applied to the sign-in screen only. Tags and scripts are stripped.', 'admin-safety-guard' ),
+                            'default' => '',
+                        ),
+
+                        'login-template'         => array(
                             'type'    => 'login-template',
                             'class'   => '',
                             'id'      => '',
@@ -1028,39 +1272,49 @@ if ( !function_exists( 'tpsa_get_features_summary' ) ):
 endif;
 
 if ( !function_exists( 'tpsa_get_security_score' ) ):
+/**
+ * Overall security score for this site.
+ *
+ * Delegates to the weighted audit, which grades real site conditions (HTTPS,
+ * core updates, exposed usernames, PHP version...) alongside plugin coverage.
+ * The previous version divided active plugin features by available ones, so a
+ * site could read 100/100 while running outdated core over plain HTTP.
+ *
+ * @return int 0-100.
+ */
     function tpsa_get_security_score() {
+        $report = \ThemePaste\SecureAdmin\Classes\SecurityAudit::report();
 
-        $summary = tpsa_get_features_summary();
-
-        if ( empty( $summary->total ) ) {
-            return 0;
-        }
-
-        $raw_score = ( $summary->active / $summary->total ) * 100;
-
-        // Absolute + safe bounds
-        $score = abs( round( $raw_score ) );
-        $score = min( 100, max( 0, $score ) );
-
-        return $score;
+        return (int) $report['score'];
     }
 endif;
 
 if ( !function_exists( 'tpsa_get_security_label' ) ):
+/**
+ * Human label for a score.
+ *
+ * @param int $score Score out of 100.
+ * @return string
+ */
     function tpsa_get_security_label( $score ) {
+        if ( $score >= 90 ) { return __( 'Excellent protection', 'admin-safety-guard' ); }
+        if ( $score >= 75 ) { return __( 'Strong protection', 'admin-safety-guard' ); }
+        if ( $score >= 60 ) { return __( 'Moderate protection', 'admin-safety-guard' ); }
+        if ( $score >= 40 ) { return __( 'Weak protection', 'admin-safety-guard' ); }
 
-        if ( $score >= 90 ) {
-            return 'Excellent protection';
-        } elseif ( $score >= 75 ) {
-        return 'Strong protection';
-    } elseif ( $score >= 50 ) {
-        return 'Moderate protection';
-    } elseif ( $score >= 30 ) {
-        return 'Weak protection';
-    } else {
-        return 'Critical risk';
+        return __( 'Critical risk', 'admin-safety-guard' );
     }
-}
+endif;
+
+if ( !function_exists( 'tpsa_get_security_report' ) ):
+/**
+ * The full audit report: score, grade and every check.
+ *
+ * @return array
+ */
+    function tpsa_get_security_report() {
+        return \ThemePaste\SecureAdmin\Classes\SecurityAudit::report();
+    }
 endif;
 
 if ( !function_exists( 'tp_is_pro_active' ) ) {

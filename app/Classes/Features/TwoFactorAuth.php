@@ -118,6 +118,8 @@ class TwoFactorAuth implements FeatureInterface {
         // A client that cannot render an interactive form cannot complete the
         // second factor, so refuse rather than letting it through.
         if ( $this->is_non_interactive_request() ) {
+            \ThemePaste\SecureAdmin\Classes\ThreatLog::report( 'twofa_blocked', $user->user_login );
+
             return new \WP_Error(
                 'tpsa_2fa_required',
                 __( 'This account requires a second factor, which this connection method does not support. Sign in through the website instead.', 'admin-safety-guard' )
@@ -247,6 +249,8 @@ class TwoFactorAuth implements FeatureInterface {
              * @param int $tries_used Failed attempts against this challenge.
              */
             do_action( 'tpsa_2fa_failed', (int) $pending['user'], (int) $pending['tries'] );
+
+            \ThemePaste\SecureAdmin\Classes\ThreatLog::report( 'twofa_fail', '', '' );
 
             $this->redirect_with_error( $token, 'invalid' );
         }

@@ -205,6 +205,8 @@ class CustomLoginUrl implements FeatureInterface {
      * @return void
      */
     private function deny_default_login() {
+        \ThemePaste\SecureAdmin\Classes\ThreatLog::report( 'login_url_probe' );
+
         /**
          * How to handle a request to the old login URL: '404' or 'home'.
          *

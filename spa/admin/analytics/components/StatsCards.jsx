@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ThreatsPanel from './ThreatsPanel';
 
 /**
  * TPStatsCards (React + Plain CSS, fully scoped)
@@ -7,7 +8,17 @@ import React, { useEffect, useState } from 'react';
  * - CSS is scoped under ".tpStats" wrapper to avoid conflicts
  */
 
-const restUrl = tpsaAdmin.rest_url + 'secure-admin/v1/failed-logins/count';
+const summaryUrl = tpsaAdmin.rest_url + 'secure-admin/v1/monitor/summary';
+
+/** Percentage change between two periods, as a display string. */
+function trend(now, before) {
+  const a = Number(now) || 0;
+  const b = Number(before) || 0;
+  if (a === b) return { text: 'No change', tone: 'good' };
+  if (b === 0) return { text: `+${a}`, tone: 'bad' };
+  const pct = Math.round(((a - b) / b) * 100);
+  return { text: `${pct > 0 ? '+' : ''}${pct}%`, tone: pct > 0 ? 'bad' : 'good' };
+}
 
 function TPStatsIcon({ name, className }) {
   const common = {
@@ -108,38 +119,55 @@ function TPStatsIcon({ name, className }) {
 }
 
 export default function StatsCards() {
-  const [failedLoginCount, setFailedLoginCount] = useState(1);
+  const [data, setData] = useState(null);
+  const [showThreats, setShowThreats] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
-    fetch(restUrl, {
+    let cancelled = false;
+
+    fetch(summaryUrl, {
       headers: { 'X-WP-Nonce': tpsaAdmin.rest_nonce },
       credentials: 'include',
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setFailedLoginCount(data);
+      .then((r) => r.json())
+      .then((json) => {
+        if (!cancelled) setData(json);
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        if (!cancelled) setData({});
       });
-  }, []);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [reloadKey]);
+
+  const d = data || {};
+  const threatTrend = trend(d.threats_24h, d.threats_prev);
+  const failedTrend = trend(d.failed_24h, d.failed_prev);
 
   const STATS = [
     {
       id: 'threats',
       theme: 'purple',
       label: 'Threats Blocked',
-      value: failedLoginCount,
-      trendText: '0%',
-      trendTone: 'good',
+      value: d.threats_total ?? 0,
+      sub: `${d.threats_24h ?? 0} in the last 24 hours`,
+      trendText: threatTrend.text,
+      trendTone: threatTrend.tone,
       icon: 'shield',
+      // The only tile with a drill-down: click to see what was blocked.
+      onClick: () => setShowThreats(true),
+      actionLabel: 'View details',
     },
     {
       id: 'users',
       theme: 'blue',
       label: 'Active Users',
-      value: tpsaAdmin.total_users,
-      trendText: '+100%',
+      value: d.active_users ?? 0,
+      sub: `signed in of ${d.total_users ?? 0} registered`,
+      trendText: 'Last 24 hours',
       trendTone: 'good',
       icon: 'users',
     },
@@ -147,9 +175,10 @@ export default function StatsCards() {
       id: 'failed',
       theme: 'orange',
       label: 'Failed Logins',
-      value: failedLoginCount,
-      trendText: '-0%',
-      trendTone: 'bad',
+      value: d.failed_24h ?? 0,
+      sub: 'in the last 24 hours',
+      trendText: failedTrend.text,
+      trendTone: failedTrend.tone,
       icon: 'alert',
     },
     // {
@@ -168,9 +197,32 @@ export default function StatsCards() {
     <section className="tpStats">
       <style>{tpStatsCss}</style>
 
+      {showThreats && (
+        <ThreatsPanel
+          onClose={() => setShowThreats(false)}
+          onCleared={() => setReloadKey((k) => k + 1)}
+        />
+      )}
+
       <div className="tpStats__grid">
         {STATS.map((s) => (
-          <div key={s.id} className={`tpStats__card tpStats__card--${s.theme}`}>
+          <div
+            key={s.id}
+            className={`tpStats__card tpStats__card--${s.theme}${s.onClick ? ' is-clickable' : ''}`}
+            {...(s.onClick
+              ? {
+                  role: 'button',
+                  tabIndex: 0,
+                  onClick: s.onClick,
+                  onKeyDown: (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      s.onClick();
+                    }
+                  },
+                }
+              : {})}
+          >
             <div className="tpStats__top">
               <div className={`tpStats__iconBox tpStats__iconBox--${s.theme}`}>
                 <TPStatsIcon
@@ -195,6 +247,10 @@ export default function StatsCards() {
 
             <p className="tpStats__label">{s.label}</p>
             <p className="tpStats__value">{s.value}</p>
+            {s.sub && <p className="tpStats__sub">{s.sub}</p>}
+            {s.actionLabel && (
+              <span className="tpStats__action">{s.actionLabel} &rarr;</span>
+            )}
           </div>
         ))}
 
@@ -241,6 +297,37 @@ export default function StatsCards() {
 }
 
 const tpStatsCss = `
+.tpStats__sub{ margin:4px 0 0; font-size:12px; color:#8a94a6; }
+.tpStats__action{ display:inline-block; margin-top:10px; font-size:12px; font-weight:700; color:#9333ea; }
+.tpStats__card.is-clickable{ cursor:pointer; }
+.tpStats__card.is-clickable:hover{ transform:translateY(-2px); }
+.tpStats__card.is-clickable:focus-visible{ outline:2px solid #814bfe; outline-offset:2px; }
+
+.tpThreats__overlay{ position:fixed; inset:0; background:rgba(15,23,42,.5); display:flex; align-items:center; justify-content:center; z-index:100000; padding:20px; }
+.tpThreats__panel{ background:#fff; border-radius:12px; width:100%; max-width:900px; max-height:82vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(15,23,42,.3); }
+.tpThreats__head{ display:flex; align-items:flex-start; justify-content:space-between; padding:20px 24px; border-bottom:1px solid #e2d8fb; }
+.tpThreats__title{ margin:0; font-size:18px; font-weight:700; color:#1d2327; }
+.tpThreats__sub{ margin:4px 0 0; font-size:13px; color:#9e8cca; }
+.tpThreats__close{ background:none; border:0; font-size:28px; line-height:1; cursor:pointer; color:#9e8cca; padding:0 4px; }
+.tpThreats__close:hover{ color:#1d2327; }
+.tpThreats__body{ overflow:auto; padding:0 24px; flex:1; }
+.tpThreats__error{ margin:16px 24px 0; padding:10px 14px; background:#fdf0f0; color:#c62828; border-radius:6px; font-size:13px; }
+.tpThreats__state{ text-align:center; padding:44px 16px; color:#9e8cca; font-size:13px; display:flex; flex-direction:column; gap:6px; }
+.tpThreats__state strong{ color:#3d444b; }
+.tpThreats__table{ width:100%; border-collapse:collapse; font-size:13px; }
+.tpThreats__table th{ text-align:left; padding:12px 10px; background:#f8f5ff; color:#6d4fd0; font-weight:600; font-size:12px; position:sticky; top:0; }
+.tpThreats__table td{ padding:12px 10px; border-bottom:1px solid #f3f1ff; color:#3d444b; vertical-align:middle; }
+.tpThreats__type{ font-weight:600; color:#1d2327; }
+.tpThreats__table code{ background:#f3f1ff; color:#6d4fd0; padding:2px 7px; border-radius:4px; font-size:12px; }
+.tpThreats__detail{ max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tpThreats__muted{ color:#9e8cca; }
+.tpThreats__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 24px; border-top:1px solid #e2d8fb; }
+.tpThreats__pager{ display:flex; align-items:center; gap:12px; font-size:13px; color:#64748b; }
+.tpThreats__pager button, .tpThreats__clear, .tpThreats__confirm button{ padding:7px 14px; border:1px solid #bba8e7; background:#fff; color:#814bfe; border-radius:4px; cursor:pointer; font-size:13px; }
+.tpThreats__pager button:disabled{ opacity:.45; cursor:default; }
+.tpThreats__confirm{ display:flex; align-items:center; gap:10px; font-size:13px; color:#3d444b; }
+.tpThreats__danger{ background:#fdf0f0 !important; color:#c62828 !important; border-color:#f5b5b5 !important; font-weight:600; }
+
 /* =========================
    Fully scoped styles
    ========================= */

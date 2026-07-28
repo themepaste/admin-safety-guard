@@ -144,6 +144,7 @@ class LimitLoginAttempts implements FeatureInterface {
 
         // Manually denied addresses never see the form at all.
         if ( $this->is_denied_ip() ) {
+            \ThemePaste\SecureAdmin\Classes\ThreatLog::report( 'ip_denied' );
             $this->deny(
                 __( 'Your IP address is not permitted to sign in to this site.', 'admin-safety-guard' ),
                 __( 'Login Blocked', 'admin-safety-guard' )
@@ -332,6 +333,12 @@ class LimitLoginAttempts implements FeatureInterface {
         }
 
         if ( $just_locked ) {
+            \ThemePaste\SecureAdmin\Classes\ThreatLog::report(
+                $lockouts >= $max_lockouts ? 'ip_blocked' : 'login_lockout',
+                $username,
+                $ip
+            );
+
             $this->maybe_notify_admin( $ip, $user_agent, $username, $now, $lockouts >= $max_lockouts );
         }
 

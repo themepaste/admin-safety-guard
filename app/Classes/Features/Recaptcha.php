@@ -417,6 +417,8 @@ class Recaptcha implements FeatureInterface {
         $body = json_decode( wp_remote_retrieve_body( $response ), true );
 
         if ( empty( $body['success'] ) ) {
+            \ThemePaste\SecureAdmin\Classes\ThreatLog::report( 'recaptcha_fail' );
+
             return new WP_Error( 'recaptcha_invalid', __( 'reCAPTCHA verification failed.', 'admin-safety-guard' ) );
         }
 
