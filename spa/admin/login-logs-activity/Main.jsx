@@ -4,10 +4,20 @@ import './assets/style.css';
 import FailedLogins from './components/FailedLogins';
 import SuccessfulLogins from './components/SuccessfulLogins';
 import BlockUsers from './components/BlockUsers';
+import SummaryCards from './components/shared/SummaryCards';
+
+const TABS = [
+  { id: 'SuccessfulLogins', label: 'Successful sign-ins' },
+  { id: 'FailedLogins', label: 'Failed sign-ins' },
+  { id: 'BlockUsers', label: 'Blocked addresses' },
+];
 
 function Main() {
   const [activeComponent, setActiveComponent] = useState('SuccessfulLogins');
   const [loading, setLoading] = useState(true);
+  // Bumped whenever a block/release happens so the tiles recount.
+  const [refreshKey, setRefreshKey] = useState(0);
+  const onChanged = () => setRefreshKey((k) => k + 1);
 
   // Update the active component based on the URL hash during initial load
   useEffect(() => {
@@ -45,13 +55,12 @@ function Main() {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'BlockUsers':
-        return <BlockUsers />;
+        return <BlockUsers onChanged={onChanged} />;
       case 'FailedLogins':
-        return <FailedLogins />;
+        return <FailedLogins onChanged={onChanged} />;
       case 'SuccessfulLogins':
-        return <SuccessfulLogins />;
       default:
-        return <SuccessfulLogins />;
+        return <SuccessfulLogins onChanged={onChanged} />;
     }
   };
 
@@ -63,37 +72,32 @@ function Main() {
   return (
     <>
       <div className="tpsa-login-log-activity-wrapper">
+        <SummaryCards refreshKey={refreshKey} onNavigate={setActiveComponent} />
+
         <div className="tpsa-login-log-activity-header">
-          <div className="tpsa-login-log-activity-tabs">
-            <button
-              className={activeComponent === 'BlockUsers' ? 'active' : ''}
-              type="button"
-              onClick={() => setActiveComponent('BlockUsers')}
-            >
-              Blocked Users
-            </button>
-            <button
-              className={activeComponent === 'FailedLogins' ? 'active' : ''}
-              type="button"
-              onClick={() => setActiveComponent('FailedLogins')}
-            >
-              Failed Logins
-            </button>
-            <button
-              className={activeComponent === 'SuccessfulLogins' ? 'active' : ''}
-              type="button"
-              onClick={() => setActiveComponent('SuccessfulLogins')}
-            >
-              Successful Logins
-            </button>
+          <div className="tpsa-login-log-activity-tabs" role="tablist">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={activeComponent === tab.id}
+                className={activeComponent === tab.id ? 'active' : ''}
+                type="button"
+                onClick={() => setActiveComponent(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
-          <div class="tp-feature">
-            <button class="tp-help-icon">?</button>
-            <div class="tp-tooltip">
+          <div className="tp-feature">
+            <button className="tp-help-icon" type="button">
+              ?
+            </button>
+            <div className="tp-tooltip">
               <p>
-                This feature records login attempts and admin interactions,
-                empowering you to audit usage patterns and identify suspicious
-                behaviors fast.
+                Every sign-in and failed attempt is recorded here with the
+                address and device used. Block an address straight from the
+                table, or export the log as CSV for an audit.
               </p>
             </div>
           </div>

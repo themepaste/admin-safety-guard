@@ -1,199 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import QuestionMarkTooltip from '../../../part/QuestionMarkTooltip';
+import React from 'react';
+import LogTable from '../shared/LogTable';
+import UserAgentCell from '../shared/UserAgentCell';
+import TimeCell from '../shared/TimeCell';
+import IpCell from '../shared/IpCell';
 
-const SuccessfulLogins = () => {
-    const [loginData, setLoginData] = useState([]);
-    const [totalEntries, setTotalEntries] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+const columns = [
+  {
+    key: 'username',
+    label: 'Account',
+    render: (row) => (
+      <span className="tpsa-log__account">
+        <strong>{row.username}</strong>
+        {Number(row.login_count) > 1 && (
+          <span className="tpsa-log__muted"> · {row.login_count} sign-ins</span>
+        )}
+        {Number(row.is_new_ip) === 1 && (
+          <span className="tpsa-log__flag" title="This account had not signed in from this IP address before">
+            New location
+          </span>
+        )}
+      </span>
+    ),
+  },
+  { key: 'ip_address', label: 'IP address', render: (row) => <IpCell ip={row.ip_address} /> },
+  { key: 'user_agent', label: 'Device', render: (row) => <UserAgentCell raw={row.user_agent} /> },
+  { key: 'login_time', label: 'When', render: (row) => <TimeCell value={row.login_time} /> },
+];
 
-    const [itemsPerPage, setItemsPerPage] = useState(10);
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString.replace(' ', 'T'));
-        return date.toLocaleString('en-US', {
-            month: 'long', // July
-            day: 'numeric', // 3
-            year: 'numeric', // 2025
-            hour: 'numeric', // 11
-            minute: '2-digit', // 17
-            hour12: true, // am/pm
-        });
-    };
-
-    const fetchData = async () => {
-        setLoading(false);
-        setError(null);
-        try {
-            const params = new URLSearchParams({
-                page: currentPage,
-                limit: itemsPerPage,
-            });
-
-            // Add search param only if searchTerm is not empty
-            if (searchTerm.trim() !== '') {
-                params.append('s', searchTerm.trim());
-            }
-
-            const response = await fetch(
-                `${
-                    tpsaAdmin.rest_url
-                }secure-admin/v1/success-logins?${params.toString()}`,
-                {
-                    method: 'GET',
-                    headers: { 'X-WP-Nonce': tpsaAdmin.rest_nonce },
-                    credentials: 'include',
-                }
-            );
-
-            if (!response.ok) throw new Error('Failed to fetch data');
-
-            const json = await response.json();
-
-            setLoginData(json.data || []);
-            setTotalEntries(json.total || 0);
-        } catch (err) {
-            setError(err.message || 'Unknown error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [currentPage, searchTerm, itemsPerPage]);
-
-    const totalPages = Math.ceil(totalEntries / itemsPerPage);
-
-    const handlePrevPage = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
-
-    const handleNextPage = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
-
-    return (
-        <div className="tpsa-login-log-activity">
-            {loading ? (
-                <div className="tpsa-preloader">
-                    Loading...{' '}
-                    <img
-                        src={tpsaAdmin.assets_url + '/admin/img/preloader.gif'}
-                        alt="abc"
-                    />{' '}
-                </div>
-            ) : error ? (
-                <p style={{ color: 'red' }}>Error: {error}</p>
-            ) : (
-                <>
-                    <h1>Successful Logins</h1>
-                    <div className="tpsa-login-log-activity-header">
-                        <div className="tpsa-login-log-activity-items-per-page">
-                            <label>Items per page: </label>
-                            <select
-                                value={itemsPerPage}
-                                onChange={(e) =>
-                                    setItemsPerPage(Number(e.target.value))
-                                }
-                            >
-                                <option value="1">1</option>
-                                <option value="3">3</option>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                        </div>
-                        <div className="tpsa-login-log-activity-search">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={(e) => {
-                                    setSearchTerm(e.target.value);
-                                    setCurrentPage(1);
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <>
-                        <table className="tpsa-table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Username /{' '}
-                                        <span style={{ fontSize: '12px' }}>
-                                            Login Count
-                                        </span>
-                                    </th>
-                                    <th>
-                                        User Agent{' '}
-                                        <QuestionMarkTooltip message="Showing last login user agent only" />{' '}
-                                    </th>
-                                    <th>
-                                        IP Address{' '}
-                                        <QuestionMarkTooltip message="Showing last login IP address only" />
-                                    </th>
-                                    <th>
-                                        Date & Time{' '}
-                                        <QuestionMarkTooltip message="Showing last login date & time only" />{' '}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {loginData.length > 0 ? (
-                                    loginData.map((login) => (
-                                        <tr key={login.id}>
-                                            <td>
-                                                {login.username} / (
-                                                {login.login_count})
-                                            </td>
-                                            <td>{login.user_agent}</td>
-                                            <td>{login.ip_address}</td>
-                                            <td>
-                                                {formatDate(login.login_time)}
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7">
-                                            No results available in table
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-
-                        <div className="tpsa-login-log-activity-pagination">
-                            <button
-                                onClick={handlePrevPage}
-                                disabled={currentPage === 1}
-                            >
-                                Previous
-                            </button>
-                            <span>
-                                Page {currentPage} of {totalPages || 1}
-                            </span>
-                            <button
-                                onClick={handleNextPage}
-                                disabled={
-                                    currentPage === totalPages ||
-                                    totalEntries === 0
-                                }
-                            >
-                                Next
-                            </button>
-                        </div>
-                    </>
-                </>
-            )}
-        </div>
-    );
-};
-
-export default SuccessfulLogins;
+export default function SuccessfulLogins({ onChanged }) {
+  return (
+    <LogTable
+      title="Successful sign-ins"
+      endpoint="success-logins"
+      exportType="success"
+      columns={columns}
+      action="block"
+      onChanged={onChanged}
+      emptyMessage="No sign-ins recorded yet."
+      emptyHint="Every successful sign-in is logged here, including the device and location used."
+    />
+  );
+}

@@ -25,6 +25,13 @@ class BlockUsersController extends BaseController {
     }
 
     /**
+     * @return string
+     */
+    protected function get_time_column(): string {
+        return 'login_time';
+    }
+
+    /**
      * Returns a paginated list of blocked users.
      *
      * @param WP_REST_Request $request

@@ -4,6 +4,7 @@ namespace ThemePaste\SecureAdmin\Classes;
 
 use ThemePaste\SecureAdmin\Classes\APIs\BlockUsersController;
 use ThemePaste\SecureAdmin\Classes\APIs\FailedLoginsController;
+use ThemePaste\SecureAdmin\Classes\APIs\MonitorController;
 use ThemePaste\SecureAdmin\Classes\APIs\Reports;
 use ThemePaste\SecureAdmin\Classes\APIs\SuccessLoginsController;
 use ThemePaste\SecureAdmin\Classes\APIs\TwoFAByAppUsers;
@@ -89,6 +90,85 @@ class RestApi {
                 'permission_callback' => function ( $request ) {
                     return FailedLoginsController::get()->authorize_request( $request );
                 },
+            ]
+        );
+
+        // --- Monitoring: counters, actions and export -----------------------
+        $monitor = function () {
+            return MonitorController::get();
+        };
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/monitor/summary',
+            [
+                'methods'             => 'GET',
+                'callback'            => function ( $request ) use ( $monitor ) {
+                    return $monitor()->get_summary( $request );
+                },
+                'permission_callback' => function ( $request ) use ( $monitor ) {
+                    return $monitor()->authorize_request( $request );
+                },
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/monitor/block',
+            [
+                'methods'             => 'POST',
+                'callback'            => function ( $request ) use ( $monitor ) {
+                    return $monitor()->block_ip( $request );
+                },
+                'permission_callback' => function ( $request ) use ( $monitor ) {
+                    return $monitor()->authorize_request( $request );
+                },
+                'args'                => [
+                    'ip' => [
+                        'required'          => true,
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/monitor/unblock',
+            [
+                'methods'             => 'POST',
+                'callback'            => function ( $request ) use ( $monitor ) {
+                    return $monitor()->unblock_ip( $request );
+                },
+                'permission_callback' => function ( $request ) use ( $monitor ) {
+                    return $monitor()->authorize_request( $request );
+                },
+                'args'                => [
+                    'ip' => [
+                        'required'          => true,
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            'secure-admin/v1',
+            '/monitor/export',
+            [
+                'methods'             => 'GET',
+                'callback'            => function ( $request ) use ( $monitor ) {
+                    return $monitor()->export_csv( $request );
+                },
+                'permission_callback' => function ( $request ) use ( $monitor ) {
+                    return $monitor()->authorize_request( $request );
+                },
+                'args'                => [
+                    'type' => [
+                        'required'          => true,
+                        'sanitize_callback' => 'sanitize_key',
+                    ],
+                ],
             ]
         );
 

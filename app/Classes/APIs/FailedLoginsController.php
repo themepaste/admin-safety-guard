@@ -26,6 +26,13 @@ class FailedLoginsController extends BaseController {
     }
 
     /**
+     * @return string
+     */
+    protected function get_time_column(): string {
+        return 'last_login_time';
+    }
+
+    /**
      * Returns a paginated list of failed login records.
      *
      * @param WP_REST_Request $request

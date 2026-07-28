@@ -247,7 +247,14 @@ if ( !function_exists( 'tpsa_settings_fields' ) ) {
                 ),
                 'login-logs-activity'  => array(
                     'fields' => array(
-
+                        'notify-new-ip' => array(
+                            'type'    => 'switch',
+                            'label'   => __( 'Alert On New Admin Location', 'admin-safety-guard' ),
+                            'class'   => '',
+                            'id'      => '',
+                            'desc'    => __( 'Email you when an administrator signs in from an IP address never used before — an early sign of a stolen password. One alert per account and address per day.', 'admin-safety-guard' ),
+                            'default' => 0,
+                        ),
                     ),
                 ),
                 'recaptcha'            => array(

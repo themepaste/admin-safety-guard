@@ -23,6 +23,13 @@ class SuccessLoginsController extends BaseController {
     }
 
     /**
+     * @return string
+     */
+    protected function get_time_column(): string {
+        return 'login_time';
+    }
+
+    /**
      * Returns a paginated list of successful login records.
      *
      * @param WP_REST_Request $request

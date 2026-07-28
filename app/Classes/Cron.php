@@ -30,6 +30,16 @@ class Cron {
      */
     const FAILED_LOGIN_RETENTION_DAYS = 30;
 
+    /**
+     * How long successful-login history is retained, in days.
+     *
+     * Successful sign-ins are appended one row per event, so without a
+     * retention window this table grows for the life of the site.
+     *
+     * @var int
+     */
+    const SUCCESS_LOGIN_RETENTION_DAYS = 90;
+
     public function __construct() {
         $this->action( 'init', [$this, 'schedule_event'] );
         $this->action( self::EVENT, [$this, 'cleanup'] );
@@ -85,6 +95,15 @@ class Cron {
             $wpdb->prepare(
                 "DELETE FROM {$failed_table} WHERE last_login_time < %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 wp_date( 'Y-m-d H:i:s', time() - ( self::FAILED_LOGIN_RETENTION_DAYS * DAY_IN_SECONDS ) )
+            )
+        );
+
+        // Same for the sign-in audit trail, which now records one row per event.
+        $success_table = get_tpsa_db_table_name( 's_logins' );
+        $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$success_table} WHERE login_time < %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                wp_date( 'Y-m-d H:i:s', time() - ( self::SUCCESS_LOGIN_RETENTION_DAYS * DAY_IN_SECONDS ) )
             )
         );
     }

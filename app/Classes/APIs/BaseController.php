@@ -59,6 +59,37 @@ abstract class BaseController {
     }
 
     /**
+     * Column used by the `range` time filter, if the table supports one.
+     *
+     * @return string Empty string disables range filtering.
+     */
+    protected function get_time_column(): string {
+        return '';
+    }
+
+    /**
+     * Translate a `range` parameter into a site-local cut-off datetime.
+     *
+     * @param string $range One of 24h, 7d, 30d. Anything else means no limit.
+     * @return string Empty string when unbounded.
+     */
+    protected function range_to_datetime( string $range ): string {
+        $windows = [
+            '24h' => DAY_IN_SECONDS,
+            '7d'  => 7 * DAY_IN_SECONDS,
+            '30d' => 30 * DAY_IN_SECONDS,
+        ];
+
+        if ( !isset( $windows[$range] ) ) {
+            return '';
+        }
+
+        // Rows are written with current_time( 'mysql' ), so the cut-off has to
+        // be site-local too.
+        return wp_date( 'Y-m-d H:i:s', time() - $windows[$range] );
+    }
+
+    /**
      * Generic method to return a paginated list of records from a specified table.
      *
      * @param WP_REST_Request $request
@@ -96,7 +127,7 @@ abstract class BaseController {
         // already-prepared fragment a second time makes wpdb re-scan the escaped
         // values for printf placeholders, which breaks on any search term
         // containing a '%'.
-        $where_sql = '';
+        $clauses = [];
         $where_values = [];
 
         if ( '' !== $search ) {
@@ -110,9 +141,20 @@ abstract class BaseController {
             }
 
             if ( $conditions ) {
-                $where_sql = 'WHERE ' . implode( ' OR ', $conditions );
+                $clauses[] = '(' . implode( ' OR ', $conditions ) . ')';
             }
         }
+
+        // Optional time window, e.g. only the last 24 hours.
+        $time_column = $this->get_time_column();
+        $since = $this->range_to_datetime( sanitize_key( (string) $request->get_param( 'range' ) ) );
+
+        if ( '' !== $time_column && '' !== $since ) {
+            $clauses[] = '`' . str_replace( '`', '', $time_column ) . '` >= %s';
+            $where_values[] = $since;
+        }
+
+        $where_sql = $clauses ? 'WHERE ' . implode( ' AND ', $clauses ) : '';
 
         // Get total number of filtered records
         $count_sql = "SELECT COUNT(*) FROM {$full_table_name} {$where_sql}";

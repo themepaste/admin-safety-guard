@@ -123,6 +123,7 @@ class Install {
             ip_address VARCHAR(45) NOT NULL,
             login_time DATETIME NOT NULL,
             login_count INT UNSIGNED NOT NULL DEFAULT 1,
+            is_new_ip TINYINT(1) NOT NULL DEFAULT 0,
             PRIMARY KEY (id),
             KEY username (username),
             KEY login_time (login_time)

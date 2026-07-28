@@ -129,3 +129,212 @@
     border-bottom: 1px solid #bba8e7;
     padding-bottom: 10px;
 }
+
+/* ===================================================================
+   Monitoring screen
+   Palette matched to the plugin shell: #814bfe primary, #e2d8fb /
+   #bba8e7 borders, #f3f1ff tints, 4px button radius.
+   =================================================================== */
+
+/* Settings form sits above the log — separate the two clearly so the
+   Save button never butts up against the summary tiles. */
+.tpsa-monitor-settings {
+    padding-bottom: 30px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid #ece6f9;
+}
+.tpsa-monitor-settings .tpsa-setting-row { margin-bottom: 0; }
+/* Beats the global ".tpsa-setting-wrapper .tpsa-save-button { margin-top:50px }"
+   on specificity rather than relying on stylesheet order, since this file is
+   injected at runtime by style-loader. */
+.tpsa-setting-wrapper .tpsa-monitor-settings .tpsa-save-button { margin-top: 24px; }
+
+/* --- summary tiles --- */
+.tpsa-sum { margin-bottom: 30px; }
+
+.tpsa-sum__alert {
+    background: #fff8e6;
+    border: 1px solid #ffd88a;
+    color: #8a5a00;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+.tpsa-sum__alert a { color: #814bfe; font-weight: 600; }
+
+.tpsa-sum__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 16px;
+}
+
+.tpsa-sum__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 18px 20px;
+    border: 1px solid #e2d8fb;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .16s ease, box-shadow .16s ease;
+}
+.tpsa-sum__card:hover {
+    border-color: #bba8e7;
+    box-shadow: 0 6px 18px rgba(129, 75, 254, .10);
+}
+
+/* Quiet by default; colour only when there is something to look at. */
+.tpsa-sum__icon { color: #bba8e7; margin-bottom: 6px; }
+.tpsa-sum__icon svg { width: 18px; height: 18px; }
+.tpsa-sum__value { font-size: 26px; font-weight: 700; color: #1d2327; line-height: 1.15; }
+.tpsa-sum__label { font-size: 13px; font-weight: 600; color: #3d444b; }
+.tpsa-sum__sub { font-size: 11px; color: #9e8cca; }
+
+.tpsa-sum__card.is-warn   { border-color: #ffd88a; background: #fffdf7; }
+.tpsa-sum__card.is-warn .tpsa-sum__icon,
+.tpsa-sum__card.is-warn .tpsa-sum__value { color: #b8730a; }
+.tpsa-sum__card.is-danger { border-color: #f5b5b5; background: #fffafa; }
+.tpsa-sum__card.is-danger .tpsa-sum__icon,
+.tpsa-sum__card.is-danger .tpsa-sum__value { color: #c62828; }
+
+.tpsa-sum__offender { margin: 16px 0 0; font-size: 12px; color: #9e8cca; }
+.tpsa-sum__offender code {
+    background: #f3f1ff; color: #814bfe;
+    padding: 2px 7px; border-radius: 4px; font-size: 12px;
+}
+
+/* --- log table --- */
+.tpsa-log__head {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+}
+.tpsa-log__title { margin: 0; font-size: 17px; font-weight: 600; color: #1d2327; }
+.tpsa-log__count {
+    display: inline-block; margin-left: 8px; padding: 2px 9px;
+    background: #f3f1ff; color: #814bfe;
+    border-radius: 999px; font-size: 12px; font-weight: 700; vertical-align: middle;
+}
+
+.tpsa-log__tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.tpsa-log__search { position: relative; display: inline-flex; align-items: center; }
+.tpsa-log__search input {
+    padding: 8px 12px 8px 32px; border: 1px solid #bba8e7;
+    border-radius: 6px; font-size: 13px; min-width: 220px; color: #1d2327;
+}
+.tpsa-log__search input:focus { outline: none; border-color: #814bfe; box-shadow: 0 0 0 2px #ece6f9; }
+.tpsa-log__searchIcon {
+    position: absolute; left: 11px; width: 14px; height: 14px; color: #bba8e7; pointer-events: none;
+}
+
+.tpsa-log__select {
+    padding: 8px 12px; border: 1px solid #bba8e7; border-radius: 6px;
+    font-size: 13px; background: #fff; color: #1d2327;
+}
+.tpsa-log__select:focus { outline: none; border-color: #814bfe; }
+
+.tpsa-log__iconBtn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border: 1px solid #bba8e7;
+    background: #fff; border-radius: 6px; cursor: pointer; color: #814bfe;
+}
+.tpsa-log__iconBtn:hover { background: #f3f1ff; }
+.tpsa-log__iconBtn svg { width: 15px; height: 15px; }
+.tpsa-log__iconBtn svg.is-spinning { animation: tpsa-spin 1s linear infinite; }
+@keyframes tpsa-spin { to { transform: rotate(360deg); } }
+
+.tpsa-log__notice {
+    padding: 11px 15px; border-radius: 6px; font-size: 13px; margin-bottom: 16px;
+}
+.tpsa-log__notice.is-success { background: #eafaf0; color: #1f7a45; border: 1px solid #b7e6c9; }
+.tpsa-log__notice.is-error   { background: #fdf0f0; color: #c62828; border: 1px solid #f5b5b5; }
+.tpsa-log__notice.is-warn    { background: #fff8e6; color: #8a5a00; border: 1px solid #ffd88a; }
+.tpsa-log__notice a { color: #814bfe; font-weight: 600; }
+
+.tpsa-log__tableWrap { overflow-x: auto; border: 1px solid #e2d8fb; border-radius: 10px; }
+.tpsa-log__table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tpsa-log__table th {
+    text-align: left; padding: 12px 16px; background: #f8f5ff;
+    color: #6d4fd0; font-weight: 600; font-size: 12px;
+    border-bottom: 1px solid #e2d8fb; white-space: nowrap;
+}
+.tpsa-log__table td {
+    padding: 13px 16px; border-bottom: 1px solid #f3f1ff;
+    color: #3d444b; vertical-align: middle;
+}
+.tpsa-log__table tbody tr:last-child td { border-bottom: 0; }
+.tpsa-log__table tbody tr:hover { background: #fdfcff; }
+
+.tpsa-log__state { text-align: center; padding: 36px 16px !important; color: #9e8cca; }
+.tpsa-log__state strong { display: block; color: #3d444b; margin-bottom: 4px; }
+.tpsa-log__stateHint { font-size: 12px; color: #9e8cca; }
+
+.tpsa-log__muted { color: #9e8cca; }
+.tpsa-log__account strong { color: #1d2327; }
+
+.tpsa-log__flag {
+    display: inline-block; margin-left: 6px; padding: 2px 8px;
+    background: #fff8e6; color: #8a5a00;
+    border-radius: 999px; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .03em; vertical-align: middle;
+}
+.tpsa-log__flag.is-danger { background: #fdf0f0; color: #c62828; }
+
+.tpsa-log__ip { display: inline-flex; align-items: center; gap: 6px; }
+.tpsa-log__ip code {
+    background: #f3f1ff; color: #6d4fd0;
+    padding: 3px 8px; border-radius: 4px; font-size: 12px;
+}
+.tpsa-log__copy {
+    border: 0; background: none; cursor: pointer; padding: 2px;
+    color: #bba8e7; display: inline-flex; line-height: 1;
+}
+.tpsa-log__copy:hover { color: #814bfe; }
+.tpsa-log__copy svg { width: 13px; height: 13px; }
+
+.tpsa-log__ua { cursor: help; border-bottom: 1px dotted #d8cdf3; }
+.tpsa-log__time { cursor: help; white-space: nowrap; }
+
+.tpsa-log__actionCol { text-align: right; white-space: nowrap; }
+.tpsa-log__action {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 4px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid transparent;
+}
+.tpsa-log__action svg { width: 13px; height: 13px; }
+.tpsa-log__action.is-block { background: #fdf0f0; color: #c62828; border-color: #f5b5b5; }
+.tpsa-log__action.is-block:hover { background: #fbe3e3; }
+.tpsa-log__action.is-release { background: #eafaf0; color: #1f7a45; border-color: #b7e6c9; }
+.tpsa-log__action.is-release:hover { background: #d8f3e3; }
+.tpsa-log__action:disabled { opacity: .5; cursor: default; }
+
+.tpsa-log__pager {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; margin-top: 20px; font-size: 13px; color: #64748b;
+}
+.tpsa-log__pager button {
+    padding: 8px 16px; border: 1px solid #bba8e7; background: #fff;
+    border-radius: 4px; cursor: pointer; font-size: 13px; color: #814bfe;
+}
+.tpsa-log__pager button:hover:not(:disabled) { background: #f3f1ff; }
+.tpsa-log__pager button:disabled { opacity: .45; cursor: default; color: #9e8cca; }
+
+/* Stack into cards on narrow screens rather than scrolling sideways. */
+@media (max-width: 782px) {
+    .tpsa-log__table thead { display: none; }
+    .tpsa-log__table, .tpsa-log__table tbody,
+    .tpsa-log__table tr, .tpsa-log__table td { display: block; width: 100%; }
+    .tpsa-log__table tr { border-bottom: 1px solid #e2d8fb; padding: 8px 0; }
+    .tpsa-log__table td { border: 0; padding: 6px 16px; }
+    .tpsa-log__table td::before {
+        content: attr(data-label); display: block;
+        font-size: 10px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: .04em; color: #9e8cca; margin-bottom: 3px;
+    }
+    .tpsa-log__actionCol { text-align: left; }
+    .tpsa-log__search input { min-width: 0; width: 100%; }
+}
