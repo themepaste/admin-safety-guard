@@ -733,3 +733,11 @@
 .tpsa-support__doneActions { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
 .tpsa-support__link { font-size: 13px; color: #814bfe; text-decoration: none; }
 .tpsa-support__link:hover { text-decoration: underline; }
+
+/* --- Sidebar-less screens ------------------------------------------------
+   .tpsa-main-wrapper reserves 320px for the settings sidebar. Screens that do
+   not render one (the Pro license page) opt out, so the content fills the
+   page instead of leaving that space blank. */
+.tp-secure-admin_container.is-full .tpsa-main-wrapper {
+    width: 100%;
+}

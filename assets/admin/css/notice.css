@@ -151,3 +151,23 @@
     letter-spacing: .04em;
     vertical-align: 1px;
 }
+
+/* --- Pro upsell / license variant --------------------------------------
+   Same shell as the security notice, but this is an invitation rather than a
+   warning: gold accent, no red issue dots, and body copy instead of a list. */
+.tpsa-notice--pro .tpsa-notice__bar {
+    background: linear-gradient(180deg, #f59e0b, #fbbf24);
+}
+
+.tpsa-notice--pro .tpsa-notice__icon {
+    background: #fff8e6;
+    color: #b8730a;
+}
+
+.tpsa-notice .tpsa-notice__text {
+    margin: 0 0 12px !important;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #64748b;
+    max-width: 70ch;
+}
