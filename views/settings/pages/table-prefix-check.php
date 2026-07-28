@@ -321,6 +321,8 @@ $ajax_url = admin_url( 'admin-ajax.php' );
         data.append( 'action', 'table_prefix_change' );
         data.append( 'nonce',  nonce );
         data.append( 'prefix', newPrefix );
+        // Re-checked server-side; the browser check alone is not enough.
+        data.append( 'confirm', confirmInput.value.trim() );
 
         fetch( ajaxUrl, { method: 'POST', credentials: 'same-origin', body: data } )
             .then( function ( r ) { return r.json(); } )
