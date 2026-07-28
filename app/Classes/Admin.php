@@ -186,6 +186,10 @@ class Admin {
                 $localize['login_templates'] = login_page_templates();
             }
 
+            if ( $current_setting_screen === 'firewall-malware' ) {
+                $localize['companion'] = $this->get_companion_plugin_data();
+            }
+
             $this->localize_script( 'tpsa-admin', 'tpsaAdmin', $localize );
         }
 
@@ -211,6 +215,45 @@ class Admin {
                 ],
             ] );
         }
+    }
+
+    /**
+     * State of the Deep Malware Cleaner companion plugin.
+     *
+     * Malware scanning and cleanup are handled by that separate free plugin
+     * rather than duplicated here, so the Firewall & Malware screen needs to
+     * know whether it is already installed and active in order to show the
+     * right call to action.
+     *
+     * @return array
+     */
+    private function get_companion_plugin_data() {
+        $basename = 'deep-malware-cleaner/deep-malware-cleaner.php';
+        $slug = 'deep-malware-cleaner';
+
+        if ( !function_exists( 'get_plugins' ) ) {
+            include_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        $installed = array_key_exists( $basename, get_plugins() );
+        $active = $installed && is_plugin_active( $basename );
+
+        return [
+            'name'          => 'Deep Malware Cleaner',
+            'installed'     => $installed,
+            'active'        => $active,
+            // Where to go once it is running.
+            'dashboard_url' => admin_url( 'admin.php?page=' . $slug ),
+            // Native install screen: keeps the user inside wp-admin.
+            'install_url'   => current_user_can( 'install_plugins' )
+            ? admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $slug )
+            : '',
+            // Installed but switched off.
+            'plugins_url'   => current_user_can( 'activate_plugins' )
+            ? admin_url( 'plugins.php?s=' . rawurlencode( 'Deep Malware Cleaner' ) . '&plugin_status=all' )
+            : '',
+            'wporg_url'     => 'https://wordpress.org/plugins/' . $slug . '/',
+        ];
     }
 
     /**

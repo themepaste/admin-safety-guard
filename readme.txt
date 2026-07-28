@@ -68,7 +68,7 @@ The WordPress XML-RPC interface is a common target for brute-force and DDoS ampl
 Replace the default WordPress logo on the login page with your own logo. Set the logo width, height, and URL. Choose from pre-built login page templates to give your login form a professional, branded appearance. This is especially useful for agencies delivering client sites and for anyone who wants a polished, consistent look.
 
 **Firewall & Malware Overview**
-The Firewall & Malware section gives you a central view of your site’s firewall and malware protection status. It shows all related features in one place so you can see what is active and what still needs attention, making it easy to build up your security layer by layer.
+The Firewall & Malware section gives you a central view of your site’s firewall status, and links to our free [Deep Malware Cleaner](https://wordpress.org/plugins/deep-malware-cleaner/) plugin for malware scanning and cleanup. It shows what is active and what still needs attention, making it easy to build up your security layer by layer.
 
 ---
 
@@ -91,8 +91,11 @@ The default WordPress database prefix `wp_` is well-known to attackers and makes
 **Strong Password Enforcement**
 Set a minimum password strength policy for your users. When they update their password, it must meet your requirements — rejecting weak, guessable passwords before they become a security risk.
 
-**Advanced Firewall & Malware Scanner**
-Scan your WordPress files and database for known malware signatures, suspicious code injections, and modified core files. Get alerts when threats are detected and take action directly from the plugin dashboard.
+**Advanced Web Application Firewall**
+Inspect incoming requests and block common SQL injection and cross-site scripting payloads before they reach WordPress. Choose monitor-only or block mode, whitelist trusted IPs, block specific IPs and user agents, and cap request size.
+
+**Malware Scanning & Cleanup**
+Malware scanning and removal are handled by our dedicated free plugin, [Deep Malware Cleaner](https://wordpress.org/plugins/deep-malware-cleaner/), which covers both scanning and cleanup in one place. Admin Safety Guard links to it from the Firewall & Malware screen rather than shipping a second, more limited scanner.
 
 > **[Upgrade to Pro](https://themepaste.com/product/admin-safety-guard-pro)** to unlock all Pro features.
 
@@ -139,7 +142,7 @@ Fine-tune every setting — login attempt limits, lockout durations, OTP email t
 5. Limit Login Attempts settings — configure max attempts, lockout duration, and blocked message
 6. Custom Login URL settings — set a hidden login slug, redirect URL, and logout redirect
 7. Google reCAPTCHA settings — choose v2 or v3, enter site key and secret key
-8. Firewall & Malware overview — central view of firewall and malware protection status
+8. Firewall & Malware overview — firewall status and a link to the free Deep Malware Cleaner plugin
 9. Login Logs & Activity Tracking — searchable table of successful and failed logins with IP and timestamp
 10. Privacy Hardening — one-click toggle to disable XML-RPC
 11. Login Page Customisation — upload your logo, set dimensions, and choose a login template
@@ -171,7 +174,7 @@ The plugin will automatically enable Limit Login Attempts with sensible defaults
 == Frequently Asked Questions ==
 
 **Q: Is Admin Safety Guard free?**
-A: Yes. All features listed under "Free Features" above are completely free with no usage limits or hidden costs. A Pro version is available for advanced features such as magic link login, mobile app 2FA, social login, and malware scanning.
+A: Yes. All features listed under "Free Features" above are completely free with no usage limits or hidden costs. A Pro version is available for advanced features such as magic link login, mobile app 2FA, social login, and the web application firewall.
 
 **Q: Will this plugin slow down my WordPress site?**
 A: No. Admin Safety Guard only loads its JavaScript and CSS assets on the plugin’s own settings pages inside the admin area. It adds zero weight to your site’s front-end pages. Security checks (like login attempt limits and custom URL routing) are handled in PHP with minimal overhead.

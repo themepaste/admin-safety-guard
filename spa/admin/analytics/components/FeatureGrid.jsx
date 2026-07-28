@@ -93,18 +93,6 @@ const defaultFeatures = [
       'admin.php?page=tp-admin-safety-guard&tab=firewall-malware&tpsa-setting=web-application-firewall',
   },
   {
-    id: 'advanced-malware-scanner',
-    category: 'firewall',
-    name: 'Malware Scanner',
-    description: 'Automated scanning',
-    icon: Scan,
-    // stats: { value: '0', label: 'Files Scanned' },
-    url:
-      admin_url +
-      'admin.php?page=tp-admin-safety-guard&tab=firewall-malware&tpsa-setting=advanced-malware-scanner',
-    isPro: true,
-  },
-  {
     id: 'login-logs-activity',
     category: 'monitoring',
     name: 'Login Logs & Activity',
