@@ -19,8 +19,49 @@ class Install {
         $this->action( 'admin_post_admin_safety_guard_deactivate', [$this, 'handle_deactivate'] );
 
         // Safety net: apply schema changes that ship via a plugin update, where the
-        // activation hook does not re-fire. Idempotent and version-gated.
+        // activation hook does not re-fire. Idempotent and version-gated. This is
+        // also what provisions the tables on each site of a multisite network,
+        // since options (including tpsa_version) are per-site.
         $this->action( 'plugins_loaded', [$this, 'maybe_upgrade_database'] );
+
+        // Multisite: give a brand-new site its tables at creation time rather
+        // than on whichever request happens to hit it first.
+        $this->action( 'wp_initialize_site', [$this, 'install_for_new_site'], 100, 1 );
+    }
+
+    /**
+     * Provision plugin tables for a newly created site on a network.
+     *
+     * @param \WP_Site|int $site New site object (or ID on older callers).
+     * @return void
+     */
+    public function install_for_new_site( $site ) {
+        if ( !is_multisite() ) {
+            return;
+        }
+
+        // Only relevant when the plugin is active for the whole network; a
+        // per-site activation provisions itself on activation.
+        // wp_initialize_site can fire outside wp-admin (WP-CLI, REST), where
+        // is_plugin_active_for_network() is not loaded yet.
+        if ( !function_exists( 'is_plugin_active_for_network' ) ) {
+            include_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        if ( !is_plugin_active_for_network( TPSA_PLUGIN_BASENAME ) ) {
+            return;
+        }
+
+        $site_id = is_object( $site ) && isset( $site->blog_id ) ? (int) $site->blog_id : (int) $site;
+
+        if ( $site_id <= 0 ) {
+            return;
+        }
+
+        switch_to_blog( $site_id );
+        $this->install_tables();
+        $this->update_db_version();
+        restore_current_blog();
     }
 
     /**
@@ -82,10 +123,15 @@ class Install {
             ip_address VARCHAR(45) NOT NULL,
             login_time DATETIME NOT NULL,
             login_count INT UNSIGNED NOT NULL DEFAULT 1,
-            PRIMARY KEY (id)
+            PRIMARY KEY (id),
+            KEY username (username),
+            KEY login_time (login_time)
             "
         );
 
+        // Every lockout check filters on ip_address, and the cleanup job filters
+        // on the datetime columns. Without these keys each lookup is a full
+        // table scan, which gets slow fast on a site under sustained attack.
         $this->create_table(
             'failed_logins',
             "
@@ -98,7 +144,10 @@ class Install {
             login_attempts INT UNSIGNED NOT NULL DEFAULT 1,
             lockouts INT UNSIGNED NOT NULL DEFAULT 0,
             lockout_time DATETIME DEFAULT NULL,
-            PRIMARY KEY (id)
+            PRIMARY KEY (id),
+            KEY ip_address (ip_address),
+            KEY last_login_time (last_login_time),
+            KEY lockout_time (lockout_time)
             "
         );
 
@@ -109,7 +158,9 @@ class Install {
             user_agent TEXT NOT NULL,
             ip_address VARCHAR(45) NOT NULL,
             login_time DATETIME NOT NULL,
-            PRIMARY KEY (id)
+            PRIMARY KEY (id),
+            KEY ip_address (ip_address),
+            KEY login_time (login_time)
             "
         );
     }

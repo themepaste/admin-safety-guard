@@ -8,7 +8,13 @@
 defined( 'ABSPATH' ) || exit;
 
 $id_base = esc_attr( $args['prefix'] . $args['current_screen_slug'] . '_' . $args['key'] );
-$values  = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : ['']; // At least one field
+$values  = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : [];
+
+// Always render at least one empty row, otherwise a field whose default is an
+// empty array shows no input at all and looks broken.
+if ( empty( $values ) ) {
+    $values = [''];
+}
 ?>
 <div class="tp-field tp-repeater-field"
      data-id-base="<?php echo esc_attr( $id_base ); ?>">
@@ -31,7 +37,7 @@ $values  = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'
         </div>
 
         <button type="button" class="tp-repeater-add" aria-label="Add">➕ Add</button>
-        <p class="tp-field-desc"><?php echo esc_html( $args['field']['desc'] ); ?></p>
+        <p class="tp-field-desc"><?php echo wp_kses_post( $args['field']['desc'] ); ?></p>
     </div>
 </div>
 

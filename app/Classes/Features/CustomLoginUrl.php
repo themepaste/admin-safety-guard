@@ -58,6 +58,48 @@ class CustomLoginUrl implements FeatureInterface {
     }
 
     /**
+     * The requested path, relative to this site's root.
+     *
+     * REQUEST_URI is absolute to the domain, so on a sub-directory install
+     * (example.com/blog/) or a sub-directory multisite network
+     * (example.com/site2/) it carries a prefix that has to be removed before the
+     * login slug can be matched. Without this, the custom login URL silently
+     * never matches on either of those very common setups.
+     *
+     * Query string is dropped: only the path takes part in slug matching.
+     *
+     * @return string Path beginning with a single slash.
+     */
+    private function get_request_path() {
+        $request_uri = isset( $_SERVER['REQUEST_URI'] )
+        ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) )
+        : '';
+
+        if ( '' === $request_uri ) {
+            return '';
+        }
+
+        $path = (string) wp_parse_url( $request_uri, PHP_URL_PATH );
+        $path = '/' . ltrim( $path, '/' );
+
+        $home_path = (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+        $home_path = '/' . trim( $home_path, '/' );
+
+        if ( '/' !== $home_path ) {
+            // This site lives under a base path, so only requests inside that
+            // path can be its login URL. Anything else belongs to a different
+            // site on the network (or outside WordPress) and must not match.
+            if ( 0 !== strpos( $path, $home_path . '/' ) && $path !== $home_path ) {
+                return '';
+            }
+
+            $path = '/' . ltrim( substr( $path, strlen( $home_path ) ), '/' );
+        }
+
+        return $path;
+    }
+
+    /**
      * Override all WordPress-generated login URLs (login, register, lost password, etc.)
      */
     public function override_site_url( $url, $path, $scheme, $blog_id ) {
@@ -121,11 +163,9 @@ class CustomLoginUrl implements FeatureInterface {
      * Force WordPress to parse /habib-login as wp-login.php
      */
     public function force_custom_login_url() {
-        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
         // Normalize custom login slug match. preg_quote() stops any regex
         // metacharacter that survives sanitisation from altering the pattern.
-        if ( preg_match( '#^/' . preg_quote( $this->custom_login_slug, '#' ) . '(/|\?|$)#', $request_uri ) ) {
+        if ( preg_match( '#^/' . preg_quote( $this->custom_login_slug, '#' ) . '(/|$)#', $this->get_request_path() ) ) {
 
             // Define missing expected variables to avoid PHP warnings
             global $user_login, $error;

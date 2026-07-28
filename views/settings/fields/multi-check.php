@@ -46,6 +46,6 @@ printf(
     $field_template,
     esc_html( $args['field']['label'] ),   // %1$s: Label
     $checkboxes_html,                      // %2$s: Checkboxes
-    esc_html( $args['field']['desc'] )     // %3$s: Description
+    wp_kses_post( $args['field']['desc'] )     // %3$s: Description
 );
 ?>

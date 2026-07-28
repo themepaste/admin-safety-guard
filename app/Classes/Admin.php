@@ -236,7 +236,10 @@ class Admin {
         }
 
         $installed = array_key_exists( $basename, get_plugins() );
-        $active = $installed && is_plugin_active( $basename );
+        // is_plugin_active() alone misses a network-activated plugin on multisite.
+        $active = $installed
+        && ( is_plugin_active( $basename )
+            || ( is_multisite() && is_plugin_active_for_network( $basename ) ) );
 
         return [
             'name'          => 'Deep Malware Cleaner',

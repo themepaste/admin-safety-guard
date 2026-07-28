@@ -29,5 +29,5 @@ printf(
     esc_html( $args['field']['label'] ), // %1$s == Label
     $id_name,                            // %2$s == ID & Name
     esc_attr( $value ),                  // %3$s == Checked
-    esc_html( $args['field']['desc'] )   // %4$s == Description
+    wp_kses_post( $args['field']['desc'] )   // %4$s == Description
 );

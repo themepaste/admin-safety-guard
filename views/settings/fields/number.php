@@ -28,6 +28,6 @@ printf( $field_template,
     esc_html( $args['field']['label'] ), // %1$s == Label
     esc_attr( $id_name ), // %2$s == ID & Name
     esc_attr( $value ), // %3$s == value
-    esc_html( $args['field']['desc'] ) // %4$s == Description
+    wp_kses_post( $args['field']['desc'] ) // %4$s == Description
 );
 ?>

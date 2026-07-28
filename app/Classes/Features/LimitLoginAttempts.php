@@ -10,6 +10,13 @@ use ThemePaste\SecureAdmin\Traits\Hook;
 /**
  * Feature: LimitLoginAttempts
  *
+ * Counts failed sign-in attempts per IP address and locks the address out for a
+ * configurable window. Repeated lockouts inside 24 hours escalate to a 24-hour
+ * block (cleared by the plugin's daily cron job).
+ *
+ * Coverage: wp-login.php, XML-RPC, WooCommerce/theme login forms (anything that
+ * goes through wp_authenticate()) and Application Passwords.
+ *
  * @package ThemePaste\SecureAdmin\Classes\Features
  * @since   1.0.0
  */
@@ -26,419 +33,833 @@ class LimitLoginAttempts implements FeatureInterface {
     private $features_id = 'limit-login-attempts';
 
     /**
+     * Priority for the `authenticate` filter.
+     *
+     * This MUST run after core's wp_authenticate_username_password() (priority
+     * 20). That callback only short-circuits when it receives a WP_User — if it
+     * receives a WP_Error and the credentials are non-empty it discards the
+     * error and authenticates anyway. Returning the lockout error earlier than
+     * 20 therefore does not stop a locked-out client that has valid
+     * credentials (e.g. over XML-RPC, which never reaches login_init).
+     *
+     * It also has to stay below 30, where TwoFactorAuth intercepts and emails
+     * an OTP, so a locked-out address never triggers an OTP mail.
+     *
+     * @var int
+     */
+    const AUTH_PRIORITY = 25;
+
+    /**
+     * Per-request cache of the lockout state, keyed by IP.
+     *
+     * @var array<string, array>
+     */
+    private static $state_cache = [];
+
+    /**
+     * Cached settings for this request.
+     *
+     * @var array|null
+     */
+    private $settings = null;
+
+    /**
      * Register hooks.
      */
     public function register_hooks() {
         $settings = $this->get_settings();
 
-        if ( $this->is_enabled( $settings ) ) {
-            $this->action( 'admin_init', [$this, 'check_wp_cron_status'] );
-
-            if ( !$this->is_white_list_ip( $settings ) ) {
-                $this->action( 'wp_login_failed', [$this, 'tpsa_track_failed_login_24hr'] );
-                $this->action( 'login_init', [$this, 'hide_login_form_with_ip_address_status'] );
-                $this->action( 'login_init', [$this, 'maybe_block_login_form'] );
-                $this->action( 'template_redirect', [$this, 'maybe_block_custom_login'] );
-
-                $this->filter(
-                    'authenticate',
-                    function ( $user ) {
-                        if ( $this->is_ip_locked_out() ) {
-                            return new \WP_Error(
-                                'access_denied',
-                                __( 'You are temporarily blocked due to too many failed login attempts.', 'admin-safety-guard' )
-                            );
-                        }
-                        return $user;
-                    },
-                    0
-                );
-            }
-        }
-    }
-
-    /**
-     * Whether the current IP is on the firewall whitelist and bypasses lockouts.
-     *
-     * @param array $settings Feature settings.
-     * @return bool
-     */
-    public function is_white_list_ip( $settings ) {
-        $whitelist_ips = isset( $settings['whitelist-ip'] ) && is_array( $settings['whitelist-ip'] )
-        ? $settings['whitelist-ip']
-        : [];
-
-        if ( empty( $whitelist_ips ) ) {
-            return false;
-        }
-
-        return in_array( $this->get_ip_address(), $whitelist_ips, true );
-    }
-
-    /**
-     * Whether the current request targets a login or admin entry point.
-     *
-     * @return bool
-     */
-    private function is_login_request() {
-        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
-        return strpos( $request_uri, 'wp-login.php' ) !== false
-        || strpos( $request_uri, 'wp-admin' ) !== false;
-    }
-
-    /**
-     * Render the "permanently blocked" screen and stop the request.
-     *
-     * @return void
-     */
-    private function deny_permanently_blocked() {
-        wp_die(
-            esc_html__( 'Access Denied - You have been blocked for 1 day due to repeated login failures.', 'admin-safety-guard' ),
-            esc_html__( 'Access Denied', 'admin-safety-guard' ),
-            ['response' => 403]
-        );
-    }
-
-    /**
-     * Render the temporary lockout screen and stop the request.
-     *
-     * @return void
-     */
-    private function deny_temporarily_locked() {
-        $settings = $this->get_settings();
-        $block_message = isset( $settings['block-message'] ) && '' !== trim( (string) $settings['block-message'] )
-        ? (string) $settings['block-message']
-        : __( 'You have been locked out due to too many login attempts.', 'admin-safety-guard' );
-        $block_for = isset( $settings['block-for'] ) ? (int) $settings['block-for'] : 15;
-
-        wp_die(
-            esc_html(
-                sprintf(
-                    /* translators: 1: configured lockout message, 2: lockout duration in minutes */
-                    __( 'Access Denied - %1$s Please try again after %2$d minutes.', 'admin-safety-guard' ),
-                    $block_message,
-                    $block_for
-                )
-            ),
-            esc_html__( 'Access Denied', 'admin-safety-guard' ),
-            ['response' => 403]
-        );
-    }
-
-    public function maybe_block_custom_login() {
-        // On the front end also guard themed login/register pages.
-        if ( !$this->is_login_request() && !is_page( 'login' ) && !is_page( 'register' ) ) {
-            return;
-        }
-
-        if ( $this->is_permanently_blocked_ip() ) {
-            $this->deny_permanently_blocked();
-        } elseif ( $this->is_ip_locked_out() ) {
-            $this->deny_temporarily_locked();
-        }
-    }
-
-    public function maybe_block_login_form() {
-        if ( !$this->is_login_request() ) {
-            return;
-        }
-
-        if ( $this->is_permanently_blocked_ip() ) {
-            $this->deny_permanently_blocked();
-        } elseif ( $this->is_ip_locked_out() ) {
-            $this->deny_temporarily_locked();
-        }
-    }
-
-    /**
-     * Check the status of WordPress cron and display a warning if disabled.
-     *
-     * @since 1.0.0
-     */
-    public function check_wp_cron_status() {
-        $settings = $this->get_settings();
         if ( !$this->is_enabled( $settings ) ) {
             return;
         }
 
-        if ( defined( 'DISABLE_WP_CRON' ) && true === DISABLE_WP_CRON ) {
-            add_action(
-                'admin_notices',
-                function () {
-                    ?>
-<div class="notice notice-error is-dismissible">
-    <p>
-        <strong><?php esc_html_e( 'Warning:', 'admin-safety-guard' ); ?></strong>
-        <?php esc_html_e( 'WordPress Cron is currently disabled.', 'admin-safety-guard' ); ?>
-    </p>
+        $this->action( 'admin_init', [$this, 'check_wp_cron_status'] );
 
-    <p><?php esc_html_e( 'Please check the following to resolve the issue:', 'admin-safety-guard' ); ?></p>
+        // Record failures from every authentication path.
+        $this->action( 'wp_login_failed', [$this, 'record_failed_login'], 10, 2 );
+        $this->action( 'application_password_failed_authentication', [$this, 'record_failed_application_password'] );
 
-    <ul>
-        <li>
-            <?php
-echo wp_kses_post(
-                        __( 'Ensure the <code>DISABLE_WP_CRON</code> constant is <strong>not</strong> defined in your <code>wp-config.php</code> file. If it is, remove or comment out the line: <code>define(\'DISABLE_WP_CRON\', true);</code>', 'admin-safety-guard' )
-                    );
-                    ?>
-        </li>
+        // Clear the counter once the visitor proves they are legitimate.
+        $this->action( 'wp_login', [$this, 'clear_failed_logins'], 10, 2 );
 
-        <li>
-            <?php
-echo wp_kses_post(
-                        __( 'Ensure your server cron is properly configured to trigger <code>wp-cron.php</code> periodically. You may need to set up a server-side cron job (using <code>cron</code> on Linux or Task Scheduler on Windows).', 'admin-safety-guard' )
-                    );
-                    ?>
-        </li>
+        // Enforce. See AUTH_PRIORITY for why this priority matters.
+        $this->filter( 'authenticate', [$this, 'block_authentication'], self::AUTH_PRIORITY, 3 );
 
-        <li><?php esc_html_e( 'If you\'re unsure how to configure the server cron, please consult your hosting provider for assistance.', 'admin-safety-guard' ); ?>
-        </li>
-    </ul>
+        // Deny the login screen outright so a locked-out visitor gets a clear
+        // message instead of a generic credentials error.
+        $this->action( 'login_init', [$this, 'guard_login_screen'] );
 
-    <p>
-        <strong><?php esc_html_e( 'Note:', 'admin-safety-guard' ); ?></strong>
-        <?php esc_html_e( 'This plugin will not function properly without a working cron job. The blocked users will not be unblocked automatically if the cron is not running.', 'admin-safety-guard' ); ?>
-    </p>
-</div>
-<?php
-}
+        // Themed front-end login/registration pages.
+        $this->action( 'template_redirect', [$this, 'guard_front_end_login'] );
+
+        // Tell the visitor how many tries they have left.
+        $this->filter( 'login_errors', [$this, 'append_attempts_remaining'] );
+    }
+
+    /* ---------------------------------------------------------------------
+     * Enforcement
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Reject authentication for a locked-out or blocked address.
+     *
+     * @param \WP_User|\WP_Error|null $user     Result so far.
+     * @param string                  $username Submitted username.
+     * @param string                  $password Submitted password.
+     *
+     * @return \WP_User|\WP_Error|null
+     */
+    public function block_authentication( $user, $username = '', $password = '' ) {
+        // Nothing to do for an already-failed attempt with no credentials.
+        if ( '' === (string) $username && '' === (string) $password ) {
+            return $user;
+        }
+
+        if ( $this->is_exempt() ) {
+            return $user;
+        }
+
+        $state = $this->get_state();
+
+        if ( $state['blocked'] ) {
+            return new \WP_Error( 'tpsa_ip_blocked', $this->blocked_message() );
+        }
+
+        if ( $state['locked'] ) {
+            return new \WP_Error( 'tpsa_ip_locked_out', $this->lockout_message( $state['minutes_left'] ) );
+        }
+
+        return $user;
+    }
+
+    /**
+     * Stop a locked-out or denied address from reaching the login screen.
+     *
+     * @return void
+     */
+    public function guard_login_screen() {
+        if ( $this->is_exempt() ) {
+            return;
+        }
+
+        // Manually denied addresses never see the form at all.
+        if ( $this->is_denied_ip() ) {
+            $this->deny(
+                __( 'Your IP address is not permitted to sign in to this site.', 'admin-safety-guard' ),
+                __( 'Login Blocked', 'admin-safety-guard' )
             );
         }
+
+        $state = $this->get_state();
+
+        if ( $state['blocked'] ) {
+            $this->deny( $this->blocked_message() );
+        } elseif ( $state['locked'] ) {
+            $this->deny( $this->lockout_message( $state['minutes_left'] ) );
+        }
     }
 
     /**
-     * UPDATED LOGIC (no schema change):
-     * - Keep ALL failed attempts by INSERT-ing a new row each time (history).
-     * - When attempts hit threshold, INSERT a lockout-event row (lockouts=1, lockout_time=now).
-     * - When lockouts in last 24h reach max_lockouts, INSERT into block_users (permanent block for your current logic).
+     * Same protection for themed login/registration pages on the front end.
+     *
+     * @return void
      */
-    public function tpsa_track_failed_login_24hr( $username ) {
-        $settings = $this->get_settings();
-        if ( !$this->is_enabled( $settings ) ) {
+    public function guard_front_end_login() {
+        // Cheap bail-out first: this runs on every front-end request, so no
+        // database work unless the request actually looks like a login page.
+        if ( !is_page( array( 'login', 'register', 'sign-in', 'signin' ) ) ) {
             return;
         }
 
+        $this->guard_login_screen();
+    }
+
+    /**
+     * Append "X attempts remaining" to the login error output.
+     *
+     * @param string $errors Existing error markup.
+     * @return string
+     */
+    public function append_attempts_remaining( $errors ) {
+        $settings = $this->get_settings();
+
+        // Field default is on, so an option saved before this setting existed
+        // should behave as on rather than silently off.
+        $show_remaining = array_key_exists( 'show-remaining', $settings )
+        ? !empty( $settings['show-remaining'] )
+        : true;
+
+        if ( !$show_remaining || $this->is_exempt() ) {
+            return $errors;
+        }
+
+        $state = $this->get_state();
+
+        if ( $state['blocked'] || $state['locked'] || $state['attempts_left'] < 1 ) {
+            return $errors;
+        }
+
+        $notice = sprintf(
+            /* translators: %d: number of sign-in attempts left before lockout. */
+            _n(
+                'You have %d attempt remaining before this IP address is locked out.',
+                'You have %d attempts remaining before this IP address is locked out.',
+                $state['attempts_left'],
+                'admin-safety-guard'
+            ),
+            $state['attempts_left']
+        );
+
+        return $errors . '<p class="tpsa-attempts-remaining">' . esc_html( $notice ) . '</p>';
+    }
+
+    /* ---------------------------------------------------------------------
+     * Recording
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Record a failed sign-in for the current IP address.
+     *
+     * Attempts are tracked per IP ONLY. An earlier version keyed the counter on
+     * IP + User-Agent, which meant an attacker who randomised the User-Agent
+     * header started a fresh counter on every request and was never locked out.
+     *
+     * @param string         $username Attempted username (stored for the log only).
+     * @param \WP_Error|null $error    Error from the authentication stack.
+     *
+     * @return void
+     */
+    public function record_failed_login( $username, $error = null ) {
+        if ( $this->is_exempt() ) {
+            return;
+        }
+
+        $settings = $this->get_settings();
         $max_attempts = max( 1, (int) ( $settings['max-attempts'] ?? 3 ) );
         $max_lockouts = max( 1, (int) ( $settings['max-lockout'] ?? 3 ) );
 
-        global $wpdb;
+        $table = get_tpsa_db_table_name( 'failed_logins' );
 
-        $table_name = get_tpsa_db_table_name( 'failed_logins' );
-        $blocked_table = get_tpsa_db_table_name( 'block_users' );
-
-        $ip = $this->get_ip_address();
-        $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : 'Unknown';
-        $now = current_time( 'mysql' );
-
-        // Find existing row by IP + User Agent (your requested behavior)
-        $existing = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT * FROM {$table_name} WHERE ip_address = %s AND user_agent = %s LIMIT 1",
-                $ip,
-                $user_agent
-            )
-        );
-
-        // If row exists but is older than 24h, reset counters (keeps same row)
-        if ( $existing && !empty( $existing->last_login_time ) ) {
-            $last_ts = strtotime( $existing->last_login_time );
-            if ( $last_ts && ( time() - $last_ts ) > DAY_IN_SECONDS ) {
-                $existing->login_attempts = 0;
-                $existing->lockouts = 0;
-                $existing->lockout_time = null;
-
-                // reset the tracking window
-                $wpdb->update(
-                    $table_name,
-                    [
-                        'first_login_time' => $now,
-                        'last_login_time'  => $now,
-                        'login_attempts'   => 0,
-                        'lockouts'         => 0,
-                        'lockout_time'     => null,
-                        'username'         => $username,
-                        'user_agent'       => $user_agent,
-                    ],
-                    ['id' => (int) $existing->id],
-                    ['%s', '%s', '%d', '%d', '%s', '%s', '%s'],
-                    ['%d']
-                );
-
-                // Refresh object values for continuation
-                $existing = $wpdb->get_row(
-                    $wpdb->prepare(
-                        "SELECT * FROM {$table_name} WHERE id = %d LIMIT 1",
-                        (int) $existing->id
-                    )
-                );
-            }
-        }
-
-        if ( $existing ) {
-            $attempts = (int) $existing->login_attempts + 1;
-            $lockouts = (int) $existing->lockouts;
-
-            $lockout_time = $existing->lockout_time;
-
-            // Hit attempts threshold → lockout event, reset attempts
-            if ( $attempts >= $max_attempts ) {
-                $lockouts += 1;
-                $attempts = 0;
-                $lockout_time = $now;
-
-                // If lockouts threshold reached → add to block_users (permanent 24h)
-                if ( $lockouts >= $max_lockouts ) {
-
-                    $already_blocked = (int) $wpdb->get_var(
-                        $wpdb->prepare(
-                            "SELECT COUNT(*) FROM {$blocked_table} WHERE ip_address = %s",
-                            $ip
-                        )
-                    );
-
-                    if ( !$already_blocked ) {
-                        // Optional email (same as your current logic)
-                        $admin_email = get_option( 'admin_email' );
-                        $subject = __( 'A user has been blocked for 24 hours due to multiple failed login attempts.', 'admin-safety-guard' );
-
-                        // The IP and especially the User-Agent are attacker
-                        // controlled, so escape them before dropping them into
-                        // an HTML email body.
-                        $body = sprintf(
-                            '%1$s<br><br><b>%2$s</b><br>- IP Address: %3$s<br>- User Agent: %4$s<br>- Login Time: %5$s',
-                            esc_html__( 'A visitor has been blocked for 24 hours due to repeated login failures.', 'admin-safety-guard' ),
-                            esc_html__( 'Details:', 'admin-safety-guard' ),
-                            esc_html( $ip ),
-                            esc_html( $user_agent ),
-                            esc_html( $now )
-                        );
-
-                        $headers = ['Content-Type: text/html; charset=UTF-8'];
-                        wp_mail( $admin_email, $subject, $body, $headers );
-
-                        $wpdb->insert(
-                            $blocked_table,
-                            [
-                                'user_agent' => $user_agent,
-                                'ip_address' => $ip,
-                                'login_time' => $now,
-                            ],
-                            ['%s', '%s', '%s']
-                        );
-                    }
-                }
-            }
-
-            // Update the existing row
-            $wpdb->update(
-                $table_name,
-                [
-                    'last_login_time' => $now,
-                    'login_attempts'  => $attempts,
-                    'lockouts'        => $lockouts,
-                    'lockout_time'    => $lockout_time,
-                    'username'        => $username,
-                    'user_agent'      => $user_agent,
-                ],
-                ['id' => (int) $existing->id],
-                ['%s', '%d', '%d', '%s', '%s', '%s'],
-                ['%d']
-            );
-
+        if ( !$this->table_exists( $table ) ) {
             return;
         }
 
-        // No row yet for this IP + User Agent → first insert
-        $wpdb->insert(
-            $table_name,
-            [
-                'username'         => $username,
-                'user_agent'       => $user_agent,
-                'ip_address'       => $ip,
-                'first_login_time' => $now,
-                'last_login_time'  => $now,
-                'login_attempts'   => 1,
-                'lockouts'         => 0,
-                'lockout_time'     => null,
-            ],
-            ['%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s']
-        );
-    }
-
-    public function is_permanently_blocked_ip() {
         global $wpdb;
 
-        $blocked_table = get_tpsa_db_table_name( 'block_users' );
         $ip = $this->get_ip_address();
-        $count = $wpdb->get_var(
+        $user_agent = $this->get_user_agent();
+        $now = current_time( 'mysql' );
+        $username = is_string( $username ) ? substr( sanitize_user( $username, true ), 0, 100 ) : '';
+
+        // Newest row for this IP. Installs upgraded from the IP + User-Agent
+        // scheme can hold several rows per address; the most recent one carries
+        // the live counter.
+        $row = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM $blocked_table WHERE ip_address = %s",
+                "SELECT * FROM {$table} WHERE ip_address = %s ORDER BY id DESC LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $ip
             )
         );
 
-        return ( $count > 0 );
+        $attempts = 1;
+        $lockouts = 0;
+        $lockout_time = null;
+        $first_seen = $now;
+
+        if ( $row ) {
+            $last_ts = !empty( $row->last_login_time ) ? strtotime( $row->last_login_time ) : 0;
+            $window_expired = $last_ts && ( strtotime( $now ) - $last_ts ) > DAY_IN_SECONDS;
+
+            if ( $window_expired ) {
+                // Rolling 24-hour window: start fresh.
+                $attempts = 1;
+                $lockouts = 0;
+                $lockout_time = null;
+                $first_seen = $now;
+            } else {
+                $attempts = (int) $row->login_attempts + 1;
+                $lockouts = (int) $row->lockouts;
+                $lockout_time = $row->lockout_time;
+                $first_seen = $row->first_login_time;
+            }
+        }
+
+        // Threshold reached: open a lockout window and reset the attempt counter.
+        $just_locked = false;
+        if ( $attempts >= $max_attempts ) {
+            $attempts = 0;
+            $lockouts++;
+            $lockout_time = $now;
+            $just_locked = true;
+        }
+
+        if ( $row ) {
+            $wpdb->update(
+                $table,
+                [
+                    'username'         => $username,
+                    'user_agent'       => $user_agent,
+                    'first_login_time' => $first_seen,
+                    'last_login_time'  => $now,
+                    'login_attempts'   => $attempts,
+                    'lockouts'         => $lockouts,
+                    'lockout_time'     => $lockout_time,
+                ],
+                ['id' => (int) $row->id],
+                ['%s', '%s', '%s', '%s', '%d', '%d', '%s'],
+                ['%d']
+            );
+        } else {
+            $wpdb->insert(
+                $table,
+                [
+                    'username'         => $username,
+                    'user_agent'       => $user_agent,
+                    'ip_address'       => $ip,
+                    'first_login_time' => $first_seen,
+                    'last_login_time'  => $now,
+                    'login_attempts'   => $attempts,
+                    'lockouts'         => $lockouts,
+                    'lockout_time'     => $lockout_time,
+                ],
+                ['%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s']
+            );
+        }
+
+        // Too many lockouts inside the window: escalate to a 24-hour block.
+        if ( $just_locked && $lockouts >= $max_lockouts ) {
+            $this->block_ip( $ip, $user_agent, $now );
+        }
+
+        if ( $just_locked ) {
+            $this->maybe_notify_admin( $ip, $user_agent, $username, $now, $lockouts >= $max_lockouts );
+        }
+
+        // The state changed; drop the cached copy.
+        unset( self::$state_cache[$ip] );
     }
 
     /**
-     * UPDATED LOGIC:
-     * - Look for latest lockout event row (lockout_time) and compare with block-for minutes.
+     * Record a failed Application Password authentication.
+     *
+     * Application Passwords authenticate through the `determine_current_user`
+     * filter rather than wp_authenticate(), so they never fire wp_login_failed.
+     * Without this the REST API is an uncounted brute-force surface.
+     *
+     * @param \WP_Error $error Authentication error.
+     * @return void
      */
-    public function is_ip_locked_out() {
+    public function record_failed_application_password( $error = null ) {
+        $username = '';
+
+        if ( isset( $_SERVER['PHP_AUTH_USER'] ) ) {
+            $username = sanitize_user( wp_unslash( $_SERVER['PHP_AUTH_USER'] ), true );
+        }
+
+        $this->record_failed_login( $username );
+    }
+
+    /**
+     * Clear the failure counter for an address after a successful sign-in.
+     *
+     * Without this a legitimate user who mistypes their password stays one
+     * attempt away from a lockout for the next 24 hours.
+     *
+     * @param string    $user_login Username.
+     * @param \WP_User  $user       User object.
+     *
+     * @return void
+     */
+    public function clear_failed_logins( $user_login = '', $user = null ) {
+        $table = get_tpsa_db_table_name( 'failed_logins' );
+
+        if ( !$this->table_exists( $table ) ) {
+            return;
+        }
+
         global $wpdb;
 
-        $settings = $this->get_settings();
-        $blocked_minute = (int) ( $settings['block-for'] ?? 15 );
-
-        $table = get_tpsa_db_table_name( 'failed_logins' );
         $ip = $this->get_ip_address();
 
-        $lockout_time = $wpdb->get_var(
+        $wpdb->query(
             $wpdb->prepare(
-                "SELECT lockout_time
-             FROM {$table}
-             WHERE ip_address = %s AND lockout_time IS NOT NULL
-             ORDER BY lockout_time DESC
-             LIMIT 1",
+                "UPDATE {$table} SET login_attempts = 0, lockouts = 0, lockout_time = NULL WHERE ip_address = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $ip
             )
         );
 
-        if ( $lockout_time ) {
-            // lockout_time is stored in site-local time via current_time( 'mysql' ),
-            // so compare against the site-local "now" rather than a UTC timestamp.
-            $lockout_ts = strtotime( $lockout_time );
-            $now_ts = strtotime( current_time( 'mysql' ) );
+        unset( self::$state_cache[$ip] );
+    }
 
-            if ( $lockout_ts && ( $now_ts - $lockout_ts ) < ( $blocked_minute * 60 ) ) {
+    /**
+     * Add an address to the 24-hour block table.
+     *
+     * @param string $ip         IP address.
+     * @param string $user_agent User agent string.
+     * @param string $now        Site-local MySQL datetime.
+     *
+     * @return void
+     */
+    private function block_ip( $ip, $user_agent, $now ) {
+        $table = get_tpsa_db_table_name( 'block_users' );
+
+        if ( !$this->table_exists( $table ) ) {
+            return;
+        }
+
+        global $wpdb;
+
+        $already = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$table} WHERE ip_address = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $ip
+            )
+        );
+
+        if ( $already ) {
+            return;
+        }
+
+        $wpdb->insert(
+            $table,
+            [
+                'user_agent' => $user_agent,
+                'ip_address' => $ip,
+                'login_time' => $now,
+            ],
+            ['%s', '%s', '%s']
+        );
+    }
+
+    /**
+     * Email the site administrator about a lockout, if enabled.
+     *
+     * @param string $ip         IP address.
+     * @param string $user_agent User agent string.
+     * @param string $username   Attempted username.
+     * @param string $now        Site-local MySQL datetime.
+     * @param bool   $escalated  Whether this lockout escalated to a 24h block.
+     *
+     * @return void
+     */
+    private function maybe_notify_admin( $ip, $user_agent, $username, $now, $escalated ) {
+        $settings = $this->get_settings();
+
+        if ( empty( $settings['notify-admin'] ) ) {
+            return;
+        }
+
+        $admin_email = get_option( 'admin_email' );
+
+        if ( !is_email( $admin_email ) ) {
+            return;
+        }
+
+        // Don't let a sustained attack turn into a mail flood.
+        $throttle_key = 'tpsa_lockout_mail_' . md5( $ip );
+        if ( false !== get_transient( $throttle_key ) ) {
+            return;
+        }
+        set_transient( $throttle_key, 1, HOUR_IN_SECONDS );
+
+        $site_name = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+
+        $subject = $escalated
+        ? sprintf(
+            /* translators: %s: site name. */
+            __( '[%s] An IP address has been blocked for 24 hours', 'admin-safety-guard' ),
+            $site_name
+        )
+        : sprintf(
+            /* translators: %s: site name. */
+            __( '[%s] An IP address has been locked out', 'admin-safety-guard' ),
+            $site_name
+        );
+
+        // The IP, username and especially the User-Agent are attacker
+        // controlled, so escape them before building an HTML email body.
+        $body = sprintf(
+            '<p>%1$s</p><ul><li><strong>%2$s</strong> %3$s</li><li><strong>%4$s</strong> %5$s</li><li><strong>%6$s</strong> %7$s</li><li><strong>%8$s</strong> %9$s</li></ul>',
+            $escalated
+            ? esc_html__( 'An IP address has been blocked for 24 hours after repeated lockouts.', 'admin-safety-guard' )
+            : esc_html__( 'An IP address has been locked out after too many failed sign-in attempts.', 'admin-safety-guard' ),
+            esc_html__( 'IP address:', 'admin-safety-guard' ),
+            esc_html( $ip ),
+            esc_html__( 'Attempted username:', 'admin-safety-guard' ),
+            esc_html( '' !== $username ? $username : __( '(none)', 'admin-safety-guard' ) ),
+            esc_html__( 'User agent:', 'admin-safety-guard' ),
+            esc_html( $user_agent ),
+            esc_html__( 'Time:', 'admin-safety-guard' ),
+            esc_html( $now )
+        );
+
+        wp_mail( $admin_email, $subject, $body, ['Content-Type: text/html; charset=UTF-8'] );
+    }
+
+    /* ---------------------------------------------------------------------
+     * State
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Resolve the lockout state for the current address.
+     *
+     * Cached for the lifetime of the request: the login screen, the
+     * authenticate filter and the error notice all need it, and each lookup
+     * would otherwise be two more queries.
+     *
+     * @return array{blocked:bool,locked:bool,minutes_left:int,attempts_left:int}
+     */
+    private function get_state() {
+        $ip = $this->get_ip_address();
+
+        if ( isset( self::$state_cache[$ip] ) ) {
+            return self::$state_cache[$ip];
+        }
+
+        $settings = $this->get_settings();
+        $max_attempts = max( 1, (int) ( $settings['max-attempts'] ?? 3 ) );
+        $block_minutes = max( 1, (int) ( $settings['block-for'] ?? 15 ) );
+
+        $state = [
+            'blocked'       => false,
+            'locked'        => false,
+            'minutes_left'  => 0,
+            'attempts_left' => $max_attempts,
+        ];
+
+        global $wpdb;
+
+        $block_table = get_tpsa_db_table_name( 'block_users' );
+        if ( $this->table_exists( $block_table ) ) {
+            $state['blocked'] = (bool) $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT 1 FROM {$block_table} WHERE ip_address = %s LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $ip
+                )
+            );
+        }
+
+        $failed_table = get_tpsa_db_table_name( 'failed_logins' );
+        if ( !$state['blocked'] && $this->table_exists( $failed_table ) ) {
+            $row = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT login_attempts, lockout_time FROM {$failed_table}
+                     WHERE ip_address = %s
+                     ORDER BY ( lockout_time IS NULL ), lockout_time DESC, id DESC
+                     LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $ip
+                )
+            );
+
+            if ( $row ) {
+                $state['attempts_left'] = max( 0, $max_attempts - (int) $row->login_attempts );
+
+                if ( !empty( $row->lockout_time ) ) {
+                    // Stored with current_time( 'mysql' ), so compare against
+                    // site-local "now" rather than a UTC timestamp.
+                    $lockout_ts = strtotime( $row->lockout_time );
+                    $now_ts = strtotime( current_time( 'mysql' ) );
+                    $elapsed = $now_ts - $lockout_ts;
+                    $window = $block_minutes * MINUTE_IN_SECONDS;
+
+                    if ( $lockout_ts && $elapsed >= 0 && $elapsed < $window ) {
+                        $state['locked'] = true;
+                        $state['minutes_left'] = max( 1, (int) ceil( ( $window - $elapsed ) / MINUTE_IN_SECONDS ) );
+                    }
+                }
+            }
+        }
+
+        self::$state_cache[$ip] = $state;
+
+        return $state;
+    }
+
+    /* ---------------------------------------------------------------------
+     * Exemptions
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Whether the current visitor is exempt from all lockout handling.
+     *
+     * @return bool
+     */
+    private function is_exempt() {
+        // WP-CLI and cron are not brute-force surfaces and must never be locked out.
+        if ( ( defined( 'WP_CLI' ) && WP_CLI ) || wp_doing_cron() ) {
+            return true;
+        }
+
+        // A visitor who already holds a valid administrator session cannot be
+        // brute-forcing the login form, and locking them out would leave nobody
+        // able to switch the feature off.
+        if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+            return true;
+        }
+
+        if ( $this->is_trusted_ip() ) {
+            return true;
+        }
+
+        /**
+         * Filter whether the current request bypasses login-attempt limiting.
+         *
+         * @since 1.3.0
+         *
+         * @param bool   $exempt Whether to skip enforcement.
+         * @param string $ip     Resolved client IP address.
+         */
+        return (bool) apply_filters( 'tpsa_limit_login_exempt', false, $this->get_ip_address() );
+    }
+
+    /**
+     * Whether the current IP is on the trusted (never lock out) list.
+     *
+     * @return bool
+     */
+    public function is_trusted_ip() {
+        $settings = $this->get_settings();
+
+        return $this->ip_matches_list( $this->get_ip_address(), $settings['whitelist-ip'] ?? [] );
+    }
+
+    /**
+     * Whether the current IP is on the manual deny list.
+     *
+     * @return bool
+     */
+    public function is_denied_ip() {
+        $settings = $this->get_settings();
+
+        return $this->ip_matches_list( $this->get_ip_address(), $settings['block-ip-address'] ?? [] );
+    }
+
+    /**
+     * Match an IP against a list of addresses, CIDR ranges or wildcards.
+     *
+     * Accepts exact addresses (`203.0.113.7`), CIDR notation
+     * (`203.0.113.0/24`, `2001:db8::/32`) and trailing wildcards
+     * (`203.0.113.*`), so admins can trust a whole office network.
+     *
+     * @param string $ip   Address to test.
+     * @param mixed  $list Configured list.
+     *
+     * @return bool
+     */
+    private function ip_matches_list( $ip, $list ) {
+        if ( '' === $ip || empty( $list ) ) {
+            return false;
+        }
+
+        foreach ( (array) $list as $entry ) {
+            $entry = trim( (string) $entry );
+
+            if ( '' === $entry ) {
+                continue;
+            }
+
+            if ( $entry === $ip ) {
                 return true;
+            }
+
+            if ( false !== strpos( $entry, '/' ) && $this->ip_in_cidr( $ip, $entry ) ) {
+                return true;
+            }
+
+            // Trailing wildcard, e.g. 203.0.113.*
+            if ( false !== strpos( $entry, '*' ) ) {
+                $prefix = rtrim( substr( $entry, 0, strpos( $entry, '*' ) ), '.' );
+                if ( '' !== $prefix && 0 === strpos( $ip, $prefix . '.' ) ) {
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
-    public function hide_login_form_with_ip_address_status() {
+    /**
+     * Whether an address falls inside a CIDR range (IPv4 or IPv6).
+     *
+     * @param string $ip   Address to test.
+     * @param string $cidr Range in CIDR notation.
+     *
+     * @return bool
+     */
+    private function ip_in_cidr( $ip, $cidr ) {
+        list( $subnet, $bits ) = array_pad( explode( '/', $cidr, 2 ), 2, null );
+
+        $subnet = trim( (string) $subnet );
+        if ( null === $bits || '' === trim( (string) $bits ) ) {
+            return false;
+        }
+        $bits = (int) $bits;
+
+        $ip_bin = @inet_pton( $ip );
+        $subnet_bin = @inet_pton( $subnet );
+
+        // Both must parse, and both must be the same family (4 or 16 bytes).
+        if ( false === $ip_bin || false === $subnet_bin || strlen( $ip_bin ) !== strlen( $subnet_bin ) ) {
+            return false;
+        }
+
+        $max_bits = strlen( $ip_bin ) * 8;
+        if ( $bits < 0 || $bits > $max_bits ) {
+            return false;
+        }
+
+        $whole_bytes = intdiv( $bits, 8 );
+        $remainder = $bits % 8;
+
+        if ( $whole_bytes > 0 && strncmp( $ip_bin, $subnet_bin, $whole_bytes ) !== 0 ) {
+            return false;
+        }
+
+        if ( 0 === $remainder ) {
+            return true;
+        }
+
+        $mask = chr( 0xFF << ( 8 - $remainder ) & 0xFF );
+
+        return ( $ip_bin[$whole_bytes] & $mask ) === ( $subnet_bin[$whole_bytes] & $mask );
+    }
+
+    /* ---------------------------------------------------------------------
+     * Messaging
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Message shown to an address that is blocked for 24 hours.
+     *
+     * @return string
+     */
+    private function blocked_message() {
+        return __( 'Access denied. This IP address has been blocked for 24 hours after repeated failed sign-in attempts.', 'admin-safety-guard' );
+    }
+
+    /**
+     * Message shown to a temporarily locked-out address.
+     *
+     * Supports {minutes} in the admin-defined message; otherwise the remaining
+     * time is appended.
+     *
+     * @param int $minutes_left Minutes until the lockout expires.
+     * @return string
+     */
+    private function lockout_message( $minutes_left ) {
         $settings = $this->get_settings();
-        if ( !$this->is_enabled( $settings ) ) {
-            return;
-        }
-        $block_ip_lists = isset( $settings['block-ip-address'] ) && is_array( $settings['block-ip-address'] )
-        ? $settings['block-ip-address']
-        : [];
+        $configured = isset( $settings['block-message'] ) ? trim( (string) $settings['block-message'] ) : '';
 
-        if ( empty( $block_ip_lists ) ) {
-            return;
+        if ( '' === $configured ) {
+            $configured = __( 'You have been locked out due to too many failed sign-in attempts.', 'admin-safety-guard' );
         }
 
-        if ( in_array( $this->get_ip_address(), $block_ip_lists, true ) ) {
-            wp_die(
-                '<h2 style="color:red;text-align:center;">' . esc_html__( 'Your IP address is not permitted to log in to this site.', 'admin-safety-guard' ) . '</h2>',
-                esc_html__( 'Login Blocked', 'admin-safety-guard' ),
-                ['response' => 403]
-            );
+        $minutes_left = max( 1, (int) $minutes_left );
+
+        if ( false !== strpos( $configured, '{minutes}' ) ) {
+            return str_replace( '{minutes}', (string) $minutes_left, $configured );
         }
+
+        return $configured . ' ' . sprintf(
+            /* translators: %d: minutes until the lockout expires. */
+            _n( 'Please try again in %d minute.', 'Please try again in %d minutes.', $minutes_left, 'admin-safety-guard' ),
+            $minutes_left
+        );
+    }
+
+    /**
+     * Stop the request with a 403 and a plain explanation.
+     *
+     * @param string      $message Body text.
+     * @param string|null $title   Optional page title.
+     *
+     * @return void
+     */
+    private function deny( $message, $title = null ) {
+        $title = $title ? $title : __( 'Access Denied', 'admin-safety-guard' );
+
+        nocache_headers();
+
+        wp_die(
+            esc_html( $message ),
+            esc_html( $title ),
+            ['response' => 403]
+        );
+    }
+
+    /* ---------------------------------------------------------------------
+     * Admin notice
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Warn the administrator when WP-Cron is disabled, since the daily cleanup
+     * job is what releases 24-hour blocks.
+     *
+     * @since 1.0.0
+     */
+    public function check_wp_cron_status() {
+        if ( !defined( 'DISABLE_WP_CRON' ) || true !== DISABLE_WP_CRON ) {
+            return;
+        }
+
+        if ( !current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        add_action(
+            'admin_notices',
+            static function () {
+                echo '<div class="notice notice-warning is-dismissible"><p><strong>';
+                esc_html_e( 'Admin Safety Guard:', 'admin-safety-guard' );
+                echo '</strong> ';
+                esc_html_e( 'WP-Cron is disabled on this site, so 24-hour IP blocks will not be released automatically. Configure a real server cron job that calls wp-cron.php, or remove the DISABLE_WP_CRON constant from wp-config.php.', 'admin-safety-guard' );
+                echo '</p></div>';
+            }
+        );
+    }
+
+    /* ---------------------------------------------------------------------
+     * Helpers
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Whether a plugin table exists, cached per request.
+     *
+     * Guards against a fatal-free but broken state on sites where activation
+     * could not create the tables (restrictive DB grants, migrations, etc.).
+     *
+     * @param string $table Fully-prefixed table name.
+     * @return bool
+     */
+    private function table_exists( $table ) {
+        static $checked = [];
+
+        if ( isset( $checked[$table] ) ) {
+            return $checked[$table];
+        }
+
+        global $wpdb;
+
+        $checked[$table] = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table );
+
+        return $checked[$table];
+    }
+
+    /**
+     * Truncated, sanitised User-Agent string.
+     *
+     * @return string
+     */
+    private function get_user_agent() {
+        $agent = isset( $_SERVER['HTTP_USER_AGENT'] )
+        ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) )
+        : '';
+
+        if ( '' === $agent ) {
+            return 'Unknown';
+        }
+
+        return substr( $agent, 0, 255 );
     }
 
     /**
@@ -446,9 +867,7 @@ echo wp_kses_post(
      *
      * Delegates to the shared, spoofing-resistant helper which trusts only
      * REMOTE_ADDR unless the site has opted in to proxy headers via the
-     * `tpsa_trust_proxy_headers` filter. Forwarded headers were previously
-     * trusted unconditionally, which let attackers bypass lockouts and the IP
-     * blocklist by forging X-Forwarded-For / Client-IP.
+     * `tpsa_trust_proxy_headers` filter.
      *
      * @return string
      */
@@ -457,13 +876,17 @@ echo wp_kses_post(
     }
 
     /**
-     * Returns the settings for this feature.
+     * Returns the settings for this feature, cached per request.
      *
      * @return array
      */
     private function get_settings() {
-        $option_name = get_tpsa_settings_option_name( $this->features_id );
-        return get_option( $option_name, [] );
+        if ( null === $this->settings ) {
+            $settings = get_option( get_tpsa_settings_option_name( $this->features_id ), [] );
+            $this->settings = is_array( $settings ) ? $settings : [];
+        }
+
+        return $this->settings;
     }
 
     /**
