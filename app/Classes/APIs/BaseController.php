@@ -8,23 +8,29 @@ use WP_REST_Response;
 
 abstract class BaseController {
     /**
-     * The single instance of the class.
+     * One instance per concrete controller, keyed by class name.
      *
-     * @var static|null
+     * A single inherited `static::$instance` property would be shared by every
+     * subclass that does not redeclare it, so whichever controller was
+     * instantiated first would then be handed back for all of them.
+     *
+     * @var array<string, static>
      */
-    protected static $instance = null;
+    private static $instances = [];
 
     /**
-     * Ensures only one instance of the class is loaded.
+     * Ensures only one instance of each concrete controller is loaded.
      *
      * @return static
      */
     public static function get() {
-        if ( is_null( static::$instance ) ) {
-            static::$instance = new static();
+        $class = static::class;
+
+        if ( !isset( self::$instances[$class] ) ) {
+            self::$instances[$class] = new static();
         }
 
-        return static::$instance;
+        return self::$instances[$class];
     }
 
     /**
@@ -40,6 +46,19 @@ abstract class BaseController {
     abstract protected function get_table_name(): string;
 
     /**
+     * Columns that the `s` search parameter is matched against.
+     *
+     * Each table has a different schema, so a shared column list produces
+     * "Unknown column" SQL errors. Subclasses override this with the columns
+     * that actually exist on their table.
+     *
+     * @return string[]
+     */
+    protected function get_searchable_columns(): array {
+        return [ 'ip_address', 'user_agent' ];
+    }
+
+    /**
      * Generic method to return a paginated list of records from a specified table.
      *
      * @param WP_REST_Request $request
@@ -52,10 +71,11 @@ abstract class BaseController {
         // Sanitize and validate parameters
         $page = absint( $request->get_param( 'page' ) );
         $limit = absint( $request->get_param( 'limit' ) );
-        $search = sanitize_text_field( $request->get_param( 's' ) );
+        $search = sanitize_text_field( (string) $request->get_param( 's' ) );
 
         $page = $page > 0 ? $page : 1;
-        $limit = $limit > 0 ? $limit : 10;
+        // Cap the page size so a crafted request cannot ask for the whole table.
+        $limit = $limit > 0 ? min( $limit, 100 ) : 10;
 
         $offset = ( $page - 1 ) * $limit;
         $full_table_name = get_tpsa_db_table_name( $table_name );
@@ -71,37 +91,46 @@ abstract class BaseController {
             );
         }
 
+        // Build the WHERE clause as a placeholder template plus a value list, so the
+        // query is only ever passed through prepare() once. Preparing an
+        // already-prepared fragment a second time makes wpdb re-scan the escaped
+        // values for printf placeholders, which breaks on any search term
+        // containing a '%'.
         $where_sql = '';
-        if ( !empty( $search ) ) {
-            $like_search = '%' . $wpdb->esc_like( $search ) . '%';
+        $where_values = [];
 
-            // Search across all relevant columns (assuming common columns for login logs)
-            $where_sql = $wpdb->prepare(
-                "WHERE username LIKE %s
-                OR user_agent LIKE %s
-                OR ip_address LIKE %s
-                OR login_time LIKE %s",
-                $like_search,
-                $like_search,
-                $like_search,
-                $like_search
-            );
+        if ( '' !== $search ) {
+            $like_search = '%' . $wpdb->esc_like( $search ) . '%';
+            $conditions = [];
+
+            foreach ( $this->get_searchable_columns() as $column ) {
+                // Column names come from a hard-coded per-controller allowlist.
+                $conditions[] = '`' . str_replace( '`', '', $column ) . '` LIKE %s';
+                $where_values[] = $like_search;
+            }
+
+            if ( $conditions ) {
+                $where_sql = 'WHERE ' . implode( ' OR ', $conditions );
+            }
         }
 
         // Get total number of filtered records
-        $total_items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM $full_table_name $where_sql" );
+        $count_sql = "SELECT COUNT(*) FROM {$full_table_name} {$where_sql}";
+        if ( $where_values ) {
+            $count_sql = $wpdb->prepare( $count_sql, $where_values ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        }
+        $total_items = (int) $wpdb->get_var( $count_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         // Fetch paginated results
         $results = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM $full_table_name $where_sql ORDER BY id DESC LIMIT %d OFFSET %d",
-                $limit,
-                $offset
+                "SELECT * FROM {$full_table_name} {$where_sql} ORDER BY id DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                array_merge( $where_values, [ $limit, $offset ] )
             ),
             ARRAY_A
         );
 
-        if ( empty( $results ) && !empty( $search ) ) {
+        if ( empty( $results ) && '' !== $search ) {
             return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given search.', 'admin-safety-guard' ) );
         } elseif ( empty( $results ) ) {
             return $this->build_response( [], $total_items, $page, $limit, __( 'No records found for the given page.', 'admin-safety-guard' ) );

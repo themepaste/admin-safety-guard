@@ -4,20 +4,18 @@ namespace ThemePaste\SecureAdmin\Classes;
 
 defined( 'ABSPATH' ) || exit;
 
-use ThemePaste\SecureAdmin\Traits\Asset;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
 class Install {
 
     use Hook;
-    use Asset;
 
     /**
      * Constructor.
      */
     public function __construct() {
         $this->activation( [$this, 'bootstrapping'] );
-        $this->activation( [$this, 'send_deactivation_email'] );
+        $this->activation( [$this, 'send_activation_email'] );
         $this->action( 'admin_post_admin_safety_guard_deactivate', [$this, 'handle_deactivate'] );
 
         // Safety net: apply schema changes that ship via a plugin update, where the
@@ -117,9 +115,12 @@ class Install {
     }
 
     /**
-     * Send deactivation email.
+     * Email the site admin on activation, including a one-click "safe
+     * deactivate" link in case the plugin causes trouble.
+     *
+     * @return void
      */
-    public function send_deactivation_email() {
+    public function send_activation_email() {
 
         if ( !$this->is_database_up_to_date() ) {
             return;

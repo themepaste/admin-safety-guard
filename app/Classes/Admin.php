@@ -33,13 +33,6 @@ class Admin {
         $this->action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_scripts'] );
         $this->ajax_priv( 'tpsa_deactivate_plugin', [$this, 'tpsa_deactivate_plugin_callback'] );
         $this->ajax_priv( 'tpsa_generate_prefix_suggestions', [$this, 'tpsa_generate_prefix_suggestions_callback'] );
-
-        add_action( 'login_init', function () {
-            if ( isset( $_GET['cdp_preview'] ) ) {
-                add_filter( 'wp_headers', function ( $h ) {$h['Cache-Control'] = 'no-store, must-revalidate';return $h;} );
-            }
-        } );
-
     }
 
     public function tpsa_deactivate_plugin_callback() {
@@ -62,7 +55,7 @@ class Admin {
                 'x-api-key'    => 'a2e4a51671af827045df95bcd686c7ae4dae3b99',
             ],
 
-            'body'    => json_encode( [
+            'body'    => wp_json_encode( [
                 'website_url' => site_url(),
                 'admin_name'  => wp_get_current_user()->display_name,
                 'admin_email' => wp_get_current_user()->user_email,
@@ -115,47 +108,49 @@ class Admin {
 
         if ( 'toplevel_page_' . Settings::$SETTING_PAGE_ID === $screen || 'admin-safety-guard_page_tp-admin-safety-guard-pro' === $screen ) {
 
-            wp_enqueue_media();
-            $this->enqueue_script(
-                'tpsa-admin',
-                TPSA_ASSETS_URL . '/admin/js/admin.js',
-                ['jquery'], null, array( 'in_footer' => false )
-            );
-            if ( $current_setting_screen === 'login-logs-activity' ) {
+            // Handle that carries the tpsaAdmin localized data. It has no file
+            // of its own (src === false), so it costs no HTTP request while
+            // still giving every React bundle a dependency to order against.
+            wp_register_script( 'tpsa-admin', false, ['jquery'], TPSA_ASSETS_VERSION, false );
+            wp_enqueue_script( 'tpsa-admin' );
+
+            // Screen slug => React bundle. Only the bundle for the screen being
+            // viewed is loaded.
+            $bundles = [
+                'login-logs-activity'  => 'loginLogActivity',
+                'analytics'            => 'analytics',
+                'security-core'        => 'securityCore',
+                'firewall-malware'     => 'firewallMalware',
+                '2fa-using-mobile-app' => 'twoFAUsingMobileApp',
+                'privacy-hardening'    => 'privacyHardening',
+                'customize'            => 'loginTemplate',
+            ];
+
+            if ( isset( $bundles[$current_setting_screen] ) ) {
+                // React and the webpack runtime are split into shared chunks so
+                // they are downloaded and parsed once rather than being inlined
+                // into each of the seven bundles.
                 $this->enqueue_script(
-                    'tpsa-login-log-activity',
-                    TPSA_ASSETS_URL . '/admin/build/loginLogActivity.bundle.js', [], null, array( 'in_footer' => false )
+                    'tpsa-runtime',
+                    TPSA_ASSETS_URL . '/admin/build/runtime.bundle.js',
+                    [], null, array( 'in_footer' => false )
                 );
-            } elseif ( $current_setting_screen === 'analytics' ) {
                 $this->enqueue_script(
-                    'tpsa-analytics',
-                    TPSA_ASSETS_URL . '/admin/build/analytics.bundle.js', [], null, array( 'in_footer' => false )
-                );
-            } elseif ( $current_setting_screen === 'security-core' ) {
-                $this->enqueue_script(
-                    'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/securityCore.bundle.js', [], null, array( 'in_footer' => false )
+                    'tpsa-framework',
+                    TPSA_ASSETS_URL . '/admin/build/framework.bundle.js',
+                    ['tpsa-runtime'], null, array( 'in_footer' => false )
                 );
 
-            } elseif ( $current_setting_screen === 'firewall-malware' ) {
+                // wp_enqueue_media() is only needed by screens with an upload
+                // field; loading it everywhere pulls in the whole media modal.
+                if ( 'customize' === $current_setting_screen ) {
+                    wp_enqueue_media();
+                }
+
                 $this->enqueue_script(
-                    'tpsa-firewall-malware',
-                    TPSA_ASSETS_URL . '/admin/build/firewallMalware.bundle.js', [], null, array( 'in_footer' => false )
-                );
-            } elseif ( $current_setting_screen === '2fa-using-mobile-app' ) {
-                $this->enqueue_script(
-                    'tpsa-2fa-using-mobile-app',
-                    TPSA_ASSETS_URL . '/admin/build/twoFAUsingMobileApp.bundle.js', [], null, array( 'in_footer' => false )
-                );
-            } elseif ( $current_setting_screen === 'privacy-hardening' ) {
-                $this->enqueue_script(
-                    'tpsa-security-core',
-                    TPSA_ASSETS_URL . '/admin/build/privacyHardening.bundle.js', [], null, array( 'in_footer' => false )
-                );
-            } elseif ( $current_setting_screen === 'customize' ) {
-                $this->enqueue_script(
-                    'tpsa-customize',
-                    TPSA_ASSETS_URL . '/admin/build/loginTemplate.bundle.js', [], null, array( 'in_footer' => false )
+                    'tpsa-screen-' . $current_setting_screen,
+                    TPSA_ASSETS_URL . '/admin/build/' . $bundles[$current_setting_screen] . '.bundle.js',
+                    ['tpsa-admin', 'tpsa-runtime', 'tpsa-framework'], null, array( 'in_footer' => false )
                 );
             }
 
@@ -165,7 +160,6 @@ class Admin {
             $localize = [
                 'nonce'           => wp_create_nonce( 'tpsa-nonce' ),
                 'rest_nonce'      => wp_create_nonce( 'wp_rest' ),
-                'site_url'        => site_url(),
                 'ajax_url'        => admin_url( 'admin-ajax.php' ),
                 'screen_slug'     => Settings::$SETTING_PAGE_ID,
                 'setting_slug'    => $current_setting_screen,
@@ -174,10 +168,10 @@ class Admin {
                 'admin_url'       => admin_url(),
                 'assets_url'      => TPSA_ASSETS_URL,
                 'previewUrl'      => $login_url . $glue . 'cdp_preview=1',
-                'social_login'    => array_keys( (array) get_option( 'social_login_crendentials' ) ),
+                'social_login'    => array_keys( (array) get_option( 'social_login_crendentials', [] ) ),
                 'sameOrigin'      => ( wp_parse_url( admin_url(), PHP_URL_HOST ) === wp_parse_url( $login_url, PHP_URL_HOST ) ),
                 'feature_status'  => tpsa_get_features_summary(),
-                'total_users'     => count_users()['total_users'],
+                'total_users'     => $this->get_total_users(),
 
                 //server info
                 'php_version'     => phpversion(),
@@ -217,6 +211,27 @@ class Admin {
                 ],
             ] );
         }
+    }
+
+    /**
+     * Total user count for the dashboard tiles.
+     *
+     * count_users() runs an uncached GROUP BY over the whole user table, which
+     * is expensive on large sites. The dashboard only needs a rough figure, so
+     * the result is cached for an hour.
+     *
+     * @return int
+     */
+    private function get_total_users() {
+        $total = get_transient( 'tpsa_total_users' );
+
+        if ( false === $total ) {
+            $counts = count_users();
+            $total = isset( $counts['total_users'] ) ? (int) $counts['total_users'] : 0;
+            set_transient( 'tpsa_total_users', $total, HOUR_IN_SECONDS );
+        }
+
+        return (int) $total;
     }
 
     /**

@@ -34,9 +34,16 @@ class FormProcessor {
             wp_die( esc_html__( 'Missing screen_slug.', 'admin-safety-guard' ) );
         }
 
-        // Get settings fields
+        // Get settings fields. Only slugs that are actually registered may be
+        // saved: without this check any admin-post submission could create an
+        // arbitrary `tpsa_<slug>_settings` option.
         $all_fields = tpsa_settings_fields();
-        $fields = $all_fields[$screen_slug]['fields'] ?? array();
+
+        if ( !isset( $all_fields[$screen_slug]['fields'] ) ) {
+            wp_die( esc_html__( 'Unknown settings screen.', 'admin-safety-guard' ) );
+        }
+
+        $fields = (array) $all_fields[$screen_slug]['fields'];
 
         // Build sanitized settings data
         $sanitized = array();

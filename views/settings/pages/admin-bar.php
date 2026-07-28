@@ -48,7 +48,7 @@ $license_url            = add_query_arg( ['page' => 'tp-admin-safety-guard-pro']
                             'value'               => $saved_settings[$key] ?? $field['default'],
                             'current_screen_slug' => $screen_slug,
                         ];
-                        echo Utility::get_template( 'settings/fields/' . $field['type'] . '.php', $field_args );
+                        echo Utility::get_template( 'settings/fields/' . sanitize_key( $field['type'] ) . '.php', $field_args );
                     }
                 }
                 ?>

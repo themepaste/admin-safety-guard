@@ -57,8 +57,8 @@ final class App {
         // Register activation-related setup such as DB installation, version check, etc.
         self::get( Classes\Install::class );
 
-        // Load common functionality (AJAX, scripts, etc.)
-        self::get( Classes\Common::class );
+        // Scheduled cleanup of the log tables (expires blocked IPs).
+        self::get( Classes\Cron::class );
 
         // Load all features
         self::get( Classes\FeatureManager::class );
@@ -66,11 +66,6 @@ final class App {
         // Register admin-specific hooks and classes.
         if ( is_admin() ) {
             self::get( Classes\Admin::class );
-        }
-
-        // Register frontend-specific hooks and classes.
-        if ( !is_admin() ) {
-            // self::get( Classes\Front::class );
         }
 
         // Initialize REST API

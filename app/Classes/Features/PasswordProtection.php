@@ -63,43 +63,49 @@ class PasswordProtection implements FeatureInterface {
      */
     public function password_protection() {
 
-        $current_user = wp_get_current_user();
-        $current_user_roles = (array) $current_user->roles; // roles is an array
-
-        // Assuming single-role users (most common)
-        $current_user_role_key = $current_user_roles[0] ?? null;
-
         $settings = $this->get_settings();
-        $exclude_users = $settings['exclude'] ?? [];
 
-        if ( in_array( 'all-login-user', $exclude_users ) ) {
-            if ( is_user_logged_in() ) {
-                return;
-            }
+        // Skip if the feature is not enabled. This has to come first: the
+        // exclusion checks below are pure overhead on every front-end request
+        // when the feature is off.
+        if ( !$this->is_enabled( $settings ) ) {
+            return;
         }
 
-        if ( $current_user_role_key && in_array( $current_user_role_key, $exclude_users ) ) {
-            return; // Exit early if the current user's role is in the exclude list
+        // The stored value can be a string when the option was never saved as a
+        // multi-check, so normalise before any in_array() call.
+        $exclude_users = isset( $settings['exclude'] ) && is_array( $settings['exclude'] )
+        ? array_map( 'strval', $settings['exclude'] )
+        : [];
+
+        if ( is_user_logged_in() && in_array( 'all-login-user', $exclude_users, true ) ) {
+            return;
         }
+
+        // Strict comparison throughout: a loose in_array() would match the
+        // integer user ID against arbitrary role strings.
+        $current_user_roles = array_map( 'strval', (array) wp_get_current_user()->roles );
 
         if ( array_intersect( $current_user_roles, $exclude_users ) ) {
             return;
         }
 
-        if ( in_array( get_current_user_id(), $exclude_users ) ) {
+        if ( is_user_logged_in() && in_array( (string) get_current_user_id(), $exclude_users, true ) ) {
             return;
         }
 
-        // Skip if the feature is not enabled.
-        if ( !$this->is_enabled( $settings ) ) {
+        // Password from settings. There is deliberately no fallback default:
+        // a shipped default would be identical on every install and therefore
+        // publicly known. With no password configured the gate cannot be passed
+        // by anyone, so the feature stays inactive instead of locking the site.
+        $password = isset( $settings['password'] ) ? trim( (string) $settings['password'] ) : '';
+
+        if ( '' === $password ) {
             return;
         }
-
-        // Get password from settings, fallback to 'tpsm'.
-        $password = isset( $settings['password'] ) ? trim( $settings['password'] ) : 'tpsm';
 
         // Get expiry days and convert to seconds.
-        $password_expiry = isset( $settings['password-expiry'] ) ? (int) $settings['password-expiry'] : 15;
+        $password_expiry = isset( $settings['password-expiry'] ) ? max( 1, (int) $settings['password-expiry'] ) : 15;
         $password_second = $password_expiry * DAY_IN_SECONDS;
 
         // Cookie key used to store the access token.

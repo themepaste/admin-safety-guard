@@ -5,7 +5,6 @@ namespace ThemePaste\SecureAdmin\Classes;
 defined( 'ABSPATH' ) || exit;
 
 use ThemePaste\SecureAdmin\Helpers\Utility;
-use ThemePaste\SecureAdmin\Traits\Asset;
 use ThemePaste\SecureAdmin\Traits\Hook;
 
 /**
@@ -18,7 +17,6 @@ use ThemePaste\SecureAdmin\Traits\Hook;
 class Settings {
 
     use Hook;
-    use Asset;
 
     /**
      * Settings Page Slug.

@@ -5,14 +5,15 @@ namespace ThemePaste\SecureAdmin\Classes\APIs;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class Reports {
-    protected static $instance = null;
+class Reports extends BaseController {
 
-    public static function get() {
-        if ( self::$instance === null ) {
-            self::$instance = new self();
-        }
-        return self::$instance;
+    /**
+     * This controller aggregates across several tables rather than paging one.
+     *
+     * @return string
+     */
+    protected function get_table_name(): string {
+        return '';
     }
 
     /**
@@ -49,13 +50,19 @@ class Reports {
 
         $series = [];
 
-        foreach ( $requested as $key ) {
-            if ( !isset( $map[$key] ) ) {
+        // Iterate the map rather than the request so the series always comes
+        // back in a stable order, whatever order `reports` was passed in.
+        foreach ( $map as $key => $definition ) {
+            if ( !in_array( $key, $requested, true ) ) {
                 continue;
             }
 
-            [$label, $table_key, $time_col] = $map[$key];
+            [$label, $table_key, $time_col] = $definition;
             $table = get_tpsa_db_table_name( $table_key );
+
+            if ( !$this->table_exists( $table ) ) {
+                continue;
+            }
 
             // 6 buckets of 4 hours: index 0=oldest(24-20h) ... index 5=latest(4-0h)
             $data = array_fill( 0, 6, 0 );
@@ -95,35 +102,6 @@ class Reports {
             ];
         }
 
-        // Keep consistent order even if user passes reports in different order
-        $order = ['block_users', 's_logins', 'failed_logins'];
-        $ordered_series = [];
-
-        foreach ( $order as $k ) {
-            foreach ( $series as $item ) {
-                if (
-                    ( $k === 'block_users' && $item['name'] === 'Blocked Users' ) ||
-                    ( $k === 's_logins' && $item['name'] === 'Successful Logins' ) ||
-                    ( $k === 'failed_logins' && $item['name'] === 'Failed Logins' )
-                ) {
-                    $ordered_series[] = $item;
-                    break;
-                }
-            }
-        }
-
-        // If user passed subset, return subset in generated order
-        if ( count( $ordered_series ) > 0 ) {
-            return new WP_REST_Response( $ordered_series, 200 );
-        }
-
         return new WP_REST_Response( $series, 200 );
-    }
-
-    public function authorize_request( WP_REST_Request $request ) {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return new \WP_Error( 'rest_forbidden', __( 'You do not have permission to access this resource.', 'admin-safety-guard' ), ['status' => 403] );
-        }
-        return true;
     }
 }

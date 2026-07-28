@@ -16,6 +16,15 @@ class BlockUsersController extends BaseController {
     }
 
     /**
+     * The block_users table has no `username` column.
+     *
+     * @return string[]
+     */
+    protected function get_searchable_columns(): array {
+        return [ 'user_agent', 'ip_address', 'login_time' ];
+    }
+
+    /**
      * Returns a paginated list of blocked users.
      *
      * @param WP_REST_Request $request

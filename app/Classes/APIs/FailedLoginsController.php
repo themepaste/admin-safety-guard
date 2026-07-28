@@ -16,6 +16,16 @@ class FailedLoginsController extends BaseController {
     }
 
     /**
+     * The failed_logins table stores first_login_time / last_login_time
+     * rather than a single `login_time` column.
+     *
+     * @return string[]
+     */
+    protected function get_searchable_columns(): array {
+        return [ 'username', 'user_agent', 'ip_address', 'last_login_time' ];
+    }
+
+    /**
      * Returns a paginated list of failed login records.
      *
      * @param WP_REST_Request $request
@@ -28,9 +38,10 @@ class FailedLoginsController extends BaseController {
     /**
      * Returns the total number of failed login records in the database.
      *
+     * @param WP_REST_Request $request Unused; present to match the route callback signature.
      * @return int The total number of failed login records.
      */
-    public function get_count() {
+    public function get_count( WP_REST_Request $request ) {
         return $this->get_record_count( $this->get_table_name() );
     }
 }

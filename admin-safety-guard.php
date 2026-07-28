@@ -7,8 +7,10 @@ Version: 1.3.0
 Author: Themepaste Team
 Author URI: http://themepaste.com/
 License: GPLv3 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: admin-safety-guard
+Requires at least: 5.8
+Requires PHP: 8.0
  */
 
 if ( !defined( 'ABSPATH' ) ) {
@@ -34,23 +36,19 @@ final class TPSucureAdmin {
      * define all constant
      */
     private function define() {
-        define( "TPSA_DEVS", false ); // 'true' | is development mode on
-
         define( 'TPSA_PLUGIN_FILE', __FILE__ );
         define( 'TPSA_PREFIX', 'tpsa' );
         define( 'TPSA_PLUGIN_VERSION', '1.3.0' );
-        define( 'TPSA_PLUGIN_DIRNAME', dirname( TPSA_PLUGIN_FILE ) );
         define( 'TPSA_PLUGIN_BASENAME', plugin_basename( TPSA_PLUGIN_FILE ) );
         define( 'TPSA_PLUGIN_DIR', plugin_dir_path( TPSA_PLUGIN_FILE ) );
-        define( 'TPSA_PLUGIN_URL', plugin_dir_url( TPSA_PLUGIN_FILE ) );
         define( 'TPSA_ASSETS_URL', plugins_url( 'assets', TPSA_PLUGIN_FILE ) );
-        define( 'TPSA_REAL_PATH', realpath( dirname( TPSA_PLUGIN_DIR ) ) );
 
-        if ( TPSA_DEVS ) {
-            define( 'TPSA_ASSETS_VERSION', time() );
-        } else {
-            define( 'TPSA_ASSETS_VERSION', TPSA_PLUGIN_VERSION );
-        }
+        // Cache-bust assets per release; SCRIPT_DEBUG busts on every load so
+        // local development picks up rebuilt bundles without a hard refresh.
+        define(
+            'TPSA_ASSETS_VERSION',
+            ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? (string) time() : TPSA_PLUGIN_VERSION
+        );
     }
 
     /**

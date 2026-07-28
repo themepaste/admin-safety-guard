@@ -38,11 +38,8 @@ class FeatureManager {
             Features\PrivacyHardening::class,
             Features\Customize::class,
 
-            // Pro
+            // Pro upsell surfaces (the pro plugin registers the real features).
             Pro\AdvancedFirewall::class,
-            // Pro\AdvancedMalwareScanner::class,
-            // Pro\TablePrefixCheck::class,
-            // Pro\SocialLogin::class,
             Pro\ProFeaturesSettings::class,
         ];
 

@@ -16,6 +16,13 @@ class SuccessLoginsController extends BaseController {
     }
 
     /**
+     * @return string[]
+     */
+    protected function get_searchable_columns(): array {
+        return [ 'username', 'user_agent', 'ip_address', 'login_time' ];
+    }
+
+    /**
      * Returns a paginated list of successful login records.
      *
      * @param WP_REST_Request $request

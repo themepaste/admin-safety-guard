@@ -18,8 +18,11 @@ class CustomLoginUrl implements FeatureInterface {
     public function register_hooks() {
         $settings = $this->get_settings();
 
-        // Get the custom login slug from settings, fallback to empty string
-        $this->custom_login_slug = !empty( $settings['login-url'] ) ? trim( $settings['login-url'], '/' ) : '';
+        // Get the custom login slug from settings, fallback to empty string.
+        // sanitize_title() guarantees a URL-safe slug: without it a value such as
+        // "log.in" or "a|b" would be injected straight into the rewrite rule and
+        // into the regex used by force_custom_login_url().
+        $this->custom_login_slug = !empty( $settings['login-url'] ) ? sanitize_title( trim( $settings['login-url'], '/' ) ) : '';
         $this->redirect_slug = !empty( $settings['redirect-url'] ) ? trim( $settings['redirect-url'], '/' ) : '';
         $this->logout_url = !empty( $settings['logout-url'] ) ? trim( $settings['logout-url'], '/' ) : '';
 
@@ -111,7 +114,7 @@ class CustomLoginUrl implements FeatureInterface {
      * Rewrite /habib-login → wp-login.php with all query args
      */
     public function rewrite_url() {
-        add_rewrite_rule( '^' . $this->custom_login_slug . '/?$', 'wp-login.php', 'top' );
+        add_rewrite_rule( '^' . preg_quote( $this->custom_login_slug, '/' ) . '/?$', 'wp-login.php', 'top' );
     }
 
     /**
@@ -120,8 +123,9 @@ class CustomLoginUrl implements FeatureInterface {
     public function force_custom_login_url() {
         $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-        // Normalize custom login slug match
-        if ( preg_match( '#^/' . $this->custom_login_slug . '(/|\?|$)#', $request_uri ) ) {
+        // Normalize custom login slug match. preg_quote() stops any regex
+        // metacharacter that survives sanitisation from altering the pattern.
+        if ( preg_match( '#^/' . preg_quote( $this->custom_login_slug, '#' ) . '(/|\?|$)#', $request_uri ) ) {
 
             // Define missing expected variables to avoid PHP warnings
             global $user_login, $error;
@@ -141,13 +145,9 @@ class CustomLoginUrl implements FeatureInterface {
     }
 
     public function logout_redirect( $redirect_to, $requested_redirect_to, $user ) {
-        // Check if logout URL is set in settings
-        $settings = $this->get_settings();
-        if ( !empty( $settings['logout-url'] ) ) {
-            return home_url( $settings['logout-url'] );
-        }
-
-        return $redirect_to; // Fallback to default redirect
+        // The filter is only registered when a logout URL is configured, so the
+        // already-resolved property is authoritative here.
+        return !empty( $this->logout_url ) ? home_url( $this->logout_url ) : $redirect_to;
     }
 
     private function get_settings() {

@@ -1,13 +1,16 @@
-<?php 
+<?php
 
 namespace ThemePaste\SecureAdmin\Classes;
 
 defined( 'ABSPATH' ) || exit;
 
-use ThemePaste\SecureAdmin\Traits\Hook;
-use ThemePaste\SecureAdmin\Traits\Asset;
 use ThemePaste\SecureAdmin\Helpers\Utility;
+use ThemePaste\SecureAdmin\Traits\Asset;
+use ThemePaste\SecureAdmin\Traits\Hook;
 
+/**
+ * Renders the one-off "run the setup wizard" admin notice.
+ */
 class Notice {
 
     use Hook;
@@ -18,38 +21,60 @@ class Notice {
         $this->action( 'admin_enqueue_scripts', [$this, 'enqueue_assets'] );
     }
 
-    public function render_admin_notices() {
-
-        $current_admin_page_slug = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
-
-        // Don't show on setup wizard
-        if( $current_admin_page_slug == 'tpasg_setup_wizard' ) {
-            return;
+    /**
+     * Whether the setup-wizard notice should be rendered on this request.
+     *
+     * @return bool
+     */
+    private function should_show_notice() {
+        // Never on the wizard screen itself.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing value.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        if ( 'tpasg_setup_wizard' === $page ) {
+            return false;
         }
 
-        // Only show to admin users
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return;
+        if ( !current_user_can( 'manage_options' ) ) {
+            return false;
         }
 
-        // Already completed? Then skip notice
+        // The wizard writes 0 or 1 once a choice has been made; anything else
+        // (including the option being absent) means it has not run yet.
         $setup_wizard_value = get_option( 'tpsm_is_setup_wizard', null );
-        if ( $setup_wizard_value === '0' || $setup_wizard_value === '1' || $setup_wizard_value === 0 || $setup_wizard_value === 1 ) {
-            return;
+        if ( null !== $setup_wizard_value && in_array( (int) $setup_wizard_value, [0, 1], true ) ) {
+            return false;
         }
 
-        // Check if user dismissed the notice manually
+        // Check if user dismissed the notice manually.
         if ( get_user_meta( get_current_user_id(), 'tpsm_dismissed_setup_notice', true ) ) {
-            return;
+            return false;
         }
 
-        printf( '%s', Utility::get_template( 'notice/setup-wizard-notice.php' ) );
+        return true;
     }
 
+    public function render_admin_notices() {
+        if ( !$this->should_show_notice() ) {
+            return;
+        }
+
+        printf( '%s', Utility::get_template( 'notice/setup-wizard-notice.php' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template escapes its own output.
+    }
+
+    /**
+     * Load the notice stylesheet only when the notice is actually rendered,
+     * rather than on every screen in wp-admin.
+     *
+     * @return void
+     */
     public function enqueue_assets() {
+        if ( !$this->should_show_notice() ) {
+            return;
+        }
+
         $this->enqueue_style(
             'tpsm-notice',
-            TPSA_ASSETS_URL . '/admin/css/notice.css',
+            TPSA_ASSETS_URL . '/admin/css/notice.css'
         );
     }
 }

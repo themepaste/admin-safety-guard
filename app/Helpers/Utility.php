@@ -10,48 +10,32 @@ defined( 'ABSPATH' ) || exit;
 class Utility {
 
     /**
-     * Prints information about a variable in a more readable format.
+     * Includes a template file from the 'views' directory.
      *
-     * @param mixed $data The variable you want to display.
-     * @param bool  $admin_only Should it display in wp-admin area only
-     * @param bool  $hide_adminbar Should it hide the admin bar
-     */
-    public static function pri( $data, $admin_only = true, $hide_adminbar = true ) {
-        if ( $admin_only && !current_user_can( 'manage_options' ) ) {
-            return;
-        }
-
-        echo '<pre>';
-        if ( is_object( $data ) || is_array( $data ) ) {
-            print_r( $data );
-        } else {
-            var_dump( $data );
-        }
-        echo '</pre>';
-
-        if ( is_admin() && $hide_adminbar ) {
-            echo '<style>#adminmenumain{display:none;}</style>';
-        }
-    }
-
-    /**
-     * Includes a template file from the 'view' directory.
+     * @param string $template The template file name, relative to views/.
+     * @param array  $args     Optional. Variables made available to the template as $args.
      *
-     * @param string $template The template file name.
-     * @param array  $args Optional. An associative array of variables to pass to the template file.
+     * @return string The rendered template, or an empty string when it does not exist.
      */
     public static function get_template( $template, $args = array() ) {
+        // Templates are addressed by hard-coded relative paths, but normalise
+        // anyway so a future caller cannot traverse out of views/.
+        $template = ltrim( str_replace( array( '..', "\0" ), '', (string) $template ), '/' );
         $path = TPSA_PLUGIN_DIR . 'views/' . $template;
 
-        if ( file_exists( $path ) ) {
-            if ( !empty( $args ) && is_array( $args ) ) {
-                extract( $args );
-            }
-
-            ob_start();
-            include $path;
-            return ob_get_clean();
+        if ( !file_exists( $path ) ) {
+            return '';
         }
+
+        // Templates read both $args and the individual keys. EXTR_SKIP keeps a
+        // stray key from clobbering $path / $template / $args themselves.
+        if ( !empty( $args ) && is_array( $args ) ) {
+            extract( $args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+        }
+
+        ob_start();
+        include $path;
+        return (string) ob_get_clean();
     }
 
     /**
@@ -63,31 +47,42 @@ class Utility {
      * @param string $template The relative path to the template file inside the 'admin-safety-guard-pro/views/' directory.
      * @param array  $args     Optional. An associative array of variables to extract into the template's scope.
      *
-     * @return string|null The output of the template file, or null if the file doesn't exist.
+     * @return string The output of the template file, or an empty string if unavailable.
      */
     public static function get_pro_template( $template, $args = array() ) {
-        if ( is_plugin_active( 'admin-safety-guard-pro/admin-safety-guard-pro.php' ) ) {
-            $path = TPASG_PRO_REAL_PATH . '/admin-safety-guard-pro/views/' . $template;
-
-            if ( file_exists( $path ) ) {
-                if ( !empty( $args ) && is_array( $args ) ) {
-                    extract( $args );
-                }
-
-                ob_start();
-                include $path;
-                return ob_get_clean();
-            }
+        // tp_is_pro_active() loads wp-admin/includes/plugin.php on demand;
+        // calling is_plugin_active() directly is a fatal error on the front end.
+        // TPASG_PRO_REAL_PATH is defined by the pro plugin, so it must be
+        // checked before use rather than assumed.
+        if ( !tp_is_pro_active() || !defined( 'TPASG_PRO_REAL_PATH' ) ) {
+            return '';
         }
+
+        $template = ltrim( str_replace( array( '..', "\0" ), '', (string) $template ), '/' );
+        $path = TPASG_PRO_REAL_PATH . '/admin-safety-guard-pro/views/' . $template;
+
+        if ( !file_exists( $path ) ) {
+            return '';
+        }
+
+        if ( !empty( $args ) && is_array( $args ) ) {
+            extract( $args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+        }
+
+        ob_start();
+        include $path;
+        return (string) ob_get_clean();
     }
 
     /**
-     * @param string $var the variable name
-     * @return string
+     * Read a routing/UI query var.
+     *
+     * @param string $var The query var name.
+     * @return string Sanitized value, or an empty string when absent.
      */
     public static function get_screen( $var = '' ) {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing/UI value, no state change.
-        return isset( $_GET[$var] ) ? sanitize_text_field( wp_unslash( $_GET[$var] ) ) : null;
+        return isset( $_GET[$var] ) ? sanitize_key( wp_unslash( $_GET[$var] ) ) : '';
     }
 
 }

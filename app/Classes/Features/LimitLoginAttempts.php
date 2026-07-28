@@ -44,7 +44,10 @@ class LimitLoginAttempts implements FeatureInterface {
                     'authenticate',
                     function ( $user ) {
                         if ( $this->is_ip_locked_out() ) {
-                            return new \WP_Error( 'access_denied', '🚫 You are temporarily blocked due to too many failed login attempts.' );
+                            return new \WP_Error(
+                                'access_denied',
+                                __( 'You are temporarily blocked due to too many failed login attempts.', 'admin-safety-guard' )
+                            );
                         }
                         return $user;
                     },
@@ -54,62 +57,97 @@ class LimitLoginAttempts implements FeatureInterface {
         }
     }
 
+    /**
+     * Whether the current IP is on the firewall whitelist and bypasses lockouts.
+     *
+     * @param array $settings Feature settings.
+     * @return bool
+     */
     public function is_white_list_ip( $settings ) {
-        $current_ip_address = $this->get_ip_address();
-        $whitelist_ips = isset( $settings['whitelist-ip'] ) ? $settings['whitelist-ip'] : [];
+        $whitelist_ips = isset( $settings['whitelist-ip'] ) && is_array( $settings['whitelist-ip'] )
+        ? $settings['whitelist-ip']
+        : [];
+
         if ( empty( $whitelist_ips ) ) {
-            return;
+            return false;
         }
-        return in_array( $current_ip_address, $whitelist_ips, true );
+
+        return in_array( $this->get_ip_address(), $whitelist_ips, true );
+    }
+
+    /**
+     * Whether the current request targets a login or admin entry point.
+     *
+     * @return bool
+     */
+    private function is_login_request() {
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        return strpos( $request_uri, 'wp-login.php' ) !== false
+        || strpos( $request_uri, 'wp-admin' ) !== false;
+    }
+
+    /**
+     * Render the "permanently blocked" screen and stop the request.
+     *
+     * @return void
+     */
+    private function deny_permanently_blocked() {
+        wp_die(
+            esc_html__( 'Access Denied - You have been blocked for 1 day due to repeated login failures.', 'admin-safety-guard' ),
+            esc_html__( 'Access Denied', 'admin-safety-guard' ),
+            ['response' => 403]
+        );
+    }
+
+    /**
+     * Render the temporary lockout screen and stop the request.
+     *
+     * @return void
+     */
+    private function deny_temporarily_locked() {
+        $settings = $this->get_settings();
+        $block_message = isset( $settings['block-message'] ) && '' !== trim( (string) $settings['block-message'] )
+        ? (string) $settings['block-message']
+        : __( 'You have been locked out due to too many login attempts.', 'admin-safety-guard' );
+        $block_for = isset( $settings['block-for'] ) ? (int) $settings['block-for'] : 15;
+
+        wp_die(
+            esc_html(
+                sprintf(
+                    /* translators: 1: configured lockout message, 2: lockout duration in minutes */
+                    __( 'Access Denied - %1$s Please try again after %2$d minutes.', 'admin-safety-guard' ),
+                    $block_message,
+                    $block_for
+                )
+            ),
+            esc_html__( 'Access Denied', 'admin-safety-guard' ),
+            ['response' => 403]
+        );
     }
 
     public function maybe_block_custom_login() {
-        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+        // On the front end also guard themed login/register pages.
+        if ( !$this->is_login_request() && !is_page( 'login' ) && !is_page( 'register' ) ) {
+            return;
+        }
+
         if ( $this->is_permanently_blocked_ip() ) {
-            // Only block access to login/registration pages
-            if ( is_page( 'login' ) || is_page( 'register' ) || strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
-                wp_die(
-                    '🚫 Access Denied – You have been permanently blocked for 1 day due to repeated login failures.',
-                    'Access Denied',
-                    ['response' => 403]
-                );
-            }
+            $this->deny_permanently_blocked();
         } elseif ( $this->is_ip_locked_out() ) {
-            // Only block login and register pages
-            if ( is_page( 'login' ) || is_page( 'register' ) || strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
-                wp_die(
-                    '🚫 Access Denied – You have been temporarily blocked due to too many failed login attempts. Please try again after 15 minutes.',
-                    'Access Denied',
-                    ['response' => 403]
-                );
-            }
+            $this->deny_temporarily_locked();
         }
     }
 
     public function maybe_block_login_form() {
-        $settings      = $this->get_settings();
-        $block_message = isset( $settings['block-message'] ) ? $settings['block-message'] : 'You have been permanently blocked due to repeated login failures.';
-        $block_for     = isset( $settings['block-for'] ) ? $settings['block-for'] : '15';
-        $request_uri   = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+        if ( !$this->is_login_request() ) {
+            return;
+        }
 
         if ( $this->is_permanently_blocked_ip() ) {
-            if ( strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
-                wp_die(
-                    '🚫 Access Denied – You have been permanently blocked for 1 day due to repeated login failures.',
-                    'Access Denied',
-                    ['response' => 403]
-                );
-            }
+            $this->deny_permanently_blocked();
         } elseif ( $this->is_ip_locked_out() ) {
-            // Only show the lockout message if it's for login/registration page
-            if ( strpos( $request_uri, 'wp-login.php' ) !== false || strpos( $request_uri, 'wp-admin' ) !== false ) {
-                wp_die(
-                    esc_html( '🚫 Access Denied – ' . $block_message . '. Please try again after ' . $block_for . ' minutes.' ),
-                    esc_html__( 'Access Denied', 'admin-safety-guard' ),
-                    ['response' => 403]
-                );
-
-            }
+            $this->deny_temporarily_locked();
         }
     }
 
@@ -262,18 +300,20 @@ echo wp_kses_post(
                     if ( !$already_blocked ) {
                         // Optional email (same as your current logic)
                         $admin_email = get_option( 'admin_email' );
-                        $subject = 'A user has been blocked for 24 hours due to multiple failed login attempts.';
-                        $body = "
-                        Hi Admin,<br><br>
-                        A user has been <b>blocked for 24 hours</b> due to repeated login failures.<br><br>
-                        <b>Details:</b><br>
-                        - IP Address: {$ip}<br>
-                        - User Agent: {$user_agent}<br>
-                        - Login Time: {$now}<br><br>
-                        Please review the logs for further action if necessary.<br><br>
-                        Thanks,<br>
-                        Secure Admin Plugin
-                    ";
+                        $subject = __( 'A user has been blocked for 24 hours due to multiple failed login attempts.', 'admin-safety-guard' );
+
+                        // The IP and especially the User-Agent are attacker
+                        // controlled, so escape them before dropping them into
+                        // an HTML email body.
+                        $body = sprintf(
+                            '%1$s<br><br><b>%2$s</b><br>- IP Address: %3$s<br>- User Agent: %4$s<br>- Login Time: %5$s',
+                            esc_html__( 'A visitor has been blocked for 24 hours due to repeated login failures.', 'admin-safety-guard' ),
+                            esc_html__( 'Details:', 'admin-safety-guard' ),
+                            esc_html( $ip ),
+                            esc_html( $user_agent ),
+                            esc_html( $now )
+                        );
+
                         $headers = ['Content-Type: text/html; charset=UTF-8'];
                         wp_mail( $admin_email, $subject, $body, $headers );
 
@@ -366,10 +406,12 @@ echo wp_kses_post(
         );
 
         if ( $lockout_time ) {
+            // lockout_time is stored in site-local time via current_time( 'mysql' ),
+            // so compare against the site-local "now" rather than a UTC timestamp.
             $lockout_ts = strtotime( $lockout_time );
-            $now_ts = current_time( 'timestamp' );
+            $now_ts = strtotime( current_time( 'mysql' ) );
 
-            if ( ( $now_ts - $lockout_ts ) < ( $blocked_minute * 60 ) ) {
+            if ( $lockout_ts && ( $now_ts - $lockout_ts ) < ( $blocked_minute * 60 ) ) {
                 return true;
             }
         }
@@ -382,21 +424,20 @@ echo wp_kses_post(
         if ( !$this->is_enabled( $settings ) ) {
             return;
         }
-        $block_ip_lists = isset( $settings['block-ip-address'] ) ? $settings['block-ip-address'] : '';
+        $block_ip_lists = isset( $settings['block-ip-address'] ) && is_array( $settings['block-ip-address'] )
+        ? $settings['block-ip-address']
+        : [];
 
         if ( empty( $block_ip_lists ) ) {
             return;
         }
 
-        $current_ip_address = $this->get_ip_address();
-
-        if ( in_array( $current_ip_address, $block_ip_lists, true ) ) {
+        if ( in_array( $this->get_ip_address(), $block_ip_lists, true ) ) {
             wp_die(
-                '<h2 style="color:red;text-align:center;">' . esc_html( 'Your IP address is not permitted to log in to this site.' ) . '</h2>',
-                'Login Blocked',
+                '<h2 style="color:red;text-align:center;">' . esc_html__( 'Your IP address is not permitted to log in to this site.', 'admin-safety-guard' ) . '</h2>',
+                esc_html__( 'Login Blocked', 'admin-safety-guard' ),
                 ['response' => 403]
             );
-            exit;
         }
     }
 

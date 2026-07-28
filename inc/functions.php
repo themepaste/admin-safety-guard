@@ -625,7 +625,7 @@ if ( !function_exists( 'tpsm_saved_remote_data' ) ) {
                 'X-Auth-Token' => 'c7fc312817194d30c79da538204eaec3',
                 'Content-Type' => 'application/json',
             ],
-            'body'    => json_encode( [
+            'body'    => wp_json_encode( [
                 'email_address' => $email_address,
                 'full_name'     => $full_name,
                 'site_url'      => $site_url,

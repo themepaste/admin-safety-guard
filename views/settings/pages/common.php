@@ -40,15 +40,15 @@ $is_valid_license_available = is_valid_license_available();
                 <?php
 if ( is_array( $current_settings_fields ) && !empty( $current_settings_fields ) ) {
     foreach ( $current_settings_fields as $key => $field ) {
-        $args = [
+        $field_args = [
             'prefix'              => $args['prefix'],
             'key'                 => $key,
             'field'               => $field,
             'value'               => isset( $saved_settings[$key] ) ? $saved_settings[$key] : $field['default'],
             'current_screen_slug' => $screen_slug,
         ];
-        $field_name = $field['type'];
-        echo Utility::get_template( 'settings/fields/' . $field_name . '.php', $args );
+        $field_name = sanitize_key( $field['type'] );
+        echo Utility::get_template( 'settings/fields/' . $field_name . '.php', $field_args );
     }
 }
 ?>

@@ -18,12 +18,10 @@ foreach ( $settings_option as $key => $value ) {
         $features = $value['sub'];
         foreach ( $features as $sub_key => $sub_value ) {
             if ( $current_screen == $sub_key ) {
+                // Feature-specific page if one exists, otherwise the generic
+                // field-renderer page. Templates escape their own output.
                 $template = Utility::get_template( 'settings/pages/' . $sub_key . '.php', $args );
-                if ( isset( $template ) && !empty( $template ) && $template ) {
-                    echo $template;
-                } else {
-                    echo Utility::get_template( 'settings/pages/common.php', $args );
-                }
+                echo $template ? $template : Utility::get_template( 'settings/pages/common.php', $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
         }
     }

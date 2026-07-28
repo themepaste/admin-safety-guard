@@ -23,10 +23,12 @@
             </div>
         </div>';
 
+    // esc_textarea() is the correct escaper for element content; esc_attr()
+    // leaves the value double-encoded when it is re-displayed after saving.
     printf( $field_template,
         esc_html( $args['field']['label'] ),    // %1$s == Label
         $id_name,                               // %2$s == ID & Name
-        esc_attr( $value ),                     // %3$s == value
+        esc_textarea( $value ),                 // %3$s == value
         esc_html( $args['field']['desc'] )      // %4$s == Description
     );
 ?>
