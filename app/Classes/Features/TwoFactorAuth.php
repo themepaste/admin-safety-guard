@@ -243,7 +243,7 @@ class TwoFactorAuth implements FeatureInterface {
              * Fires when a two-factor code is rejected, so failures can be
              * surfaced in the monitoring log or an external SIEM.
              *
-             * @since 1.3.0
+             * @since 1.4.0
              *
              * @param int $user_id    Account being challenged.
              * @param int $tries_used Failed attempts against this challenge.
@@ -452,7 +452,7 @@ printf(
         /**
          * Filter whether a given user must pass two-factor authentication.
          *
-         * @since 1.3.0
+         * @since 1.4.0
          *
          * @param bool     $required Whether the second factor applies.
          * @param \WP_User $user     The user signing in.

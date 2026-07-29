@@ -60,12 +60,22 @@ function tpsa_uninstall_site() {
             OR option_name LIKE '\_transient\_timeout\_tpsm\_%'"
     );
 
-    // User meta written by the wizard notice and the legacy OTP implementation.
-    delete_metadata( 'user', 0, 'tpsm_dismissed_setup_notice', '', true );
-    delete_metadata( 'user', 0, '_tpsa_otp_code', '', true );
+    // User meta written by the wizard notice, session tracking, the new-address
+    // alert, the audit notice, and the legacy OTP implementation.
+    $meta_keys = array(
+        'tpsm_dismissed_setup_notice',
+        '_tpsa_otp_code',
+        '_tpsa_last_seen',
+        '_tpsa_known_ips',
+        '_tpsa_audit_notice_dismissed',
+    );
+
+    foreach ( $meta_keys as $meta_key ) {
+        delete_metadata( 'user', 0, $meta_key, '', true );
+    }
 
     // Custom log tables.
-    foreach ( array( 's_logins', 'failed_logins', 'block_users' ) as $table ) {
+    foreach ( array( 's_logins', 'failed_logins', 'block_users', 'threats' ) as $table ) {
         $name = $wpdb->prefix . 'tpsa_' . $table;
         $wpdb->query( "DROP TABLE IF EXISTS `{$name}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     }

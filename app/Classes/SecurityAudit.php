@@ -19,7 +19,7 @@ use ThemePaste\SecureAdmin\Traits\Hook;
  * requests — and the whole result is cached, so the score costs nothing on a
  * normal page load.
  *
- * @since 1.3.0
+ * @since 1.4.0
  */
 class SecurityAudit {
 
@@ -322,7 +322,7 @@ class SecurityAudit {
         /**
          * Filter the audit checks, so other code can add its own.
          *
-         * @since 1.3.0
+         * @since 1.4.0
          *
          * @param array $checks The check list.
          */

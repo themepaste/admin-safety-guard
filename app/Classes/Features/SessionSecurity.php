@@ -19,7 +19,7 @@ use ThemePaste\SecureAdmin\Traits\Hook;
  * stolen laptop or a copied cookie stays usable for that whole window.
  *
  * @package ThemePaste\SecureAdmin\Classes\Features
- * @since   1.3.0
+ * @since   1.4.0
  */
 class SessionSecurity implements FeatureInterface {
 

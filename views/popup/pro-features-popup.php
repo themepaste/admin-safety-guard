@@ -24,7 +24,7 @@ $license_url = add_query_arg(
             </div>
 
             <div class="tpsa-pro-buttons">
-                <a href="https://themepaste.com/product/admin-safety-guard-pro#pricePlanSection" target="_blank"
+                <a href="https://wordpressdirect.co.uk/product/admin-safety-guard-pro/#pricePlanSection" target="_blank"
                     class="tpsa-pro-btn purchase-btn">
                     Purchase Pro
                 </a>

@@ -2,233 +2,305 @@
 Contributors: themepaste, habibnote
 Tags: login security, limit login attempts, two-factor authentication, brute force protection, custom login url
 Requires at least: 5.8
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Protect your WP site from hackers for free. Limit logins, add 2FA, reCAPTCHA, block IPs, hide wp-login.php & track activity logs.
+Stop brute force attacks for free. Limit login attempts, add 2FA and reCAPTCHA, hide wp-login.php, block IPs and see every login on your site.
 
 == Description ==
 
-**Admin Safety Guard** is a powerful yet lightweight WordPress security plugin that protects your login page and admin dashboard from hackers, bots, and brute-force attacks. It is built for anyone — from first-time bloggers to experienced developers — with a clean interface, clear settings, and features that work from the moment you activate it.
+Admin Safety Guard locks down the two places WordPress sites actually get broken into: the login form and the admin area.
 
-WordPress is the most popular website platform in the world, which also makes it the most targeted. Every day, thousands of automated bots scan WordPress sites looking for weak passwords, exposed login pages, and unpatched vulnerabilities. Admin Safety Guard closes those doors quickly and reliably, without slowing down your site or requiring any technical expertise.
+You don't need to know what a firewall rule is to use it. Turn on a switch, pick a number, save. The plugin handles the rest and shows you, in plain words, what it blocked and what still needs your attention.
+
+If you have ever looked at your login log and seen hundreds of failed attempts for a user called "admin" that you never created, this plugin is for you.
 
 [youtube https://www.youtube.com/watch?v=KFNUmTHtODE]
 
----
+### How WordPress sites get broken into
 
-### Why WordPress Sites Get Hacked — And How Admin Safety Guard Stops It
+Almost every automated attack follows the same three steps:
 
-Most successful WordPress attacks follow the same pattern:
+1. A bot loads `yoursite.com/wp-login.php`, because that address is the same on every WordPress site in the world.
+2. It guesses usernames and passwords, thousands of times an hour, until one works.
+3. Once it's in, it installs a backdoor, injects spam links, or quietly adds itself as an administrator.
 
-1. A bot finds your login page at the default `wp-login.php` address.
-2. It tries thousands of username and password combinations (brute-force attack).
-3. Once inside, it installs malware, steals data, or takes over your site.
+Admin Safety Guard breaks that chain at every step, and every feature below is free.
 
-Admin Safety Guard blocks every step of this attack chain — for free.
+### Free features
 
----
+**Limit login attempts (on by default)**
+Lock out an IP address after a set number of failed sign-ins. You choose how many attempts are allowed, how long the lockout lasts, and what the person sees. Keep failing and the address is blocked for a full 24 hours. This is the one feature that switches itself on when you activate the plugin, so your site is covered before you configure anything.
 
-### Free Features
+It doesn't only watch `wp-login.php`. XML-RPC, application passwords and custom theme login forms all count towards the same limit, which is how most bots get around simpler login limiters.
 
-**Limit Login Attempts (Active by Default)**
-Automatically block any IP address that fails too many login attempts. You control the number of allowed attempts, the lockout duration, and the message shown to blocked users. Brute-force attacks become impossible when attackers are locked out after 3 failed tries. Login Limit Attempts is the only feature enabled by default on fresh install, so your site is protected the moment you activate the plugin.
+Add your own IP to the trusted list so you can never lock yourself out. Single addresses, CIDR ranges (`203.0.113.0/24`), wildcards (`203.0.113.*`) and IPv6 all work.
 
-**Custom Login URL**
-Move your login page away from the default `wp-login.php` address. Bots and automated scanners will never find your login page because it simply does not exist at the expected location. You can set any slug you like, and the plugin handles redirect rules automatically. You can also set a custom redirect URL for after login and after logout.
+**Custom login URL**
+Move your sign-in page to an address only you know, like `yoursite.com/office-door`. After that, `wp-login.php` and `wp-register.php` return a 404 for everyone, so scanners find nothing to attack. It works on root installs, WordPress in a subfolder, and multisite. Reserved slugs that would break your site are rejected before you can save them.
 
-**Two-Factor Authentication (2FA) via Email OTP**
-After a user enters their correct password, a one-time passcode (OTP) is sent to their email address. They must enter that code to complete the login. Even if a hacker steals a password, they cannot get in without also accessing the user’s email inbox. You can customise the OTP email subject and body to match your brand.
+**Two-factor authentication by email**
+After the password comes a one-time code, sent to the user's inbox. A stolen password on its own becomes useless. You decide which roles need it (administrators and editors only, for example), how many digits the code has, how long it stays valid, and how many wrong guesses are allowed before it's destroyed. The email is styled by default, and you can write your own subject and body if you'd rather.
 
-**Google reCAPTCHA (v2 & v3)**
-Add Google reCAPTCHA to your login form to block automated bots in real time. Both reCAPTCHA v2 (the familiar checkbox) and v3 (invisible, score-based) are supported. Simply enter your site key and secret key from Google, choose your version, and reCAPTCHA will handle the rest silently in the background.
+**Google reCAPTCHA (v2 and v3)**
+Add reCAPTCHA to your login form to stop bots before they ever submit a password. Both the "I'm not a robot" checkbox and the invisible v3 score check are supported. Paste in your site key and secret key, pick a version, done.
 
-**IP Blocking**
-Manually block specific IP addresses from accessing your login page entirely. If you notice a suspicious IP in your activity log or receive repeated failed login alerts, add that IP to the block list and it will be turned away immediately. Perfect for stopping known bad actors before they become a problem.
+**Session security**
+Everything above protects the sign-in. This protects what happens after it. WordPress keeps a session alive for two days, or fourteen if someone ticked "Remember Me" - however long the laptop sits open in a coffee shop.
 
-**Login Logs & Activity Tracking**
-See exactly who is logging in to your site and when. The activity dashboard shows successful logins, failed login attempts, IP addresses, user agents, and timestamps in a clear, searchable table. You will always know if something unusual is happening on your site, and you have the evidence to act on it.
+Sign people out after a period of inactivity, shorten the maximum session length, end every other session when someone changes their password, and optionally tie a session to the IP address it started from so a copied cookie stops working elsewhere.
 
-**Security Analytics Dashboard**
-The built-in analytics dashboard gives you a real-time overview of your site’s security health. It shows your overall Security Score (based on how many features you have enabled), recent login activity, failed login trends, and a breakdown of which security features are active versus inactive. It is the first page you see when you open the plugin, giving you immediate situational awareness.
+**IP blocking**
+Some addresses don't deserve a second chance. Add them to the permanent block list and they never reach your login page again. You can also block an address in one click straight from the login log.
 
-**Hide Admin Bar (by Role)**
-Choose which user roles see the WordPress admin bar on the front end of your site. For example, you can hide the admin bar from subscribers and customers while keeping it visible for editors and administrators. This reduces information leakage and gives non-admin users a cleaner experience.
+**Login logs and activity tracking**
+A real audit trail: every successful sign-in and every failed attempt, with username, IP address, browser, and timestamp. Search it, sort it, page through it, export it to CSV for a client report, or clear out old entries by date range.
 
-**Password Protection (Site-Wide)**
-Lock your entire website behind a password. Visitors must enter the correct password before they can view any content. This is ideal for staging sites, coming-soon pages, client previews, or any situation where you want to restrict public access temporarily. You can set the access duration and exclude specific user roles from the password requirement.
+You can also get an email the first time an administrator signs in from an address that account has never used before. That's often the earliest sign that a password has leaked.
 
-**Privacy Hardening — Disable XML-RPC**
-The WordPress XML-RPC interface is a common target for brute-force and DDoS amplification attacks. With one toggle, you can disable it completely. Unless you rely on XML-RPC for mobile app publishing or specific third-party integrations, disabling it is a safe and recommended step for almost every WordPress site.
+**Threats blocked**
+Every block the plugin performs is recorded in one place: lockouts, blocked addresses, failed reCAPTCHA checks, wrong two-factor codes, blocked XML-RPC requests, username-discovery attempts. The dashboard shows what was stopped and when, so "is anything actually happening?" has a real answer.
 
-**Login Page Customisation & Branding**
-Replace the default WordPress logo on the login page with your own logo. Set the logo width, height, and URL. Choose from pre-built login page templates to give your login form a professional, branded appearance. This is especially useful for agencies delivering client sites and for anyone who wants a polished, consistent look.
+**Security score**
+The score grades your site, not the plugin. It checks the things that matter - HTTPS, whether core and PHP are current, whether an account is literally called "admin", whether your usernames are public, whether file editing is still enabled - and weighs them against the protections you have switched on. Anything critical gets flagged at the top of your admin screen until it's dealt with.
 
-**Firewall & Malware Overview**
-The Firewall & Malware section gives you a central view of your site’s firewall status, and links to our free [Deep Malware Cleaner](https://wordpress.org/plugins/deep-malware-cleaner/) plugin for malware scanning and cleanup. It shows what is active and what still needs attention, making it easy to build up your security layer by layer.
+**Privacy hardening**
+Nine one-click switches that close the small leaks attackers use for reconnaissance:
 
----
+* Disable XML-RPC
+* Block username discovery through `?author=1` and the REST users endpoint
+* Show one generic error instead of telling people which half of the login was wrong
+* Hide your WordPress version from page source, feeds and asset URLs
+* Remove the RSD, Windows Live Writer and shortlink meta tags
+* Disable pingbacks so your site can't be used to flood someone else's
+* Disable the theme and plugin file editors
+* Send browser security headers (clickjacking, MIME sniffing, referrer leaks, camera and microphone access)
+* Disable application passwords
 
-### Pro Features
+**Password protect the whole site**
+Put a password in front of everything. Handy for staging sites, client previews and coming-soon pages. Choose how long access lasts and which roles skip it.
 
-[Admin Safety Guard Pro](https://themepaste.com/product/admin-safety-guard-pro) extends the plugin with advanced security tools designed for agencies, developers, and high-traffic sites.
+**Hide the admin bar by role**
+Decide which roles see the toolbar on the front end. Hide it from subscribers and customers, keep it for editors and administrators.
 
-**Passwordless Login (Magic Links)**
-Let users log in with a secure, one-time link sent to their email — no password needed. Magic links expire after a single use, making them more secure than passwords for many workflows.
+**Brand your login page**
+Swap the WordPress logo for yours, set its size, where it links to, and its alt text. Change the page background (colour or image), the form background, text, link and button colours, round off the corners, hide the links you don't want, tick "Remember Me" by default, or write your own CSS. Ready-made templates are included if you'd rather not fiddle.
 
-**2FA via Mobile Authenticator App**
-Add Google Authenticator or Authy-compatible two-factor authentication to your login flow. Users scan a QR code once, then generate time-based OTP codes from their phone app. This is the same method used by banks and enterprise software.
+**Firewall and malware overview**
+One screen showing your firewall status, with a link to our free [Deep Malware Cleaner](https://wordpress.org/plugins/deep-malware-cleaner/) plugin for scanning and cleanup. If it's already installed, the screen takes you straight to it.
 
-**Social Login**
-Allow users to log in with their existing Google, Facebook, or other social media accounts. Reduce friction at sign-up and login, while keeping full control over which providers are allowed.
+### Pro features
 
-**Database Table Prefix Check**
-The default WordPress database prefix `wp_` is well-known to attackers and makes SQL injection easier. This Pro tool detects your current prefix and guides you through changing it to a unique, random value to close that vulnerability.
+[Admin Safety Guard Pro](https://wordpressdirect.co.uk/product/admin-safety-guard-pro/) adds the tools agencies and busier sites tend to ask for.
 
-**Strong Password Enforcement**
-Set a minimum password strength policy for your users. When they update their password, it must meet your requirements — rejecting weak, guessable passwords before they become a security risk.
+**Passwordless login (magic links)**
+Users click a one-time link in their email instead of typing a password. The link works once and then expires.
 
-**Advanced Web Application Firewall**
-Inspect incoming requests and block common SQL injection and cross-site scripting payloads before they reach WordPress. Choose monitor-only or block mode, whitelist trusted IPs, block specific IPs and user agents, and cap request size.
+**2FA with an authenticator app**
+Google Authenticator, Authy and anything else that speaks TOTP. Users scan a QR code once and generate codes on their phone from then on - no email delivery to wait for.
 
-**Malware Scanning & Cleanup**
-Malware scanning and removal are handled by our dedicated free plugin, [Deep Malware Cleaner](https://wordpress.org/plugins/deep-malware-cleaner/), which covers both scanning and cleanup in one place. Admin Safety Guard links to it from the Firewall & Malware screen rather than shipping a second, more limited scanner.
+**Social login**
+Let people sign in with Google, Facebook or other accounts they already have, while you keep control of which providers are allowed.
 
-> **[Upgrade to Pro](https://themepaste.com/product/admin-safety-guard-pro)** to unlock all Pro features.
+**Database prefix check**
+The default `wp_` prefix is known to every attacker and makes SQL injection easier to write. This finds your current prefix and walks you through changing it safely.
 
----
+**Strong password enforcement**
+Set a minimum password strength. Weak passwords get rejected at the point they're created, not after an incident.
 
-### Who Is Admin Safety Guard For?
+**Advanced web application firewall**
+Inspect incoming requests and block SQL injection and cross-site scripting payloads before WordPress ever sees them. Run it in monitor-only mode first, whitelist trusted addresses, block user agents, and cap request size.
 
-**Bloggers & Content Creators**
-You focus on writing — not on managing server security. Admin Safety Guard protects your login page and admin area quietly in the background with zero ongoing maintenance required.
+**Malware scanning and cleanup**
+Handled by our separate free plugin, [Deep Malware Cleaner](https://wordpress.org/plugins/deep-malware-cleaner/), rather than a second half-built scanner in here.
 
-**Small Business Owners**
-Your website is your business. A hack can bring it down, damage your reputation, and cost you money. Admin Safety Guard gives you enterprise-level login protection without the enterprise price tag.
+> **[Upgrade to Pro](https://wordpressdirect.co.uk/product/admin-safety-guard-pro/)** to unlock all Pro features.
 
-**WooCommerce Store Owners**
-An online store holds customer data, payment details, and order history. Limit login attempts, add 2FA, and lock down your admin area so only you and your trusted team can get in.
+### Who uses it
 
-**Freelancers & Web Designers**
-Deliver more secure sites to clients out of the box. Customise the login page with the client’s branding, lock down the admin bar by role, and hand over a professional, secure WordPress installation every time.
+**Bloggers and content creators** - protection that runs in the background with nothing to maintain.
 
-**Agencies & Development Teams**
-Manage security across multiple client sites with a consistent, repeatable setup. All features are toggle-based and clearly documented, making it easy to onboard new team members and maintain a security standard across your portfolio.
+**Small business owners** - your site is your shopfront. A hack costs you customers and takes days to clean up.
 
-**Developers & Site Administrators**
-Fine-tune every setting — login attempt limits, lockout durations, OTP email templates, reCAPTCHA version, redirect URLs, IP block lists, and more. Admin Safety Guard is built on WordPress hooks and filters, so it plays well with the rest of your stack.
+**WooCommerce stores** - customer records, addresses and order history sit behind that login form. Lock it properly.
 
----
+**Freelancers and web designers** - hand over a site that's already hardened and branded, without a security bill attached.
 
-### What Makes Admin Safety Guard Different?
+**Agencies** - the same repeatable setup across every client site, with logs you can export when someone asks what happened.
 
-- **Lightweight by design.** Assets are loaded only on the pages that need them. The plugin has no impact on your site’s front-end load time.
-- **No configuration required to get started.** Limit Login Attempts is enabled automatically on install. Your site is more secure the moment you activate the plugin.
-- **All features are clearly labelled Free or Pro.** You can see exactly what is available and what requires the Pro version before making any decisions.
-- **Clean, modern dashboard.** The settings UI is built with React for a fast, app-like experience. Finding and configuring features takes seconds, not minutes.
-- **Built to WordPress standards.** Every input is sanitised, every output is escaped, all AJAX requests use nonce verification, and every database query uses prepared statements.
+**Developers** - every limit, message and redirect is configurable, and the features are built on standard hooks and filters you can extend.
 
----
+### What's different about it
 
-== Screenshots ==
-
-1. Security Analytics Dashboard — overview of your security score and recent login activity
-2. Security Analytics Dashboard — feature status and login attempt trends
-3. Security Core — full list of free and pro security features with Active/Inactive status
-4. Security Core — feature detail view with Configure Settings option
-5. Limit Login Attempts settings — configure max attempts, lockout duration, and blocked message
-6. Custom Login URL settings — set a hidden login slug, redirect URL, and logout redirect
-7. Google reCAPTCHA settings — choose v2 or v3, enter site key and secret key
-8. Firewall & Malware overview — firewall status and a link to the free Deep Malware Cleaner plugin
-9. Login Logs & Activity Tracking — searchable table of successful and failed logins with IP and timestamp
-10. Privacy Hardening — one-click toggle to disable XML-RPC
-11. Login Page Customisation — upload your logo, set dimensions, and choose a login template
-
----
+* **Light.** Admin assets only load on the plugin's own screens, and only the code for the screen you're actually looking at. Nothing is added to your front end.
+* **Useful straight away.** Limit login attempts switches itself on at activation. You're protected before you open the settings.
+* **Honest about free vs Pro.** Pro features are visible and clearly labelled. Nothing pretends to be free and then asks for a card.
+* **Written to WordPress standards.** Inputs sanitised, output escaped, nonces on every request, prepared statements on every query, and a real uninstall routine that removes its own data when you delete it.
 
 == Installation ==
 
-**Option 1 — Install from the WordPress Plugin Directory (Recommended)**
+**From your dashboard (easiest)**
 
-1. Log in to your WordPress admin area.
-2. Go to **Plugins → Add New**.
-3. Search for **Admin Safety Guard**.
-4. Click **Install Now**, then click **Activate**.
+1. Go to **Plugins → Add New**.
+2. Search for **Admin Safety Guard**.
+3. Click **Install Now**, then **Activate**.
 
-**Option 2 — Upload Manually**
+**Uploading the zip**
 
-1. Download the plugin `.zip` file from WordPress.org.
+1. Download the plugin zip from WordPress.org.
 2. Go to **Plugins → Add New → Upload Plugin**.
-3. Choose the `.zip` file and click **Install Now**.
-4. Click **Activate Plugin**.
+3. Pick the zip, click **Install Now**, then **Activate Plugin**.
 
-**After Activation**
+**Then what?**
 
-The plugin will automatically enable Limit Login Attempts with sensible defaults (3 attempts, 15-minute lockout) so your site is protected immediately. Head to **Admin Safety Guard** in your WordPress menu to explore and configure the rest of the features.
+Limit login attempts turns itself on with sensible defaults (3 attempts, 15 minute lockout), so there's nothing you have to do immediately. When you're ready, open **Admin Safety Guard** in the menu, check your security score, and work down the list of suggestions.
 
----
+If you plan to use a custom login URL, add your own IP to the trusted list first and bookmark the new address before you save.
 
 == Frequently Asked Questions ==
 
-**Q: Is Admin Safety Guard free?**
-A: Yes. All features listed under "Free Features" above are completely free with no usage limits or hidden costs. A Pro version is available for advanced features such as magic link login, mobile app 2FA, social login, and the web application firewall.
+= Is it really free? =
 
-**Q: Will this plugin slow down my WordPress site?**
-A: No. Admin Safety Guard only loads its JavaScript and CSS assets on the plugin’s own settings pages inside the admin area. It adds zero weight to your site’s front-end pages. Security checks (like login attempt limits and custom URL routing) are handled in PHP with minimal overhead.
+Yes. Everything listed under Free Features works with no limits, no trial period and no account. Pro exists for magic links, app-based 2FA, social login, password policies and the web application firewall, but nothing in the free version is crippled to push you towards it.
 
-**Q: What happens when I change my login URL?**
-A: The plugin sets a custom rewrite rule that points your new login slug (e.g. `/my-login`) to the WordPress login system. The old `wp-login.php` URL will redirect visitors away. Your existing bookmarks will need to be updated to the new URL. The plugin flushes WordPress permalink rules automatically when you save the setting.
+= Will it slow my site down? =
 
-**Q: Does the custom login URL work in a WordPress subdirectory install?**
-A: Yes. The plugin detects subdirectory installs and builds the correct URL for your setup automatically.
+No. The admin JavaScript and CSS only load on the plugin's own screens, and even there only the bundle for the screen you're viewing. Your front end gets nothing extra. The login checks themselves are a couple of indexed database queries.
 
-**Q: How does Limit Login Attempts work?**
-A: Every time a user enters the wrong password, the plugin records the attempt against that IP address. Once the number of failed attempts reaches your configured limit (default: 3), that IP address is locked out for the duration you set (default: 15 minutes). After the lockout period, they can try again. You can also manually block IP addresses permanently from the IP Blocking settings.
+= Could I lock myself out? =
 
-**Q: Does Limit Login Attempts work against bots that change their IP address?**
-A: Limit Login Attempts blocks on a per-IP basis, which stops the vast majority of automated attacks. For more sophisticated threats, enabling a custom login URL so bots cannot even find your login page adds a second layer of defence.
+That's the risk worth taking seriously, so two things protect you. Add your own IP to the trusted list and login limiting will never apply to you. And if you change your login URL, bookmark the new address before saving, because `wp-login.php` will return a 404 afterwards.
 
-**Q: Is Two-Factor Authentication (2FA) required for all users?**
-A: No. You enable the OTP via Email toggle in the Two-Factor Authentication settings. Once enabled, it applies to all login attempts on your site. If you want role-specific or user-specific control, that is available in the Pro version.
+If it does happen: wait out the lockout (15 minutes by default), or rename the plugin folder over FTP to switch everything off.
 
-**Q: Can I customise the 2FA email that gets sent to users?**
-A: Yes. In the Two-Factor Authentication settings you can edit both the email subject line and the email body. Use the `{otp}` placeholder where you want the code to appear, and `{site_name}` for your site’s name.
+= How does limiting login attempts actually work? =
 
-**Q: What does disabling XML-RPC do, and is it safe?**
-A: XML-RPC is an older interface that lets external apps communicate with WordPress. It is frequently used in brute-force and DDoS amplification attacks because it allows multiple login attempts in a single request. Disabling it is safe for most sites. The only time you need XML-RPC is if you use the official WordPress mobile app for publishing, or a specific third-party service that requires it. Check with your tools before disabling.
+Each failed password is recorded against the IP address it came from. Hit your limit (3 by default) and that address is locked out for your chosen duration (15 minutes by default). If the same address collects several lockouts in a day, it's blocked for a full 24 hours. Trusted addresses are skipped entirely, and everything is logged.
 
-**Q: Does reCAPTCHA v2 or v3 work better for login pages?**
-A: It depends on your preference. reCAPTCHA v2 shows a visible checkbox ("I’m not a robot") which users must tick — straightforward and clear. reCAPTCHA v3 is invisible and runs silently in the background, scoring visitors based on behaviour. v3 offers a better user experience but requires you to set a score threshold. Both are fully supported.
+= What if the attacker changes IP address? =
 
-**Q: Will Password Protection affect my logged-in users?**
-A: No. You can exclude specific user roles (e.g. Administrator, Editor) from the password requirement. Users in excluded roles will access the site normally without being shown the password gate. You can also choose to exclude all logged-in users at once.
+Per-IP limiting stops the overwhelming majority of automated attacks, because most run from a small number of addresses. For anything more determined, a custom login URL is the stronger layer: a bot that can't find the login form has nothing to attack. Running both is the usual answer.
 
-**Q: Can I see who has been trying to log in to my site?**
-A: Yes. The Login Logs & Activity Tracking section shows a detailed table of all login events — both successful and failed — including the username, IP address, browser/device (user agent), and timestamp. You can use this information to identify suspicious activity and block problem IPs.
+= What happens when I change my login URL? =
 
-**Q: What is the Security Score shown on the dashboard?**
-A: The Security Score is a percentage (0–100) calculated based on how many available security features you have enabled. The more features you activate, the higher your score. It gives you a quick, at-a-glance understanding of your site’s current protection level and shows which areas still need attention.
+The plugin points your new slug at the WordPress login system and makes `wp-login.php` and `wp-register.php` return 404 for logged-out visitors. Slugs that would collide with a real WordPress path are rejected. Permalinks are flushed automatically when you save.
 
-**Q: Can I hide the admin bar from certain user roles?**
-A: Yes. In the Hide Admin Bar settings, you choose which roles should have the admin bar hidden on the front end of your site. For example, you might hide it from Subscribers and Customers while keeping it visible for Editors and Administrators.
+= Does the custom login URL work in a subfolder or multisite install? =
 
-**Q: Is Admin Safety Guard compatible with WooCommerce?**
-A: Yes. The plugin is fully compatible with WooCommerce. All features — login limits, 2FA, custom login URL, IP blocking, and activity logs — work alongside WooCommerce without any conflicts.
+Yes. Paths are resolved relative to the site's own home path, so root installs, WordPress in a subfolder, and both subdomain and subdirectory networks all behave the same.
 
-**Q: Is Admin Safety Guard compatible with other security plugins like Wordfence or iThemes Security?**
-A: Yes, in most cases. Admin Safety Guard focuses specifically on login security and admin area protection. It does not interfere with firewall rules or malware scanning from other plugins. If you use another plugin that also offers limit login attempts or custom login URLs, disable that specific feature in one of the two plugins to avoid conflicts.
+= Do all my users need two-factor authentication? =
 
-**Q: How do I get support if something is not working?**
-A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugin/admin-safety-guard/) for free support. For priority email support and Pro features, visit [themepaste.com/contact](https://themepaste.com/contact).
+Only the roles you choose. Leave the role list empty to cover everyone, or tick just Administrator and Editor so sign-in stays simple for customers and subscribers.
 
----
+= Can I change the two-factor email? =
+
+Yes. Edit the subject and the body in the Two-Factor Authentication settings. Use `{otp}` where the code should appear and `{site_name}` for your site name. Leave the body empty to use the styled default.
+
+= What is Session Security, and will it log people out constantly? =
+
+It controls how long a signed-in session stays valid, and every part of it is off until you turn it on. The idle timeout is the one most sites want: 30 to 60 minutes. Tying a session to an IP address is the strict option - it stops stolen cookies working elsewhere, but it will sign out anyone on a mobile connection whose IP changes, so it suits fixed office networks best.
+
+= How is the security score calculated? =
+
+It grades your site rather than counting switches. HTTPS, WordPress and PHP versions, whether an account is called "admin", whether usernames are publicly listed, whether file editing is enabled, and how much of the plugin's protection you're using - each weighted by how much it actually matters. That's why a fresh install doesn't show 100%, and why turning on everything in the plugin won't hide an outdated core.
+
+= What counts as a "threat blocked"? =
+
+Anything the plugin actively stopped: a lockout, a blocked IP trying to sign in, a failed reCAPTCHA, a wrong two-factor code, a blocked XML-RPC request, an attempt to discover usernames. Each one is recorded with the address, time and what was tried, and kept for 30 days.
+
+= Can I export the login logs? =
+
+Yes. Both the successful and failed login tables export to CSV, and you can clear out old entries by age or by date range. Handy for client reports and for keeping the tables tidy on a busy site.
+
+= Is disabling XML-RPC safe? =
+
+For most sites, yes. XML-RPC is an older interface that lets one request carry many login attempts, which is why brute-force tools love it. Leave it enabled only if you publish through the WordPress mobile app or use Jetpack or another service that needs it.
+
+= reCAPTCHA v2 or v3? =
+
+v2 is the visible checkbox: obvious to users, obvious in what it does. v3 is invisible and scores visitors on behaviour, which is smoother but means picking a threshold and occasionally reviewing it. Both are fully supported, so use whichever fits your audience.
+
+= Will password protection affect logged-in users? =
+
+Only if you want it to. Exclude specific roles, or all logged-in users at once, and they'll browse the site normally while everyone else meets the password screen.
+
+= Does it work on multisite? =
+
+Yes. Tables are created for every site on the network, including sites added after activation, and each site keeps its own settings and logs.
+
+= What happens to my data if I delete the plugin? =
+
+It's removed. Deleting the plugin (not just deactivating it) drops the plugin's tables, options, transients and user meta, on every site of a network. Deactivating leaves everything in place so you can switch it back on.
+
+= Does it conflict with Wordfence, Solid Security or similar? =
+
+Generally no. Admin Safety Guard concentrates on login and admin protection and doesn't touch other plugins' firewall or scanning. The one thing to avoid is running two login limiters or two custom login URLs at once - pick which plugin owns that feature and turn it off in the other.
+
+= Is it WooCommerce compatible? =
+
+Yes. Login limits, 2FA, custom login URLs, IP blocking and the activity log all work alongside WooCommerce, including its own account pages.
+
+= Where do I get help? =
+
+Post in the [WordPress.org support forum](https://wordpress.org/support/plugin/admin-safety-guard/) - it's free and we read it. For priority email support and Pro, see [themepaste.com/contact](https://themepaste.com/contact).
+
+== Screenshots ==
+
+1. Safety Analytics - threats blocked, active users, failed logins and server info at a glance
+2. Safety Analytics - feature status and login attempt trends
+3. Security Core - every free and Pro feature with its current Active or Inactive status
+4. Security Core - feature detail view with Configure Settings
+5. Limit Login Attempts - attempts allowed, lockout length, trusted IPs and the message users see
+6. Custom Login URL - your private login slug, redirect and logout destinations
+7. Google reCAPTCHA - choose v2 or v3 and add your site and secret keys
+8. Firewall & Malware - firewall status and the free Deep Malware Cleaner companion
+9. Login Logs & Activity - searchable table of successful and failed logins with IP and timestamp
+10. Privacy Hardening - one-click switches for XML-RPC, username discovery, version hiding and more
+11. Login branding - your logo, colours, background and login template
 
 == Changelog ==
 
-= 1.3.0 – Security & Performance Update =
+= 1.4.0 - Session Security, Threat Log & Site-Wide Security Audit =
+
+New
+
+* [feature] **Session Security.** A new feature covering what happens after sign-in: automatic sign-out after inactivity, shorter maximum session and "Remember Me" lengths, ending every other session when a password changes, and optionally tying a session to the IP address it started from.
+* [feature] **Threats Blocked log.** Every block the plugin performs - lockouts, blocked IPs, failed reCAPTCHA, wrong two-factor codes, blocked XML-RPC, username discovery attempts - is now recorded and shown on the dashboard, with 30 days of history.
+* [feature] **Rewritten security score.** The score now audits the site itself (HTTPS, WordPress and PHP versions, an account named "admin", publicly listed usernames, file editing, and more) alongside your plugin coverage, each check weighted by real-world impact. Critical findings raise a dismissible admin notice.
+* [feature] **Eight new privacy hardening switches**: block username discovery via `?author=1` and the REST users endpoint, generic login errors, hide the WordPress version, remove RSD/Windows Live Writer/shortlink meta, disable pingbacks, disable the theme and plugin editors, send browser security headers, and disable application passwords.
+* [feature] **Trusted IP list and permanent block list** for Limit Login Attempts, accepting single addresses, CIDR ranges, wildcards and IPv6.
+* [feature] Limit Login Attempts now also covers XML-RPC, application passwords and custom theme login forms, can show remaining attempts to genuine users, and can email you on each lockout (throttled to one message per address per hour).
+* [feature] Two-factor email codes can now be limited to chosen roles, with configurable code length, validity window and attempts per code, plus a styled default email.
+* [feature] **New admin location alerts.** Optional email when an administrator signs in from an IP address that account has never used, limited to one alert per account and address per day.
+* [feature] **CSV export and purge** for the login logs, plus search, sorting, pagination, summary cards, and one-click block or unblock straight from the table.
+* [feature] **Full login page branding**: background colour and image, form background, text, link and button colours, rounded corners, hide the logo, lost password, register, back-to-site and language links, tick "Remember Me" by default, logo link and alt text, and custom CSS.
+* [feature] The Firewall & Malware screen now detects the free Deep Malware Cleaner plugin and links to install, activate or open it.
+* [feature] Deleting the plugin now removes everything it created - options, tables, transients and user meta - across every site of a network.
+* [feature] Multisite support for table creation, including sites added to the network after activation.
+
+Improvements
+
+* [improve] Admin assets are code-split: React and the webpack runtime load once as shared chunks, and only the bundle for the screen you're viewing is downloaded. The media library scripts now load on the branding screen only.
+* [improve] Indexes added to the login, failed login and threat tables, so lockout checks and cleanup stay fast on a site under sustained attack.
+* [improve] Daily cleanup with proper retention: 30 days for failed logins and threats, 90 days for successful logins, with cut-offs calculated in the site's own timezone.
+* [improve] Every setting has been relabelled in plain English, with recommended values and a clear warning where a setting can lock people out.
+* [improve] Custom Login URL now rejects reserved slugs that would break the site, and returns a proper 404 on the old login and registration URLs.
+* [improve] reCAPTCHA v3 tokens are refreshed before submission, so a form left open no longer fails with an expired token.
+* [improve] The user count on the dashboard is cached for an hour instead of running an uncached query on every page load.
+
+Fixes
+
+* [fix] **24-hour IP blocks never expired.** The cleanup job was never registered, so an address that tripped the lockout threshold stayed blocked permanently. It now runs daily as intended.
+* [fix] The successful login log overwrote a single row per username, so it only ever showed the most recent sign-in. It now records one row per event, making it a genuine audit trail.
+* [fix] Corrected the License URI in the plugin header, which pointed at GPL-2.0 while the plugin is licensed GPLv3.
+* [fix] Replaced remaining `json_encode()` calls with `wp_json_encode()`, and removed unused development constants and dead Pro placeholder classes.
+* [fix] Resolved PHP notices from missing array keys on fresh installs.
+
+= 1.3.0 - Security & Performance Update =
 * [security] Two-Factor Authentication (Email OTP) now expires codes after 5 minutes and invalidates them after 5 failed attempts to prevent code reuse and brute-forcing.
 * [security] Removed legacy storage of OTP credentials in user meta; a one-time cleanup automatically scrubs any plaintext data left behind by older versions on upgrade.
 * [security] Added a clear "code expired, please log in again" notice on the login screen when an OTP session times out.
@@ -239,18 +311,18 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 * [improve] More accurate Security Score calculation that only counts features with a real on/off control.
 * [fix] Resolved minor PHP warnings and general stability improvements.
 
-= 1.2.9 – Maintenance Update =
+= 1.2.9 - Maintenance Update =
 * [update] Refreshed the plugin short description in readme for better clarity on WordPress.org.
 * [improve] Minor readme content polish and consistency tweaks.
 * [maintenance] General housekeeping and version bump for ongoing compatibility.
 
-= 1.2.8 – Bug Fixes & Default Feature Activation =
+= 1.2.8 - Bug Fixes & Default Feature Activation =
 * [fix] Fixed PHP warnings on fresh install: "Undefined array key sub" and "Trying to access array offset on value of type null" in layout.php.
 * [fix] All features (free and pro) now correctly default to Inactive on fresh install, giving users full control over what is enabled.
 * [feature] Limit Login Attempts is now automatically enabled with sensible defaults on first install to provide immediate brute-force protection out of the box.
 * [improve] Feature status detection now correctly handles features without a master enable switch (Two-Factor Auth, Privacy Hardening) by checking their individual toggle fields.
 
-= 1.2.7 – UI & Content Update =
+= 1.2.7 - UI & Content Update =
 * [improve] Updated plugin layout to be more user-friendly and easier to use.
 * [improve] Optimized code for better performance and smoother experience.
 * [update] Updated readme content for better clarity and documentation.
@@ -258,35 +330,35 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 * [feature] Added visibility of all Pro features in free version (requires Pro plugin to use).
 * [fix] Minor UI improvements and general stability fixes.
 
-= 1.2.6 – Performance & Security Update =
+= 1.2.6 - Performance & Security Update =
 * [improve] Optimized React rendering by loading React assets in the head for faster UI initialization.
 * [feature] Added Login Attempt Limiter to help prevent brute-force login attacks.
 * [fix] Fixed React render delay issue on slow client sites.
 * [fix] Resolved minor UI and stability issues.
 * [improve] General performance improvements.
 
-= 1.2.5 – Security & Stability Update =
+= 1.2.5 - Security & Stability Update =
 * Improved deactivation process
 * Added nonce verification for AJAX security
 * Fixed cross-origin (CORS) issue during API request
 * Enhanced server-side API handling
 
-= 1.2.4 – Maintenance Update =
+= 1.2.4 - Maintenance Update =
 * Deactivation issue fixed
 
-= 1.2.3 – Maintenance Update =
+= 1.2.3 - Maintenance Update =
 * Enhanced stability and performance
 * General bug fixes and cleanup
 * Added a deactivation modal
 
-= 1.2.2 – Maintenance Update =
+= 1.2.2 - Maintenance Update =
 * Fixed critical errors and PHP warnings
 * Improved WordPress coding standards compliance
 * Optimized long descriptions and code structure
 * Enhanced stability and performance
 * General bug fixes and cleanup
 
-= 1.2.1 – Security & Compliance Update =
+= 1.2.1 - Security & Compliance Update =
 * Fixed security issues reported by WordPress Plugin Review Team
 * Improved data sanitization and escaping across plugin files
 * Updated code to follow WordPress coding standards and best practices
@@ -300,7 +372,6 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 = 1.2.0 =
 * [Fix] fixed the taxdomain and esc issues.
 
-
 = 1.1.9 =
 * [New] Added breadcrumb navigation for better page clarity and navigation.
 * [New] All major pages are now fully dynamic.
@@ -310,7 +381,6 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 * [Fix] Resolved layout and alignment inconsistencies.
 * [Maintenance] Refactored code for better performance and maintainability.
 * [Maintenance] General stability improvements and internal optimizations.
-
 
 = 1.1.8 =
 * [New] Introduced a fully redesigned, modern admin UI for a cleaner and more intuitive experience.
@@ -322,11 +392,9 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 * [Maintenance] Refactored UI-related code for better performance and maintainability.
 * [Maintenance] Minor internal improvements and stability enhancements.
 
-
 = 1.1.7 =
 * [Fix] Active license URL now shows correctly based on the Pro plugin status.
 * [Fix] Fixed the documentation link on the plugin page.
-
 
 = 1.1.6 =
 * [New] - Introduced a dynamic Security Score system based on overall site protection status.
@@ -339,12 +407,10 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 * [Maintenance] - Internal code optimization and performance improvements.
 * [Maintenance] - Security hardening and internal consistency checks.
 
-
 = 1.1.5 =
 * [Maintenance] - Release preparation and version alignment.
 * [Maintenance] - Internal consistency checks.
 * [Maintenance] - No code or feature changes in this version.
-
 
 = 1.1.4 =
 * [new] - [New] All Pro features are now available in the free version.
@@ -367,62 +433,58 @@ A: Post in the [WordPress.org support forum](https://wordpress.org/support/plugi
 * [new] - Added a phone number field to the in-plugin support form, including country code.
 
 = 1.1.0 =
-* [fix] – Resolved several important WordPress admin warnings.
-* [new] – Added an in-plugin support system.
+* [fix] - Resolved several important WordPress admin warnings.
+* [new] - Added an in-plugin support system.
 
 = 1.0.9 =
-[new] Added deactivation email feature on plugin activation
+* [new] Added deactivation email feature on plugin activation
 
 = 1.0.6, 1.0.8 =
-[new] Release the pro version
-[new] Compotable with pro version
-
+* [new] Release the pro version
+* [new] Compatible with pro version
 
 = 1.0.5 =
-[new] Added extendable action and filter hooks  
-[new] Ready to integrate Pro version  
-[new] Conditionally loaded all assets  
-[new] Added default logo URL, width, and height  
-[fix] Fixed logo issue from customizer  
-[fix] General improvements and bug fixes  
+* [new] Added extendable action and filter hooks
+* [new] Ready to integrate Pro version
+* [new] Conditionally loaded all assets
+* [new] Added default logo URL, width, and height
+* [fix] Fixed logo issue from customizer
+* [fix] General improvements and bug fixes
 
 = 1.0.4 =
-[new] Auto permalink flush for custom login/logout URLs  
-[new] Admin Notice added  
-[new] Setup Wizard  
-[new] Documentation link added  
+* [new] Auto permalink flush for custom login/logout URLs
+* [new] Admin Notice added
+* [new] Setup Wizard
+* [new] Documentation link added
 
 = 1.0.3 =
-[new] Subdirectory support  
-[new] Tooltip in failed login table  
-[new] Auto-redirect after max login attempts  
-[fix] Custom login/logout URLs  
-[fix] Lockout message  
-[fix] Failed login table issues  
+* [new] Subdirectory support
+* [new] Tooltip in failed login table
+* [new] Auto-redirect after max login attempts
+* [fix] Custom login/logout URLs
+* [fix] Lockout message
+* [fix] Failed login table issues
 
 = 1.0.2 =
-[fix] Minor bug fixes  
+* [fix] Minor bug fixes
 
 = 1.0.1 =
-[fix] Build issue resolved  
+* [fix] Build issue resolved
 
 = 1.0.0 =
-* Initial release featuring 2FA, CAPTCHA, Limit Login Attempts, IP Blocking, Custom Login URL, Password Protection, and Login Logs.  
-
----
+* Initial release featuring 2FA, CAPTCHA, Limit Login Attempts, IP Blocking, Custom Login URL, Password Protection, and Login Logs.
 
 == Upgrade Notice ==
 
-= 1.0.5 =
-Hooks, assets, and Pro-ready support added. Update for smoother performance and future compatibility.
+= 1.4.0 =
+Important fix: 24-hour IP blocks never expired, and the login log only kept the last sign-in per user. Also adds Session Security, a threat log, a real site-wide security audit, trusted IP lists, and CSV export. Recommended for everyone.
 
----
+= 1.3.0 =
+Security update for two-factor codes and password protection. Please update.
 
 == Support ==
 
-For any issues, questions, or feature requests, please reach out via [Support](https://themepaste.com/contact).
-
----
+Free support is on the [WordPress.org forum](https://wordpress.org/support/plugin/admin-safety-guard/). For anything Pro-related or urgent, use [our contact form](https://themepaste.com/contact).
 
 == External Services ==
 
@@ -489,15 +551,15 @@ Privacy Policy:
 https://themepaste.com/privacy-policy
 
 
-
-
 == Development / Source Code ==
 
-This plugin includes compiled JavaScript bundles in:
+This plugin ships compiled JavaScript bundles in:
 - assets/admin/build/*.bundle.js
 
-The original (human-readable) source files are included in this plugin under:
+The original, human-readable source files are included in this plugin under:
 - spa/admin/
+
+They are also available at https://github.com/themepaste/admin-safety-guard
 
 Build Tools
 - Node.js (LTS recommended)
@@ -507,16 +569,20 @@ Build Tools
 Source Entry Points
 The admin SPA bundles are built from the following entry points:
 
-- spa/admin/login-template/Main.jsx            -> assets/admin/build/loginTemplate.bundle.js
-- spa/admin/login-logs-activity/Main.jsx       -> assets/admin/build/loginLogActivity.bundle.js
-- spa/admin/analytics/Main.jsx                 -> assets/admin/build/analytics.bundle.js
-- spa/admin/security-core/Main.jsx             -> assets/admin/build/securityCore.bundle.js
-- spa/admin/firewall-malware/Main.jsx          -> assets/admin/build/firewallMalware.bundle.js
-- spa/admin/privacy-hardening/Main.jsx         -> assets/admin/build/privacyHardening.bundle.js
-- spa/admin/monitoring-analytics/Main.jsx      -> assets/admin/build/monitoringAnalytics.bundle.js
+- spa/admin/login-template/Main.jsx        -> assets/admin/build/loginTemplate.bundle.js
+- spa/admin/login-logs-activity/Main.jsx   -> assets/admin/build/loginLogActivity.bundle.js
+- spa/admin/analytics/Main.jsx             -> assets/admin/build/analytics.bundle.js
+- spa/admin/security-core/Main.jsx         -> assets/admin/build/securityCore.bundle.js
+- spa/admin/firewall-malware/Main.jsx      -> assets/admin/build/firewallMalware.bundle.js
+- spa/admin/privacy-hardening/Main.jsx     -> assets/admin/build/privacyHardening.bundle.js
+- spa/admin/2fa-using-mobile-app/Main.jsx  -> assets/admin/build/twoFAUsingMobileApp.bundle.js
+
+React and the webpack runtime are extracted into shared chunks
+(framework.bundle.js and runtime.bundle.js) so they are downloaded once
+rather than being inlined into every bundle.
 
 Install Dependencies
-From the plugin root directory (or the directory where package.json exists):
+From the plugin root directory (where package.json lives):
 
 1) Install dependencies:
    npm install
@@ -539,10 +605,10 @@ Important Notes
 
 == Links ==
 
-[Website](https://themepaste.com)  
-[Documentation](https://themepaste.com/product-doc/hide-admin-bar-pro/?doc_id=389)  
-[Pro Version](https://themepaste.com/product/admin-safety-guard-pro)  
-[Facebook](https://www.facebook.com/themepaste)  
-[Pinterest](https://uk.pinterest.com/themepaste/)  
-[LinkedIn](https://www.linkedin.com/company/themepaste)  
+[Website](https://themepaste.com)
+[Documentation](https://themepaste.com/documentation/admin-safety-guard/)
+[Pro Version](https://wordpressdirect.co.uk/product/admin-safety-guard-pro/)
+[Facebook](https://www.facebook.com/themepaste)
+[Pinterest](https://uk.pinterest.com/themepaste/)
+[LinkedIn](https://www.linkedin.com/company/themepaste)
 [Instagram](https://www.instagram.com/themepasteuk)

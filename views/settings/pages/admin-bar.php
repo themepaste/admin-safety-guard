@@ -11,7 +11,7 @@ $page_label             = isset( $args['page_label_forsub'] ) && !empty( $args['
     : $args['page_label'];
 $is_valid_license       = is_valid_license_available();
 $is_pro_active          = tp_is_pro_active();
-$upgrade_url            = 'https://themepaste.com/product/admin-safety-guard-pro#pricePlanSection';
+$upgrade_url            = 'https://wordpressdirect.co.uk/product/admin-safety-guard-pro/#pricePlanSection';
 $license_url            = add_query_arg( ['page' => 'tp-admin-safety-guard-pro'], admin_url( 'admin.php' ) );
 ?>
 

@@ -13,8 +13,10 @@ composer.json
 composer.lock
 CLAUDE.md
 README.md
-package.json
 package-lock.json
 node_modules
-webpack.config.js
-spa
+
+# NOTE: spa/, webpack.config.js and package.json are deliberately shipped.
+# readme.txt points reviewers and users at the un-minified React sources and
+# the build setup behind assets/admin/build/*.bundle.js, so they have to be in
+# the distributed zip.

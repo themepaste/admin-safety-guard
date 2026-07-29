@@ -13,7 +13,7 @@ use ThemePaste\SecureAdmin\Traits\Hook;
  * action and this class records it, so a new protection can start reporting
  * threats without touching the dashboard, the REST API or the schema.
  *
- * @since 1.3.0
+ * @since 1.4.0
  */
 class ThreatLog {
 

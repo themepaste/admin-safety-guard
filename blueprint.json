@@ -1,17 +1,17 @@
 {
   "name": "Admin Safety Guard",
   "slug": "admin-safety-guard",
-  "version": "1.0.1",
-  "description": "Secure your WordPress admin with Admin safety guard to ensure secured access with smart login,  2FA, and activity tracking.",
+  "version": "1.4.0",
+  "description": "Secure your WordPress login with Admin Safety Guard: limit login attempts, 2FA, reCAPTCHA, IP blocking, session security and activity tracking.",
   "author": "Themepaste Team",
-  "author_uri": "http://themepaste.com/",
-  "license": "GPL2 or Later",
-  "license_uri": "https://www.gnu.org/licenses/gpl-2.0.html",
+  "author_uri": "https://themepaste.com/",
+  "license": "GPLv3 or Later",
+  "license_uri": "https://www.gnu.org/licenses/gpl-3.0.html",
   "text_domain": "admin-safety-guard",
-  "plugin_uri": "http://themepaste.com/product/admin-safety-guard",
+  "plugin_uri": "https://wordpressdirect.co.uk/product/admin-safety-guard-pro/",
   "dependencies": {
-    "wordpress": "5.0",
-    "php": "7.4"
+    "wordpress": "5.8",
+    "php": "8.0"
   },
   "settings": {
     "enable_two_factor_auth": true,

@@ -210,7 +210,7 @@ class CustomLoginUrl implements FeatureInterface {
         /**
          * How to handle a request to the old login URL: '404' or 'home'.
          *
-         * @since 1.3.0
+         * @since 1.4.0
          *
          * @param string $behaviour Either '404' or 'home'.
          */

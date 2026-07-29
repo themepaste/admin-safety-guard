@@ -611,7 +611,7 @@ class LimitLoginAttempts implements FeatureInterface {
         /**
          * Filter whether the current request bypasses login-attempt limiting.
          *
-         * @since 1.3.0
+         * @since 1.4.0
          *
          * @param bool   $exempt Whether to skip enforcement.
          * @param string $ip     Resolved client IP address.
