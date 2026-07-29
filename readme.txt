@@ -250,17 +250,20 @@ Post in the [WordPress.org support forum](https://wordpress.org/support/plugin/a
 
 == Screenshots ==
 
-1. Safety Analytics - threats blocked, active users, failed logins and server info at a glance
-2. Safety Analytics - feature status and login attempt trends
-3. Security Core - every free and Pro feature with its current Active or Inactive status
-4. Security Core - feature detail view with Configure Settings
-5. Limit Login Attempts - attempts allowed, lockout length, trusted IPs and the message users see
-6. Custom Login URL - your private login slug, redirect and logout destinations
-7. Google reCAPTCHA - choose v2 or v3 and add your site and secret keys
-8. Firewall & Malware - firewall status and the free Deep Malware Cleaner companion
-9. Login Logs & Activity - searchable table of successful and failed logins with IP and timestamp
-10. Privacy Hardening - one-click switches for XML-RPC, username discovery, version hiding and more
-11. Login branding - your logo, colours, background and login template
+1. The dashboard leads with anything critical, like a site still running without HTTPS, then threats blocked, active users and failed sign-ins over the last 24 hours.
+2. Sign-in activity for the last 24 hours, next to a breakdown of how many of the plugin's features you actually have switched on.
+3. Security Core puts every protection in one grid, each marked Free or Pro and Active or Inactive. Limit Login Attempts is already on the moment you activate the plugin.
+4. Further down the same grid: Password Protection, Session Security, reCAPTCHA and Hide Admin Bar are free, while Passwordless Login and app-based 2FA come with Pro. Your score stays in view in the sidebar.
+5. Pro features are visible in the free version too, so you can see exactly what you would get before spending anything.
+6. Firewall & Malware shows the Pro web application firewall alongside Deep Malware Cleaner, our separate free plugin for scanning and cleanup, clearly labelled as a separate download rather than a bundled upsell.
+7. Monitoring & Analytics: failed sign-ins, current lockouts, blocked addresses and successful sign-ins at a glance, plus an optional email alert when an administrator signs in from a new location.
+8. Search any log, filter by date, page through it, export it to CSV, or delete old records when the tables get long.
+9. Privacy & Hardening: switch off XML-RPC, block username discovery through ?author=1, hide which login detail was wrong, and remove your WordPress version. Each switch explains what it does and when to leave it alone.
+10. The rest of the hardening list, covering pingbacks, the theme and plugin editors, browser security headers and application passwords.
+11. Login branding starts with your logo: set its size, point it at your own site instead of wordpress.org, and give it alt text for screen readers.
+12. Colour controls for the page, the form card, the text, the links and the Log In button, plus a full-page background image.
+13. Hide anything you do not want on the sign-in screen, from the logo to the lost password and registration links, or add your own CSS.
+14. Every point of the security score is explained: what failed, how serious it is, what it is worth, and a link straight to the fix.
 
 == Changelog ==
 
