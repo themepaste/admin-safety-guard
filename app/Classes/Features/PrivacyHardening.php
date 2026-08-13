@@ -47,6 +47,7 @@ class PrivacyHardening implements FeatureInterface {
         if ( $this->on( 'block-author-enum' ) ) {
             $this->action( 'template_redirect', [$this, 'block_author_enumeration'], 0 );
             $this->filter( 'rest_endpoints', [$this, 'restrict_user_endpoints'] );
+            $this->filter( 'wp_sitemaps_add_provider', [$this, 'remove_users_sitemap'], 10, 2 );
         }
 
         if ( $this->on( 'hide-version' ) ) {
@@ -221,6 +222,23 @@ class PrivacyHardening implements FeatureInterface {
         }
 
         return $endpoints;
+    }
+
+    /**
+     * Keep authors out of the core XML sitemap.
+     *
+     * /wp-sitemap-users-1.xml lists every author archive URL, and those URLs
+     * contain the account slug — which on most sites is the username. Blocking
+     * ?author=N and the REST user endpoints while leaving the sitemap in place
+     * only moved the enumeration one file along.
+     *
+     * @param \WP_Sitemaps_Provider $provider Provider instance.
+     * @param string                $name     Provider name.
+     *
+     * @return \WP_Sitemaps_Provider|false
+     */
+    public function remove_users_sitemap( $provider, $name = '' ) {
+        return 'users' === $name ? false : $provider;
     }
 
     /* ---------------------------------------------------------------------

@@ -69,6 +69,9 @@ class SessionSecurity implements FeatureInterface {
             $this->action( 'init', [$this, 'enforce_idle_timeout'], 1 );
         }
 
+        // Explain the sign-out on the login screen.
+        $this->filter( 'login_message', [$this, 'timeout_notice'] );
+
         // Invalidate every other session when the password changes, so a
         // stolen session cannot survive the response to it.
         if ( $this->on( 'logout-on-password-change' ) ) {
@@ -116,7 +119,7 @@ class SessionSecurity implements FeatureInterface {
      * @return void
      */
     public function enforce_idle_timeout() {
-        if ( !is_user_logged_in() || $this->is_exempt_request() ) {
+        if ( !is_user_logged_in() ) {
             return;
         }
 
@@ -124,6 +127,19 @@ class SessionSecurity implements FeatureInterface {
         $limit = $this->idle_minutes() * MINUTE_IN_SECONDS;
         $last = (int) get_user_meta( $user_id, self::LAST_SEEN_META, true );
         $now = time();
+
+        // A background request must never sign anyone out mid-flight, but it is
+        // still evidence that someone is working. The block editor, the media
+        // library and the Customizer talk to the site over REST and AJAX for
+        // long stretches without a single full page load, so ignoring those
+        // requests entirely signed out people who were actively editing.
+        if ( $this->is_exempt_request() ) {
+            if ( $this->is_user_activity_request() && ( !$last || ( $now - $last ) > self::TOUCH_INTERVAL ) ) {
+                update_user_meta( $user_id, self::LAST_SEEN_META, $now );
+            }
+
+            return;
+        }
 
         if ( $last && ( $now - $last ) > $limit ) {
             delete_user_meta( $user_id, self::LAST_SEEN_META );
@@ -259,6 +275,67 @@ class SessionSecurity implements FeatureInterface {
         || ( defined( 'WP_CLI' ) && WP_CLI )
         || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
         || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE );
+    }
+
+    /**
+     * Whether a background request represents a person actually using the site.
+     *
+     * @return bool
+     */
+    private function is_user_activity_request() {
+        // Nobody is at the keyboard for these.
+        if ( wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+            return false;
+        }
+
+        // Heartbeat polls on a timer for as long as a tab is open, and autosaves
+        // run on their own schedule. Counting either as activity would keep an
+        // unattended screen signed in forever, which is the exact thing the idle
+        // timeout exists to prevent.
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return false;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Reading the action name only, no state change.
+        $action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+
+        if ( 'heartbeat' === $action ) {
+            return false;
+        }
+
+        // Only a cookie-authenticated request comes from a browser session.
+        // Application passwords have no session to keep alive, so an integration
+        // polling the REST API must not extend a human's sign-in.
+        return '' !== (string) wp_get_session_token();
+    }
+
+    /* ---------------------------------------------------------------------
+     * Login screen
+     * ------------------------------------------------------------------- */
+
+    /**
+     * Tell the user why they were signed out.
+     *
+     * enforce_idle_timeout() and enforce_ip_binding() both redirect to the login
+     * screen with `tpsa_timeout` set; without this the sign-out looks like the
+     * session simply vanished.
+     *
+     * @param string $message Existing login screen message markup.
+     * @return string
+     */
+    public function timeout_notice( $message ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display flag on the login screen.
+        $reason = isset( $_GET['tpsa_timeout'] ) ? sanitize_key( wp_unslash( $_GET['tpsa_timeout'] ) ) : '';
+
+        if ( '' === $reason ) {
+            return $message;
+        }
+
+        $text = 'ip' === $reason
+        ? __( 'You were signed out because your session was used from a different IP address. Please sign in again.', 'admin-safety-guard' )
+        : __( 'You were signed out after a period of inactivity. Please sign in again.', 'admin-safety-guard' );
+
+        return $message . '<p class="message tpsa-session-message">' . esc_html( $text ) . '</p>';
     }
 
     private function idle_minutes() {

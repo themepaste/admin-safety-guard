@@ -3,7 +3,7 @@
 Plugin Name: Admin Safety Guard
 Plugin URI: https://wordpressdirect.co.uk/product/admin-safety-guard-pro/
 Description: Secure your WordPress login with Admin safety guard to ensure secured access with limit login attempts, 2FA, reCaptcha, IP Blocking, Disable XML-RPC and activity tracking.
-Version: 1.4.0
+Version: 1.4.1
 Author: Themepaste Team
 Author URI: http://themepaste.com/
 License: GPLv3 or later
@@ -38,7 +38,7 @@ final class TPSucureAdmin {
     private function define() {
         define( 'TPSA_PLUGIN_FILE', __FILE__ );
         define( 'TPSA_PREFIX', 'tpsa' );
-        define( 'TPSA_PLUGIN_VERSION', '1.4.0' );
+        define( 'TPSA_PLUGIN_VERSION', '1.4.1' );
         define( 'TPSA_PLUGIN_BASENAME', plugin_basename( TPSA_PLUGIN_FILE ) );
         define( 'TPSA_PLUGIN_DIR', plugin_dir_path( TPSA_PLUGIN_FILE ) );
         define( 'TPSA_ASSETS_URL', plugins_url( 'assets', TPSA_PLUGIN_FILE ) );

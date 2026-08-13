@@ -104,7 +104,12 @@ class SecurityAudit {
         $possible = 0;
         $issues = [];
 
-        foreach ( $checks as $check ) {
+        foreach ( $checks as $index => $check ) {
+            // A check supplied through the filter may be missing keys the
+            // scoring and sorting rely on.
+            $check = array_merge( ['pass' => false, 'severity' => 'low', 'weight' => 0], (array) $check );
+            $checks[$index] = $check;
+
             $possible += $check['weight'];
 
             if ( $check['pass'] ) {
@@ -121,8 +126,11 @@ class SecurityAudit {
         usort(
             $issues,
             static function ( $a, $b ) {
+                // Checks can be added through tpsa_security_audit_checks, so an
+                // unrecognised severity must sort last rather than raise a
+                // notice on an undefined key.
                 $order = ['critical' => 0, 'high' => 1, 'medium' => 2, 'low' => 3];
-                $cmp = $order[$a['severity']] <=> $order[$b['severity']];
+                $cmp = ( $order[$a['severity']] ?? 4 ) <=> ( $order[$b['severity']] ?? 4 );
 
                 return 0 !== $cmp ? $cmp : ( $b['weight'] <=> $a['weight'] );
             }
@@ -219,7 +227,9 @@ class SecurityAudit {
         $checks[] = self::check(
             'php-supported',
             __( 'PHP version is still supported', 'admin-safety-guard' ),
-            version_compare( PHP_VERSION, '8.1', '>=' ),
+            // PHP 8.1 stopped receiving security fixes on 31 December 2025, so
+            // 8.2 is the oldest branch that can still be called supported.
+            version_compare( PHP_VERSION, '8.2', '>=' ),
             'medium',
             5,
             sprintf(

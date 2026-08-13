@@ -4,7 +4,7 @@ Tags: login security, limit login attempts, two-factor authentication, brute for
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -267,6 +267,18 @@ Post in the [WordPress.org support forum](https://wordpress.org/support/plugin/a
 
 == Changelog ==
 
+= 1.4.1 - Blocked IP Enforcement & Session Fixes =
+
+Fixes
+
+* [security] **The permanent block list only applied to the login page.** An address you had blocked by hand could still sign in over XML-RPC, with an application password, or through a theme's own login form, as long as it had valid credentials. Blocked addresses are now refused on every authentication path, and the attempt is recorded in the threat log.
+* [fix] **Idle timeout signed out people who were still working.** Time spent in the block editor, the media library or the Customizer was not counted as activity, because those screens talk to the site in the background rather than loading a new page. Background activity now keeps the session alive, while automatic traffic - Heartbeat polling, autosaves, cron and application passwords - still does not, so an unattended screen is signed out as before.
+* [fix] The login screen said nothing after an automatic sign-out. It now explains whether the session ended through inactivity or an IP address change.
+* [fix] IPv6 entries on the trusted and blocked lists never matched when written with a wildcard (`2001:db8:*`). Matching is no longer dot-only, and is case-insensitive.
+* [fix] The security audit passed sites running PHP 8.1, which stopped receiving security fixes on 31 December 2025. The check now expects PHP 8.2 or newer.
+* [fix] Usernames could still be read from the WordPress sitemap at `/wp-sitemap-users-1.xml` while "block username discovery" was on. Authors are now left out of the sitemap too.
+* [fix] A security check added by other code through the `tpsa_security_audit_checks` filter could raise a PHP notice while the issue list was being sorted.
+
 = 1.4.0 - Session Security, Threat Log & Site-Wide Security Audit =
 
 New
@@ -478,6 +490,9 @@ Fixes
 * Initial release featuring 2FA, CAPTCHA, Limit Login Attempts, IP Blocking, Custom Login URL, Password Protection, and Login Logs.
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Important fix: addresses on the permanent block list could still sign in over XML-RPC, application passwords or a theme login form. Also stops the idle timeout signing out people working in the block editor. Recommended for everyone.
 
 = 1.4.0 =
 Important fix: 24-hour IP blocks never expired, and the login log only kept the last sign-in per user. Also adds Session Security, a threat log, a real site-wide security audit, trusted IP lists, and CSV export. Recommended for everyone.

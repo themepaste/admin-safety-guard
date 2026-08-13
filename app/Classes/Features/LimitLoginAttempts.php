@@ -119,6 +119,20 @@ class LimitLoginAttempts implements FeatureInterface {
             return $user;
         }
 
+        // Manually denied addresses are refused on every authentication path.
+        // guard_login_screen() only covers wp-login.php and a handful of themed
+        // front-end pages, so checking the deny list there alone left XML-RPC,
+        // Application Passwords and any other theme login form able to sign in
+        // with valid credentials from a permanently blocked address.
+        if ( $this->is_denied_ip() ) {
+            \ThemePaste\SecureAdmin\Classes\ThreatLog::report( 'ip_denied' );
+
+            return new \WP_Error(
+                'tpsa_ip_denied',
+                __( 'Your IP address is not permitted to sign in to this site.', 'admin-safety-guard' )
+            );
+        }
+
         $state = $this->get_state();
 
         if ( $state['blocked'] ) {
@@ -673,10 +687,20 @@ class LimitLoginAttempts implements FeatureInterface {
                 return true;
             }
 
-            // Trailing wildcard, e.g. 203.0.113.*
+            // Trailing wildcard, e.g. 203.0.113.* or 2001:db8:*
             if ( false !== strpos( $entry, '*' ) ) {
-                $prefix = rtrim( substr( $entry, 0, strpos( $entry, '*' ) ), '.' );
-                if ( '' !== $prefix && 0 === strpos( $ip, $prefix . '.' ) ) {
+                // IPv6 entries are separated by colons, not dots. Forcing a dot
+                // here meant an IPv6 wildcard could never match anything.
+                $separator = false !== strpos( $entry, ':' ) ? ':' : '.';
+                $prefix = rtrim( substr( $entry, 0, strpos( $entry, '*' ) ), $separator );
+
+                if ( '' === $prefix ) {
+                    continue;
+                }
+
+                $needle = strtolower( $prefix . $separator );
+
+                if ( 0 === strpos( strtolower( $ip ), $needle ) ) {
                     return true;
                 }
             }
